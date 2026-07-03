@@ -126,6 +126,8 @@ export type ResolvedSkillEdge = Required<Pick<SkillEdgeDef, "id">> &
 export type PlayerSkillState = {
   unlockedNodeIds: string[];
   discoveredHiddenNodeIds: string[];
+  /** Subclass branch sectors visible on the map (`core` is always shown). */
+  discoveredBranchIds: string[];
 };
 
 export type Point = {

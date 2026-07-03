@@ -12,6 +12,7 @@ import type {
 } from "./skillTreeTypes";
 
 import { resolveSkillTreeState } from "./skillTreeState";
+import { isBranchDiscovered } from "./skillTreeBridge";
 
 import {
   getBranchAuraPosition,
@@ -102,18 +103,42 @@ export function SkillTreeCanvas({
     return resolveSkillTreeState(nodes, edges, playerState);
   }, [nodes, edges, playerState]);
 
+  const discoveredBranchIds = playerState.discoveredBranchIds;
+
+  const visibleNodes = useMemo(() => {
+    return resolved.nodes.filter((node) =>
+      isBranchDiscovered(node.branchId, discoveredBranchIds)
+    );
+  }, [resolved.nodes, discoveredBranchIds]);
+
+  const visibleNodeIds = useMemo(() => {
+    return new Set(visibleNodes.map((node) => node.id));
+  }, [visibleNodes]);
+
+  const visibleEdges = useMemo(() => {
+    return resolved.edges.filter(
+      (edge) => visibleNodeIds.has(edge.from) && visibleNodeIds.has(edge.to)
+    );
+  }, [resolved.edges, visibleNodeIds]);
+
+  const visibleBranches = useMemo(() => {
+    return branches.filter((branch) =>
+      isBranchDiscovered(branch.id, discoveredBranchIds)
+    );
+  }, [branches, discoveredBranchIds]);
+
   const branchById = useMemo(() => {
     return new Map(branches.map((branch) => [branch.id, branch]));
   }, [branches]);
 
   const nodeById = useMemo(() => {
-    return new Map(resolved.nodes.map((node) => [node.id, node]));
-  }, [resolved.nodes]);
+    return new Map(visibleNodes.map((node) => [node.id, node]));
+  }, [visibleNodes]);
 
   const positions = useMemo(() => {
     const result = new Map<string, { x: number; y: number }>();
 
-    for (const node of resolved.nodes) {
+    for (const node of visibleNodes) {
       const branch = branchById.get(node.branchId);
 
       if (!branch) {
@@ -124,7 +149,7 @@ export function SkillTreeCanvas({
     }
 
     return result;
-  }, [resolved.nodes, branchById]);
+  }, [visibleNodes, branchById]);
 
   const selectedNode = selectedNodeId ? nodeById.get(selectedNodeId) : null;
 
@@ -281,7 +306,7 @@ export function SkillTreeCanvas({
             >
               <StarField />
 
-              {branches
+              {visibleBranches
                 .filter((branch) => branch.id !== "core")
                 .map((branch) => {
                   const aura = getBranchAuraPosition(branch);
@@ -311,9 +336,7 @@ export function SkillTreeCanvas({
                   );
                 })}
 
-              <CoreRings />
-
-              {resolved.edges.map((edge) => {
+              {visibleEdges.map((edge) => {
                 if (edge.state === "hidden") {
                   return null;
                 }
@@ -344,7 +367,7 @@ export function SkillTreeCanvas({
                 );
               })}
 
-              {resolved.nodes.map((node) => {
+              {visibleNodes.map((node) => {
                 const branch = branchById.get(node.branchId);
                 const position = positions.get(node.id);
 
@@ -441,18 +464,6 @@ function StarField() {
           opacity={star.opacity}
         />
       ))}
-    </g>
-  );
-}
-
-function CoreRings() {
-  return (
-    <g className="skill-tree-core-rings">
-      <circle r="180" />
-      <circle r="360" />
-      <circle r="560" />
-      <circle r="780" />
-      <circle r="1010" />
     </g>
   );
 }
@@ -559,13 +570,6 @@ function SkillNodeView({
           <circle className="skill-tree-node-middle" r={radius - 7} />
           <circle className="skill-tree-node-inner" r={Math.max(radius - 16, 8)} />
 
-          {(node.kind === "origin" ||
-            node.kind === "subclassGate" ||
-            node.kind === "special" ||
-            node.kind === "capstone") && (
-            <circle className="skill-tree-node-rune-ring" r={radius + 9} />
-          )}
-
           <text
             className="skill-tree-node-icon"
             textAnchor="middle"
@@ -622,7 +626,6 @@ function HiddenNodeShape({ radius }: { radius: number }) {
         points={points}
         transform="scale(0.72)"
       />
-      <circle className="skill-tree-hidden-smoke" r={radius + 12} />
     </>
   );
 }

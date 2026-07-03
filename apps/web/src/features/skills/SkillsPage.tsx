@@ -40,12 +40,31 @@ export function SkillsPage() {
     return activeTab === "bloodline" ? (lineage.bloodlineSkillIds ?? []) : heir.skillIds;
   }, [heir, lineage, activeTab]);
 
+  const classId = heir?.classId ?? "warrior";
+
+  const treeData = useMemo(
+    () =>
+      activeTab === "bloodline" ? getBloodlineSkillTree() : getClassSkillTree(classId),
+    [activeTab, classId]
+  );
+
   const playerState = useMemo(() => {
     if (!heir || !lineage) {
-      return { unlockedNodeIds: [], discoveredHiddenNodeIds: [] };
+      return {
+        unlockedNodeIds: [],
+        discoveredHiddenNodeIds: [],
+        discoveredBranchIds: ["core"],
+      };
     }
-    return buildPlayerSkillState(heir, lineage, ownedForTab, activeTab);
-  }, [heir, lineage, ownedForTab, activeTab]);
+    return buildPlayerSkillState(
+      heir,
+      lineage,
+      ownedForTab,
+      activeTab,
+      treeData.branches,
+      treeData.nodes
+    );
+  }, [heir, lineage, ownedForTab, activeTab, treeData.branches, treeData.nodes]);
 
   if (!heir || !lineage) {
     return (
@@ -54,11 +73,6 @@ export function SkillsPage() {
       </div>
     );
   }
-
-  const treeData =
-    activeTab === "bloodline"
-      ? getBloodlineSkillTree()
-      : getClassSkillTree(heir.classId);
 
   const skillPoints =
     activeTab === "bloodline"

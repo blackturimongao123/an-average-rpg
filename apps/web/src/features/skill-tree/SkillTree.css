@@ -220,13 +220,6 @@
   filter: drop-shadow(0 0 6px rgba(180, 230, 255, 0.75));
 }
 
-.skill-tree-core-rings circle {
-  fill: none;
-  stroke: rgba(145, 206, 255, 0.1);
-  stroke-width: 2;
-  stroke-dasharray: 10 16;
-}
-
 .skill-tree-branch-aura {
   pointer-events: none;
 }
@@ -302,16 +295,6 @@
   fill: rgba(255, 255, 255, 0.035);
   stroke: rgba(255, 255, 255, 0.12);
   stroke-width: 1;
-}
-
-.skill-tree-node-rune-ring {
-  fill: none;
-  stroke: var(--branch-color);
-  stroke-opacity: 0.38;
-  stroke-width: 2;
-  stroke-dasharray: 5 8;
-  animation: skillTreeRuneRotate 16s linear infinite;
-  transform-origin: center;
 }
 
 .skill-tree-node-icon {
@@ -439,16 +422,6 @@
   fill: rgba(14, 8, 28, 0.92);
   stroke: rgba(70, 35, 130, 0.7);
   stroke-width: 2;
-}
-
-.skill-tree-hidden-smoke {
-  fill: none;
-  stroke: rgba(102, 68, 180, 0.2);
-  stroke-width: 7;
-  stroke-dasharray: 10 12;
-  filter: drop-shadow(0 0 20px rgba(70, 40, 150, 0.8));
-  animation: skillTreeRuneRotate 22s linear infinite reverse;
-  transform-origin: center;
 }
 
 .skill-tree-details {
@@ -624,16 +597,6 @@
 
   50% {
     stroke-opacity: 0.78;
-  }
-}
-
-@keyframes skillTreeRuneRotate {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
   }
 }
 
