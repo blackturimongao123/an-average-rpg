@@ -1,0 +1,15 @@
+---
+description: Bump the visible app version whenever shipping user-facing changes
+alwaysApply: true
+---
+
+# Bump app version on every user-facing change
+
+When you change anything that affects the live game (UI, gameplay data, deploy workflow, Firebase client config, etc.):
+
+1. **Increment** `APP_VERSION` in `apps/web/src/constants/version.ts` using semver patch (`0.3.0` → `0.3.1`).
+2. **Do not** hardcode the version elsewhere — import `APP_VERSION` from that file (e.g. sidebar footer).
+3. **Mention the new version** in your summary so the user can confirm deploy by checking the sidebar footer (`MVP vX.Y.Z`).
+4. If the user reports the live site is stale, compare their sidebar version to `APP_VERSION` in the repo before debugging code.
+
+Skip version bumps only for purely internal changes (comments, dev-only scripts, docs with no player impact) unless the user asks to bump anyway.

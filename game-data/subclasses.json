@@ -1,0 +1,525 @@
+{
+  "subclasses": [
+    {
+      "id": "brawler",
+      "baseClassId": "warrior",
+      "name": "Brawler",
+      "description": "Raw fists and ferocity. You break bones before shields.",
+      "tier": 1,
+      "parentSubclassId": null,
+      "advanceRequires": { "level": 5, "skillIds": ["power_strike"] },
+      "flavorText": "Talk with your knuckles."
+    },
+    {
+      "id": "martial_artist",
+      "baseClassId": "warrior",
+      "name": "Martial Artist",
+      "description": "Discipline perfected. Every strike is a kata, every dodge a lesson.",
+      "tier": 2,
+      "parentSubclassId": "brawler",
+      "advanceRequires": { "level": 15, "skillIds": ["brawler_fury", "iron_body"] },
+      "flavorText": "The body is the ultimate weapon."
+    },
+    {
+      "id": "guardian",
+      "baseClassId": "warrior",
+      "name": "Guardian",
+      "description": "An immovable wall. Allies survive because you refuse to fall.",
+      "tier": 1,
+      "parentSubclassId": null,
+      "advanceRequires": { "level": 5, "skillIds": ["shield_wall"] },
+      "flavorText": "Not one step back."
+    },
+    {
+      "id": "bulwark_knight",
+      "baseClassId": "warrior",
+      "name": "Bulwark Knight",
+      "description": "Living fortress. Catastrophic blows slide off your plate like rain.",
+      "tier": 2,
+      "parentSubclassId": "guardian",
+      "advanceRequires": { "level": 15, "skillIds": ["guardian_stand", "aegis_pulse"] },
+      "flavorText": "I am the wall."
+    },
+    {
+      "id": "weaponmaster",
+      "baseClassId": "warrior",
+      "name": "Weaponmaster",
+      "description": "Master of every blade. Precision over power.",
+      "tier": 1,
+      "parentSubclassId": null,
+      "advanceRequires": { "level": 5, "skillIds": ["dual_wield"] },
+      "flavorText": "One weapon is never enough."
+    },
+    {
+      "id": "blade_dancer",
+      "baseClassId": "warrior",
+      "name": "Blade Dancer",
+      "description": "A whirlwind of steel. Enemies fall before they understand the rhythm.",
+      "tier": 2,
+      "parentSubclassId": "weaponmaster",
+      "advanceRequires": { "level": 15, "skillIds": ["weapon_flow", "parry_master"] },
+      "flavorText": "Death has a tempo."
+    },
+    {
+      "id": "warlord",
+      "baseClassId": "warrior",
+      "name": "Warlord",
+      "description": "Command the battlefield. Your presence turns skirmishes into victories.",
+      "tier": 1,
+      "parentSubclassId": null,
+      "advanceRequires": { "level": 5, "skillIds": ["tactical_mind"] },
+      "flavorText": "Victory is a habit."
+    },
+    {
+      "id": "siegebreaker",
+      "baseClassId": "warrior",
+      "name": "Siegebreaker",
+      "description": "Fortresses crumble. You are the battering ram incarnate.",
+      "tier": 2,
+      "parentSubclassId": "warlord",
+      "advanceRequires": { "level": 15, "skillIds": ["war_cry", "momentum_crush"] },
+      "flavorText": "No gate holds forever."
+    },
+    {
+      "id": "paladin",
+      "baseClassId": "warrior",
+      "alternateBaseClassIds": ["priest"],
+      "name": "Paladin",
+      "description": "A holy warrior blending sword and faith. Origin determines whether you favor shield or tome.",
+      "tier": 1,
+      "parentSubclassId": null,
+      "advanceRequires": { "level": 5, "skillIds": ["power_strike"] },
+      "advanceRequiresByClass": {
+        "warrior": { "level": 5, "skillIds": ["power_strike"] },
+        "priest": { "level": 5, "skillIds": ["holy_smite"] }
+      },
+      "classTreeRetentionByClass": {
+        "warrior": { "blockedSkillIds": ["dual_wield", "tactical_mind", "weapon_flow", "parry_master"] },
+        "priest": { "blockedSkillIds": ["purge", "sanctified_chain", "prophecy"] }
+      },
+      "flavorText": "By blade and blessing."
+    },
+    {
+      "id": "paladin_ascended",
+      "baseClassId": "warrior",
+      "alternateBaseClassIds": ["priest"],
+      "name": "Paladin Ascended",
+      "description": "Avatar of divine wrath and mercy combined.",
+      "tier": 2,
+      "parentSubclassId": "paladin",
+      "advanceRequires": { "level": 15, "skillIds": ["paladin_oath", "holy_strike"] },
+      "advanceRequiresByClass": {
+        "warrior": { "level": 15, "skillIds": ["paladin_oath", "holy_strike"] },
+        "priest": { "level": 15, "skillIds": ["paladin_conviction", "sacred_blade"] }
+      },
+      "flavorText": "Light incarnate."
+    },
+
+    {
+      "id": "assassin",
+      "baseClassId": "rogue",
+      "name": "Assassin",
+      "description": "One strike, one corpse. Contracts are your prayer book.",
+      "tier": 1,
+      "parentSubclassId": null,
+      "advanceRequires": { "level": 5, "skillIds": ["backstab"] },
+      "flavorText": "They never see it coming."
+    },
+    {
+      "id": "ghostblade",
+      "baseClassId": "rogue",
+      "name": "Ghostblade",
+      "description": "You kill so cleanly that witnesses swear no one was there.",
+      "tier": 2,
+      "parentSubclassId": "assassin",
+      "advanceRequires": { "level": 15, "skillIds": ["lethal_precision", "vanish"] },
+      "flavorText": "A rumor with a knife."
+    },
+    {
+      "id": "trickster",
+      "baseClassId": "rogue",
+      "name": "Trickster",
+      "description": "Misdirection is your art. The truth is whatever you need it to be.",
+      "tier": 1,
+      "parentSubclassId": null,
+      "advanceRequires": { "level": 5, "skillIds": ["backstab"] },
+      "flavorText": "Look over there!"
+    },
+    {
+      "id": "grand_illusionist",
+      "baseClassId": "rogue",
+      "name": "Grand Illusionist",
+      "description": "Reality bends to your schemes. Even mages doubt their eyes.",
+      "tier": 2,
+      "parentSubclassId": "trickster",
+      "advanceRequires": { "level": 15, "skillIds": ["feint_master", "mirror_self"] },
+      "flavorText": "Which one is real?"
+    },
+    {
+      "id": "swashbuckler",
+      "baseClassId": "rogue",
+      "name": "Swashbuckler",
+      "description": "Flash, flair, and fatal accuracy. Style points included.",
+      "tier": 1,
+      "parentSubclassId": null,
+      "advanceRequires": { "level": 5, "skillIds": ["dual_wield"] },
+      "flavorText": "En garde!"
+    },
+    {
+      "id": "sea_devil",
+      "baseClassId": "rogue",
+      "name": "Sea Devil",
+      "description": "Storm-lashed decks and drowned gold. The ocean remembers your name.",
+      "tier": 2,
+      "parentSubclassId": "swashbuckler",
+      "advanceRequires": { "level": 15, "skillIds": ["riposte", "crowd_pleaser"] },
+      "flavorText": "Yo ho, one more corpse."
+    },
+    {
+      "id": "shadow",
+      "baseClassId": "rogue",
+      "name": "Shadow",
+      "description": "Darkness is home. You walk where light fears to follow.",
+      "tier": 1,
+      "parentSubclassId": null,
+      "advanceRequires": { "level": 5, "skillIds": ["backstab"] },
+      "flavorText": "I am the dark."
+    },
+    {
+      "id": "void_walker",
+      "baseClassId": "rogue",
+      "name": "Void Walker",
+      "description": "Step between shadows across any distance. Distance is a suggestion.",
+      "tier": 2,
+      "parentSubclassId": "shadow",
+      "advanceRequires": { "level": 15, "skillIds": ["umbral_step", "shadow_bind"] },
+      "flavorText": "Now you see me—never mind."
+    },
+    {
+      "id": "poisoner",
+      "baseClassId": "rogue",
+      "name": "Poisoner",
+      "description": "Every blade drips. Death arrives slowly, painfully, beautifully.",
+      "tier": 1,
+      "parentSubclassId": null,
+      "advanceRequires": { "level": 5, "skillIds": ["backstab"] },
+      "flavorText": "Sweetest toxins."
+    },
+    {
+      "id": "plague_lord",
+      "baseClassId": "rogue",
+      "name": "Plague Lord",
+      "description": "Your toxins spread like gossip. Entire courts fall overnight.",
+      "tier": 2,
+      "parentSubclassId": "poisoner",
+      "advanceRequires": { "level": 15, "skillIds": ["venom_art", "miasma"] },
+      "flavorText": "Breathe deep."
+    },
+
+    {
+      "id": "pyromancer",
+      "baseClassId": "mage",
+      "name": "Pyromancer",
+      "description": "Fire answers your call. Ash is your signature.",
+      "tier": 1,
+      "parentSubclassId": null,
+      "advanceRequires": { "level": 5, "skillIds": ["fireball"] },
+      "flavorText": "Burn brighter."
+    },
+    {
+      "id": "inferno_archon",
+      "baseClassId": "mage",
+      "name": "Inferno Archon",
+      "description": "You wield conflagration like a crown. Dragons nod in respect.",
+      "tier": 2,
+      "parentSubclassId": "pyromancer",
+      "advanceRequires": { "level": 15, "skillIds": ["immolation", "phoenix_ash"] },
+      "flavorText": "All becomes ember."
+    },
+    {
+      "id": "cryomancer",
+      "baseClassId": "mage",
+      "name": "Cryomancer",
+      "description": "Winter obeys. Hearts freeze before bodies do.",
+      "tier": 1,
+      "parentSubclassId": null,
+      "advanceRequires": { "level": 5, "skillIds": ["frost_mastery"] },
+      "flavorText": "Absolute zero patience."
+    },
+    {
+      "id": "frost_sovereign",
+      "baseClassId": "mage",
+      "name": "Frost Sovereign",
+      "description": "Throne of ice, empire of silence. Time itself slows in your domain.",
+      "tier": 2,
+      "parentSubclassId": "cryomancer",
+      "advanceRequires": { "level": 15, "skillIds": ["absolute_zero", "ice_prison"] },
+      "flavorText": "Kneel before winter."
+    },
+    {
+      "id": "arcanist",
+      "baseClassId": "mage",
+      "name": "Arcanist",
+      "description": "Pure arcane theory made lethal. You rewrite the rules mid-spell.",
+      "tier": 1,
+      "parentSubclassId": null,
+      "advanceRequires": { "level": 5, "skillIds": ["arcane_bolt"] },
+      "flavorText": "Knowledge burns."
+    },
+    {
+      "id": "void_scholar",
+      "baseClassId": "mage",
+      "name": "Void Scholar",
+      "description": "You peer into the spaces between spells. Reality leaks.",
+      "tier": 2,
+      "parentSubclassId": "arcanist",
+      "advanceRequires": { "level": 15, "skillIds": ["arcane_overload", "rune_weave"] },
+      "flavorText": "The void stares back."
+    },
+    {
+      "id": "summoner",
+      "baseClassId": "mage",
+      "name": "Summoner",
+      "description": "Allies from beyond bind to your will—for a price.",
+      "tier": 1,
+      "parentSubclassId": null,
+      "advanceRequires": { "level": 5, "skillIds": ["arcane_bolt"] },
+      "flavorText": "Come forth."
+    },
+    {
+      "id": "pact_master",
+      "baseClassId": "mage",
+      "name": "Pact Master",
+      "description": "Multiple entities owe you favors. You collect with interest.",
+      "tier": 2,
+      "parentSubclassId": "summoner",
+      "advanceRequires": { "level": 15, "skillIds": ["bound_familiar", "legion_call"] },
+      "flavorText": "Sign here, in blood."
+    },
+    {
+      "id": "enchanter",
+      "baseClassId": "mage",
+      "name": "Enchanter",
+      "description": "Objects become extensions of will. Your gear fights for you.",
+      "tier": 1,
+      "parentSubclassId": null,
+      "advanceRequires": { "level": 5, "skillIds": ["arcane_bolt"] },
+      "flavorText": "Everything glows."
+    },
+    {
+      "id": "rune_emperor",
+      "baseClassId": "mage",
+      "name": "Rune Emperor",
+      "description": "Sigils cover your skin. You are a walking arcane engine.",
+      "tier": 2,
+      "parentSubclassId": "enchanter",
+      "advanceRequires": { "level": 15, "skillIds": ["artifact_bond", "sigil_storm"] },
+      "flavorText": "Symbols never lie."
+    },
+
+    {
+      "id": "cleric",
+      "baseClassId": "priest",
+      "name": "Cleric",
+      "description": "Healing hands and holy word. The flock looks to you.",
+      "tier": 1,
+      "parentSubclassId": null,
+      "advanceRequires": { "level": 5, "skillIds": ["divine_light"] },
+      "flavorText": "Be healed."
+    },
+    {
+      "id": "high_cleric",
+      "baseClassId": "priest",
+      "name": "High Cleric",
+      "description": "Miracles flow through you. Death reconsidered its options.",
+      "tier": 2,
+      "parentSubclassId": "cleric",
+      "advanceRequires": { "level": 15, "skillIds": ["mass_benediction", "resurrection_touch"] },
+      "flavorText": "Rise again."
+    },
+    {
+      "id": "inquisitor",
+      "baseClassId": "priest",
+      "name": "Inquisitor",
+      "description": "Heresy burns. Your questions come with iron and fire.",
+      "tier": 1,
+      "parentSubclassId": null,
+      "advanceRequires": { "level": 5, "skillIds": ["holy_smite"] },
+      "flavorText": "Confess."
+    },
+    {
+      "id": "witch_hunter",
+      "baseClassId": "priest",
+      "name": "Witch Hunter",
+      "description": "No curse hides from you. Monsters have learned your name.",
+      "tier": 2,
+      "parentSubclassId": "inquisitor",
+      "advanceRequires": { "level": 15, "skillIds": ["purge", "sanctified_chain"] },
+      "flavorText": "The hunt never ends."
+    },
+    {
+      "id": "bard",
+      "baseClassId": "priest",
+      "name": "Bard",
+      "description": "A traveling minstrel who weaves hymns into battle songs. Support through music and retained divine gifts.",
+      "tier": 1,
+      "parentSubclassId": null,
+      "advanceRequires": { "level": 5, "skillIds": ["divine_light"] },
+      "classTreeRetentionByClass": {
+        "priest": { "blockedSkillIds": ["holy_smite", "purge"] }
+      },
+      "flavorText": "Every road is a stage."
+    },
+    {
+      "id": "bard_maestro",
+      "baseClassId": "priest",
+      "name": "Maestro",
+      "description": "Your performances reshape the battlefield.",
+      "tier": 2,
+      "parentSubclassId": "bard",
+      "advanceRequires": { "level": 15, "skillIds": ["traveling_melody", "rallying_song"] },
+      "flavorText": "Hear the crescendo."
+    },
+    {
+      "id": "oracle",
+      "baseClassId": "priest",
+      "name": "Oracle",
+      "description": "Visions guide your hand. Fate whispers its secrets.",
+      "tier": 1,
+      "parentSubclassId": null,
+      "advanceRequires": { "level": 5, "skillIds": ["divine_light"] },
+      "flavorText": "I have seen your end."
+    },
+    {
+      "id": "fate_weaver",
+      "baseClassId": "priest",
+      "name": "Fate Weaver",
+      "description": "Threads of destiny bend. Enemies stumble into their own doom.",
+      "tier": 2,
+      "parentSubclassId": "oracle",
+      "advanceRequires": { "level": 15, "skillIds": ["prophecy", "threads_of_fate"] },
+      "flavorText": "Written in starlight."
+    },
+    {
+      "id": "exorcist",
+      "baseClassId": "priest",
+      "name": "Exorcist",
+      "description": "Spirits flee your presence. The veil is thin around you.",
+      "tier": 1,
+      "parentSubclassId": null,
+      "advanceRequires": { "level": 5, "skillIds": ["divine_light"] },
+      "flavorText": "Begone."
+    },
+    {
+      "id": "soul_binder",
+      "baseClassId": "priest",
+      "name": "Soul Binder",
+      "description": "You command the dead and damned. They serve or shatter.",
+      "tier": 2,
+      "parentSubclassId": "exorcist",
+      "advanceRequires": { "level": 15, "skillIds": ["banish", "spirit_chain"] },
+      "flavorText": "Bound by holy chains."
+    },
+
+    {
+      "id": "marksman",
+      "baseClassId": "ranger",
+      "name": "Marksman",
+      "description": "One shot, one kill. Distance is your ally.",
+      "tier": 1,
+      "parentSubclassId": null,
+      "advanceRequires": { "level": 5, "skillIds": ["hunters_mark"] },
+      "flavorText": "Never miss."
+    },
+    {
+      "id": "deadeye",
+      "baseClassId": "ranger",
+      "name": "Deadeye",
+      "description": "Legendary aim. Targets fall before the arrow is loosed.",
+      "tier": 2,
+      "parentSubclassId": "marksman",
+      "advanceRequires": { "level": 15, "skillIds": ["snipers_focus", "piercing_shot"] },
+      "flavorText": "Already dead."
+    },
+    {
+      "id": "beastmaster",
+      "baseClassId": "ranger",
+      "name": "Beastmaster",
+      "description": "The wild fights beside you. Pack tactics win wars.",
+      "tier": 1,
+      "parentSubclassId": null,
+      "advanceRequires": { "level": 5, "skillIds": ["hunters_mark"] },
+      "flavorText": "Good boy."
+    },
+    {
+      "id": "alpha_prime",
+      "baseClassId": "ranger",
+      "name": "Alpha Prime",
+      "description": "King of beasts. Even drakes hesitate before your pack.",
+      "tier": 2,
+      "parentSubclassId": "beastmaster",
+      "advanceRequires": { "level": 15, "skillIds": ["pack_hunt", "primal_bond"] },
+      "flavorText": "The wild crowns you."
+    },
+    {
+      "id": "warden",
+      "baseClassId": "ranger",
+      "name": "Warden",
+      "description": "Protector of paths and borders. Nothing passes unmarked.",
+      "tier": 1,
+      "parentSubclassId": null,
+      "advanceRequires": { "level": 5, "skillIds": ["hunters_mark"] },
+      "flavorText": "This land is watched."
+    },
+    {
+      "id": "storm_ranger",
+      "baseClassId": "ranger",
+      "name": "Storm Ranger",
+      "description": "Lightning answers your arrows. The sky is your weapon.",
+      "tier": 2,
+      "parentSubclassId": "warden",
+      "advanceRequires": { "level": 15, "skillIds": ["trail_ward", "storm_arrow"] },
+      "flavorText": "Thunder follows."
+    },
+    {
+      "id": "stalker",
+      "baseClassId": "ranger",
+      "name": "Stalker",
+      "description": "Silent pursuit. Prey realizes too late they were hunted hours ago.",
+      "tier": 1,
+      "parentSubclassId": null,
+      "advanceRequires": { "level": 5, "skillIds": ["hunters_mark"] },
+      "flavorText": "Always behind you."
+    },
+    {
+      "id": "silent_death",
+      "baseClassId": "ranger",
+      "name": "Silent Death",
+      "description": "You are the forest's judgment. No footprint, no mercy.",
+      "tier": 2,
+      "parentSubclassId": "stalker",
+      "advanceRequires": { "level": 15, "skillIds": ["camouflage", "heartseeker"] },
+      "flavorText": "Not a sound."
+    },
+    {
+      "id": "survivalist",
+      "baseClassId": "ranger",
+      "name": "Survivalist",
+      "description": "The wilderness sustains you. Cities feel like cages.",
+      "tier": 1,
+      "parentSubclassId": null,
+      "advanceRequires": { "level": 5, "skillIds": ["hunters_mark"] },
+      "flavorText": "Nature provides."
+    },
+    {
+      "id": "wild_avatar",
+      "baseClassId": "ranger",
+      "name": "Wild Avatar",
+      "description": "You become the storm, the thorn, the predator. Civilization is a memory.",
+      "tier": 2,
+      "parentSubclassId": "survivalist",
+      "advanceRequires": { "level": 15, "skillIds": ["foragers_gift", "natures_wrath"] },
+      "flavorText": "The wild claims all."
+    }
+  ]
+}

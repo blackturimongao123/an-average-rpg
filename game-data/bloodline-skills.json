@@ -1,0 +1,255 @@
+{
+  "skills": [
+    {
+      "id": "bloodline_root",
+      "name": "Bloodline Root",
+      "description": "The first knot in your family web. All legacy skills stem from here.",
+      "treeScope": "bloodline",
+      "classTags": [],
+      "subclassTags": [],
+      "cost": 0,
+      "requires": [],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "tier": 0
+    },
+    {
+      "id": "ancestral_strength",
+      "name": "Ancestral Strength",
+      "description": "Generations of warriors echo in your muscles.",
+      "treeScope": "bloodline",
+      "classTags": [],
+      "subclassTags": [],
+      "cost": 2,
+      "requires": [
+        "bloodline_root"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -2,
+        "y": 1
+      },
+      "tier": 2
+    },
+    {
+      "id": "iron_will",
+      "name": "Iron Will",
+      "description": "Your line does not break.",
+      "treeScope": "bloodline",
+      "classTags": [],
+      "subclassTags": [],
+      "cost": 2,
+      "requires": [
+        "bloodline_root"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 2,
+        "y": 1
+      },
+      "tier": 2
+    },
+    {
+      "id": "cursed_blood",
+      "name": "Cursed Blood",
+      "description": "Dark gifts run deep. Power at a price.",
+      "treeScope": "bloodline",
+      "classTags": [],
+      "subclassTags": [],
+      "cost": 3,
+      "requires": [
+        "bloodline_root"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 0,
+        "y": 2
+      },
+      "tier": 3
+    },
+    {
+      "id": "noble_lineage",
+      "name": "Noble Lineage",
+      "description": "Courts remember your name.",
+      "treeScope": "bloodline",
+      "classTags": [],
+      "subclassTags": [],
+      "cost": 2,
+      "requires": [
+        "bloodline_root"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -1,
+        "y": 2
+      },
+      "tier": 2
+    },
+    {
+      "id": "scavenger_instinct",
+      "name": "Scavenger Instinct",
+      "description": "The fallen leave gifts for the clever.",
+      "treeScope": "bloodline",
+      "classTags": [],
+      "subclassTags": [],
+      "cost": 2,
+      "requires": [
+        "bloodline_root"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 1,
+        "y": 2
+      },
+      "tier": 2
+    },
+    {
+      "id": "generation_bonus",
+      "name": "Generation Bonus",
+      "description": "Each heir grows stronger than the last.",
+      "treeScope": "bloodline",
+      "classTags": [],
+      "subclassTags": [],
+      "cost": 3,
+      "requires": [
+        "ancestral_strength",
+        "iron_will"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -3,
+        "y": 3
+      },
+      "tier": 3,
+      "specialRequirement": "generation_3"
+    },
+    {
+      "id": "death_gift",
+      "name": "Death Gift",
+      "description": "The dead fund the living.",
+      "treeScope": "bloodline",
+      "classTags": [],
+      "subclassTags": [],
+      "cost": 3,
+      "requires": [
+        "scavenger_instinct"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 2,
+        "y": 3
+      },
+      "tier": 3
+    },
+    {
+      "id": "bank_whispers",
+      "name": "Bank Whispers",
+      "description": "Gold finds your vaults.",
+      "treeScope": "bloodline",
+      "classTags": [],
+      "subclassTags": [],
+      "cost": 3,
+      "requires": [
+        "noble_lineage"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -1,
+        "y": 4
+      },
+      "tier": 3
+    },
+    {
+      "id": "mission_kinship",
+      "name": "Mission Kinship",
+      "description": "The guild favors your house.",
+      "treeScope": "bloodline",
+      "classTags": [],
+      "subclassTags": [],
+      "cost": 3,
+      "requires": [
+        "iron_will"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 1,
+        "y": 4
+      },
+      "tier": 3
+    },
+    {
+      "id": "blood_memory",
+      "name": "Blood Memory",
+      "description": "Echoes of past skills linger faintly.",
+      "treeScope": "bloodline",
+      "classTags": [],
+      "subclassTags": [],
+      "cost": 4,
+      "requires": [
+        "cursed_blood"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 0,
+        "y": 4
+      },
+      "tier": 4
+    },
+    {
+      "id": "echo_of_the_fallen",
+      "name": "Echo of the Fallen",
+      "description": "Three dead heirs whisper combat secrets. Requires 3 fallen kin.",
+      "treeScope": "bloodline",
+      "classTags": [],
+      "subclassTags": [],
+      "cost": 5,
+      "requires": [
+        "death_gift",
+        "generation_bonus"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 0,
+        "y": 5
+      },
+      "tier": 5,
+      "specialRequirement": "fallen_heirs_3"
+    },
+    {
+      "id": "eternal_legacy",
+      "name": "Eternal Legacy",
+      "description": "Your name outlives kingdoms.",
+      "treeScope": "bloodline",
+      "classTags": [],
+      "subclassTags": [],
+      "cost": 6,
+      "requires": [
+        "blood_memory",
+        "mission_kinship",
+        "bank_whispers"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 0,
+        "y": 7
+      },
+      "tier": 6
+    }
+  ]
+}

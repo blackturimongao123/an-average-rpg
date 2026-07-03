@@ -1,0 +1,1642 @@
+{
+  "skills": [
+    {
+      "id": "brawler_fury",
+      "name": "Brawler Fury",
+      "description": "Unleash brutal combos. Strength surges with each hit.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "brawler"
+      ],
+      "cost": 2,
+      "requires": [
+        "power_strike"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 0,
+        "y": -4.3
+      },
+      "tier": 2
+    },
+    {
+      "id": "iron_body",
+      "name": "Iron Body",
+      "description": "Harden your frame. Constitution rises through pain.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "brawler"
+      ],
+      "cost": 3,
+      "requires": [
+        "brawler_fury"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 0,
+        "y": -4.3
+      },
+      "tier": 3
+    },
+    {
+      "id": "iron_fist_sage",
+      "name": "Iron Fist Sage",
+      "description": "Ascended martial perfection. The surprise fist that ends wars.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "martial_artist"
+      ],
+      "cost": 5,
+      "requires": [
+        "iron_body"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 0,
+        "y": -7.9
+      },
+      "tier": 4
+    },
+    {
+      "id": "guardian_stand",
+      "name": "Guardian Stand",
+      "description": "Root yourself. Allies behind you take less damage.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "guardian"
+      ],
+      "cost": 2,
+      "requires": [
+        "shield_wall"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 4.1,
+        "y": -1.3
+      },
+      "tier": 2
+    },
+    {
+      "id": "aegis_pulse",
+      "name": "Aegis Pulse",
+      "description": "Radiate protective energy each round.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "guardian"
+      ],
+      "cost": 3,
+      "requires": [
+        "guardian_stand"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 4.1,
+        "y": -1.3
+      },
+      "tier": 3
+    },
+    {
+      "id": "living_fortress",
+      "name": "Living Fortress",
+      "description": "Become an unstoppable bulwark.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "bulwark_knight"
+      ],
+      "cost": 5,
+      "requires": [
+        "aegis_pulse"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 7.5,
+        "y": -2.4
+      },
+      "tier": 4
+    },
+    {
+      "id": "weapon_flow",
+      "name": "Weapon Flow",
+      "description": "Chain attacks between weapons seamlessly.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "weaponmaster"
+      ],
+      "cost": 2,
+      "requires": [
+        "dual_wield"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 2.5,
+        "y": 3.5
+      },
+      "tier": 2
+    },
+    {
+      "id": "parry_master",
+      "name": "Parry Master",
+      "description": "Turn defense into counterattacks.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "weaponmaster"
+      ],
+      "cost": 3,
+      "requires": [
+        "weapon_flow"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 2.5,
+        "y": 3.5
+      },
+      "tier": 3
+    },
+    {
+      "id": "blade_dance_ascended",
+      "name": "Blade Dance Ascended",
+      "description": "A hurricane of perfect strikes.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "blade_dancer"
+      ],
+      "cost": 5,
+      "requires": [
+        "parry_master"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 4.6,
+        "y": 6.4
+      },
+      "tier": 4
+    },
+    {
+      "id": "war_cry",
+      "name": "War Cry",
+      "description": "Demoralize foes and inspire allies.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "warlord"
+      ],
+      "cost": 2,
+      "requires": [
+        "tactical_mind"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -2.5,
+        "y": 3.5
+      },
+      "tier": 2
+    },
+    {
+      "id": "momentum_crush",
+      "name": "Momentum Crush",
+      "description": "Each victory makes the next strike heavier.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "warlord"
+      ],
+      "cost": 3,
+      "requires": [
+        "war_cry"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -2.5,
+        "y": 3.5
+      },
+      "tier": 3
+    },
+    {
+      "id": "siegebreaker_ascended",
+      "name": "Cataclysm Charge",
+      "description": "Break lines, walls, and wills.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "siegebreaker"
+      ],
+      "cost": 5,
+      "requires": [
+        "momentum_crush"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -4.6,
+        "y": 6.4
+      },
+      "tier": 4
+    },
+    {
+      "id": "paladin_oath",
+      "name": "Paladin's Oath",
+      "description": "Swear holy vengeance. Sword strikes carry divine fire.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": ["paladin"],
+      "originClassTags": ["warrior"],
+      "cost": 2,
+      "requires": ["power_strike"],
+      "blocks": [],
+      "grants": [],
+      "position": { "x": -4.1, "y": -1.3 },
+      "tier": 2
+    },
+    {
+      "id": "holy_strike",
+      "name": "Holy Strike",
+      "description": "A radiant sword blow that burns unholy foes.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": ["paladin"],
+      "originClassTags": ["warrior"],
+      "cost": 3,
+      "requires": ["paladin_oath"],
+      "blocks": [],
+      "grants": [],
+      "position": { "x": -4.1, "y": -1.3 },
+      "tier": 3
+    },
+    {
+      "id": "paladin_aegis",
+      "name": "Paladin Aegis",
+      "description": "Shield and faith combine for superior defense.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": ["paladin"],
+      "originClassTags": ["warrior"],
+      "cost": 3,
+      "requires": ["paladin_oath", "shield_wall"],
+      "blocks": [],
+      "grants": [],
+      "position": { "x": -5.5, "y": 0.5 },
+      "tier": 3
+    },
+    {
+      "id": "paladin_conviction",
+      "name": "Paladin Conviction",
+      "description": "Channel faith through your blade. Healing and holy damage intertwine.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": ["paladin"],
+      "originClassTags": ["priest"],
+      "cost": 2,
+      "requires": ["holy_smite"],
+      "blocks": [],
+      "grants": [],
+      "position": { "x": 2.5, "y": 3.5 },
+      "tier": 2
+    },
+    {
+      "id": "sacred_blade",
+      "name": "Sacred Blade",
+      "description": "Holy damage flows through sword and scripture alike.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": ["paladin"],
+      "originClassTags": ["priest"],
+      "cost": 3,
+      "requires": ["paladin_conviction"],
+      "blocks": [],
+      "grants": [],
+      "position": { "x": 2.5, "y": 3.5 },
+      "tier": 3
+    },
+    {
+      "id": "tome_of_light",
+      "name": "Tome of Light",
+      "description": "Offhand scripture amplifies healing and holy bolts.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": ["paladin"],
+      "originClassTags": ["priest"],
+      "cost": 3,
+      "requires": ["paladin_conviction", "divine_light"],
+      "blocks": [],
+      "grants": [],
+      "position": { "x": 4.0, "y": 2.5 },
+      "tier": 3
+    },
+    {
+      "id": "lay_on_hands",
+      "name": "Lay on Hands",
+      "description": "Limited but reliable healing in the thick of battle.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": ["paladin"],
+      "cost": 2,
+      "requires": ["paladin_oath"],
+      "blocks": [],
+      "grants": [],
+      "position": { "x": -3.0, "y": -2.5 },
+      "tier": 3
+    },
+    {
+      "id": "paladin_ascended_skill",
+      "name": "Paladin Ascended",
+      "description": "Divine wrath incarnate. Undead flee your banner.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": ["paladin_ascended"],
+      "cost": 5,
+      "requires": ["holy_strike"],
+      "blocks": [],
+      "grants": [],
+      "position": { "x": -7.5, "y": -2.4 },
+      "tier": 4
+    },
+    {
+      "id": "paladin_ascended_priest",
+      "name": "Paladin Ascended",
+      "description": "Avatar of divine wrath. Your aura melts unholy steel.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": ["paladin_ascended"],
+      "originClassTags": ["priest"],
+      "cost": 5,
+      "requires": ["sacred_blade"],
+      "blocks": [],
+      "grants": [],
+      "position": { "x": 7.5, "y": -2.4 },
+      "tier": 4
+    },
+    {
+      "id": "lethal_precision",
+      "name": "Lethal Precision",
+      "description": "Critical hits become executions.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "assassin"
+      ],
+      "cost": 2,
+      "requires": [
+        "backstab"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 0,
+        "y": -4.3
+      },
+      "tier": 2
+    },
+    {
+      "id": "vanish",
+      "name": "Vanish",
+      "description": "Disappear after a kill.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "assassin"
+      ],
+      "cost": 3,
+      "requires": [
+        "lethal_precision"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 0,
+        "y": -4.3
+      },
+      "tier": 3
+    },
+    {
+      "id": "ghostblade_ascended",
+      "name": "Ghostblade Ascended",
+      "description": "Death without presence.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "ghostblade"
+      ],
+      "cost": 5,
+      "requires": [
+        "vanish"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 0,
+        "y": -7.9
+      },
+      "tier": 4
+    },
+    {
+      "id": "feint_master",
+      "name": "Feint Master",
+      "description": "Every attack might be a feint.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "trickster"
+      ],
+      "cost": 2,
+      "requires": [
+        "backstab"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 4.1,
+        "y": -1.3
+      },
+      "tier": 2
+    },
+    {
+      "id": "mirror_self",
+      "name": "Mirror Self",
+      "description": "Leave decoys that explode.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "trickster"
+      ],
+      "cost": 3,
+      "requires": [
+        "feint_master"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 4.1,
+        "y": -1.3
+      },
+      "tier": 3
+    },
+    {
+      "id": "grand_illusionist_ascended",
+      "name": "Grand Illusion",
+      "description": "Reality optional.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "grand_illusionist"
+      ],
+      "cost": 5,
+      "requires": [
+        "mirror_self"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 7.5,
+        "y": -2.4
+      },
+      "tier": 4
+    },
+    {
+      "id": "riposte",
+      "name": "Riposte",
+      "description": "Style and deadly counters.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "swashbuckler"
+      ],
+      "cost": 2,
+      "requires": [
+        "dual_wield"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 2.5,
+        "y": 3.5
+      },
+      "tier": 2
+    },
+    {
+      "id": "crowd_pleaser",
+      "name": "Crowd Pleaser",
+      "description": "Charisma fuels combat momentum.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "swashbuckler"
+      ],
+      "cost": 3,
+      "requires": [
+        "riposte"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 2.5,
+        "y": 3.5
+      },
+      "tier": 3
+    },
+    {
+      "id": "sea_devil_ascended",
+      "name": "Sea Devil Ascended",
+      "description": "Salt, steel, storm.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "sea_devil"
+      ],
+      "cost": 5,
+      "requires": [
+        "crowd_pleaser"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 4.6,
+        "y": 6.4
+      },
+      "tier": 4
+    },
+    {
+      "id": "umbral_step",
+      "name": "Umbral Step",
+      "description": "Step through shadows.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "shadow"
+      ],
+      "cost": 2,
+      "requires": [
+        "shadow_dance"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -2.5,
+        "y": 3.5
+      },
+      "tier": 2
+    },
+    {
+      "id": "shadow_bind",
+      "name": "Shadow Bind",
+      "description": "Trap foes in darkness.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "shadow"
+      ],
+      "cost": 3,
+      "requires": [
+        "umbral_step"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -2.5,
+        "y": 3.5
+      },
+      "tier": 3
+    },
+    {
+      "id": "void_walker_ascended",
+      "name": "Void Walker Ascended",
+      "description": "Between worlds, untouchable.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "void_walker"
+      ],
+      "cost": 5,
+      "requires": [
+        "shadow_bind"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -4.6,
+        "y": 6.4
+      },
+      "tier": 4
+    },
+    {
+      "id": "venom_art",
+      "name": "Venom Art",
+      "description": "Craft toxins that bypass armor.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "poisoner"
+      ],
+      "cost": 2,
+      "requires": [
+        "backstab"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -4.1,
+        "y": -1.3
+      },
+      "tier": 2
+    },
+    {
+      "id": "miasma",
+      "name": "Miasma",
+      "description": "Poison clouds follow your steps.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "poisoner"
+      ],
+      "cost": 3,
+      "requires": [
+        "venom_art"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -4.1,
+        "y": -1.3
+      },
+      "tier": 3
+    },
+    {
+      "id": "plague_lord_ascended",
+      "name": "Plague Lord Ascended",
+      "description": "Kingdoms cough and fall.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "plague_lord"
+      ],
+      "cost": 5,
+      "requires": [
+        "miasma"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -7.5,
+        "y": -2.4
+      },
+      "tier": 4
+    },
+    {
+      "id": "immolation",
+      "name": "Immolation",
+      "description": "Burn everything nearby.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "pyromancer"
+      ],
+      "cost": 2,
+      "requires": [
+        "fireball"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 0,
+        "y": -4.3
+      },
+      "tier": 2
+    },
+    {
+      "id": "phoenix_ash",
+      "name": "Phoenix Ash",
+      "description": "Rise from your own flames once.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "pyromancer"
+      ],
+      "cost": 3,
+      "requires": [
+        "immolation"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 0,
+        "y": -4.3
+      },
+      "tier": 3
+    },
+    {
+      "id": "inferno_archon_ascended",
+      "name": "Inferno Archon Ascended",
+      "description": "Sun-touched destruction.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "inferno_archon"
+      ],
+      "cost": 5,
+      "requires": [
+        "phoenix_ash"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 0,
+        "y": -7.9
+      },
+      "tier": 4
+    },
+    {
+      "id": "absolute_zero",
+      "name": "Absolute Zero",
+      "description": "Freeze souls, not just flesh.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "cryomancer"
+      ],
+      "cost": 2,
+      "requires": [
+        "frost_mastery"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 4.1,
+        "y": -1.3
+      },
+      "tier": 2
+    },
+    {
+      "id": "ice_prison",
+      "name": "Ice Prison",
+      "description": "Encase foes in eternal frost.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "cryomancer"
+      ],
+      "cost": 3,
+      "requires": [
+        "absolute_zero"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 4.1,
+        "y": -1.3
+      },
+      "tier": 3
+    },
+    {
+      "id": "frost_sovereign_ascended",
+      "name": "Frost Sovereign Ascended",
+      "description": "Winter eternal.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "frost_sovereign"
+      ],
+      "cost": 5,
+      "requires": [
+        "ice_prison"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 7.5,
+        "y": -2.4
+      },
+      "tier": 4
+    },
+    {
+      "id": "arcane_overload",
+      "name": "Arcane Overload",
+      "description": "Push spells past safe limits.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "arcanist"
+      ],
+      "cost": 2,
+      "requires": [
+        "arcane_bolt"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 2.5,
+        "y": 3.5
+      },
+      "tier": 2
+    },
+    {
+      "id": "rune_weave",
+      "name": "Rune Weave",
+      "description": "Layer spells into combos.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "arcanist"
+      ],
+      "cost": 3,
+      "requires": [
+        "arcane_overload"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 2.5,
+        "y": 3.5
+      },
+      "tier": 3
+    },
+    {
+      "id": "void_scholar_ascended",
+      "name": "Void Scholar Ascended",
+      "description": "Reality optional.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "void_scholar"
+      ],
+      "cost": 5,
+      "requires": [
+        "rune_weave"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 4.6,
+        "y": 6.4
+      },
+      "tier": 4
+    },
+    {
+      "id": "bound_familiar",
+      "name": "Bound Familiar",
+      "description": "A loyal otherworldly ally.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "summoner"
+      ],
+      "cost": 2,
+      "requires": [
+        "arcane_bolt"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -2.5,
+        "y": 3.5
+      },
+      "tier": 2
+    },
+    {
+      "id": "legion_call",
+      "name": "Legion Call",
+      "description": "Summon a host briefly.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "summoner"
+      ],
+      "cost": 3,
+      "requires": [
+        "bound_familiar"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -2.5,
+        "y": 3.5
+      },
+      "tier": 3
+    },
+    {
+      "id": "pact_master_ascended",
+      "name": "Pact Master Ascended",
+      "description": "Every entity owes you.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "pact_master"
+      ],
+      "cost": 5,
+      "requires": [
+        "legion_call"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -4.6,
+        "y": 6.4
+      },
+      "tier": 4
+    },
+    {
+      "id": "artifact_bond",
+      "name": "Artifact Bond",
+      "description": "Enchant gear permanently.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "enchanter"
+      ],
+      "cost": 2,
+      "requires": [
+        "arcane_bolt"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -4.1,
+        "y": -1.3
+      },
+      "tier": 2
+    },
+    {
+      "id": "sigil_storm",
+      "name": "Sigil Storm",
+      "description": "Cover the field in runes.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "enchanter"
+      ],
+      "cost": 3,
+      "requires": [
+        "artifact_bond"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -4.1,
+        "y": -1.3
+      },
+      "tier": 3
+    },
+    {
+      "id": "rune_emperor_ascended",
+      "name": "Rune Emperor Ascended",
+      "description": "Walking apocalypse of symbols.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "rune_emperor"
+      ],
+      "cost": 5,
+      "requires": [
+        "sigil_storm"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -7.5,
+        "y": -2.4
+      },
+      "tier": 4
+    },
+    {
+      "id": "mass_benediction",
+      "name": "Mass Benediction",
+      "description": "Bless the whole party.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "cleric"
+      ],
+      "cost": 2,
+      "requires": [
+        "divine_light"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 0,
+        "y": -4.3
+      },
+      "tier": 2
+    },
+    {
+      "id": "resurrection_touch",
+      "name": "Resurrection Touch",
+      "description": "Snatch allies from death once.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "cleric"
+      ],
+      "cost": 3,
+      "requires": [
+        "mass_benediction"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 0,
+        "y": -4.3
+      },
+      "tier": 3
+    },
+    {
+      "id": "high_cleric_ascended",
+      "name": "High Cleric Ascended",
+      "description": "Miracles made routine.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "high_cleric"
+      ],
+      "cost": 5,
+      "requires": [
+        "resurrection_touch"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 0,
+        "y": -7.9
+      },
+      "tier": 4
+    },
+    {
+      "id": "purge",
+      "name": "Purge",
+      "description": "Burn corruption from the land.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "inquisitor"
+      ],
+      "cost": 2,
+      "requires": [
+        "holy_smite"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 4.1,
+        "y": -1.3
+      },
+      "tier": 2
+    },
+    {
+      "id": "sanctified_chain",
+      "name": "Sanctified Chain",
+      "description": "Holy damage chains between sinners.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "inquisitor"
+      ],
+      "cost": 3,
+      "requires": [
+        "purge"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 4.1,
+        "y": -1.3
+      },
+      "tier": 3
+    },
+    {
+      "id": "witch_hunter_ascended",
+      "name": "Witch Hunter Ascended",
+      "description": "No evil hides.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "witch_hunter"
+      ],
+      "cost": 5,
+      "requires": [
+        "sanctified_chain"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 7.5,
+        "y": -2.4
+      },
+      "tier": 4
+    },
+    {
+      "id": "traveling_melody",
+      "name": "Traveling Melody",
+      "description": "Strum your guitar; a note becomes a sonic blade.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": ["bard"],
+      "cost": 2,
+      "requires": ["divine_light"],
+      "blocks": [],
+      "grants": [],
+      "position": { "x": 5.5, "y": 1.5 },
+      "tier": 2
+    },
+    {
+      "id": "rallying_song",
+      "name": "Rallying Song",
+      "description": "Buff allies with an uplifting chorus.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": ["bard"],
+      "cost": 3,
+      "requires": ["traveling_melody"],
+      "blocks": [],
+      "grants": [],
+      "position": { "x": 5.5, "y": 1.5 },
+      "tier": 3
+    },
+    {
+      "id": "discordant_chord",
+      "name": "Discordant Chord",
+      "description": "A jarring note that debilitates foes.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": ["bard"],
+      "cost": 3,
+      "requires": ["traveling_melody"],
+      "blocks": [],
+      "grants": [],
+      "position": { "x": 6.5, "y": 0.5 },
+      "tier": 3
+    },
+    {
+      "id": "maestro_finale",
+      "name": "Maestro Finale",
+      "description": "Your performance reshapes the tide of battle.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": ["bard_maestro"],
+      "cost": 5,
+      "requires": ["rallying_song"],
+      "blocks": [],
+      "grants": [],
+      "position": { "x": 8.0, "y": 2.0 },
+      "tier": 4
+    },
+    {
+      "id": "prophecy",
+      "name": "Prophecy",
+      "description": "See the next enemy action.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "oracle"
+      ],
+      "cost": 2,
+      "requires": [
+        "divine_light"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -2.5,
+        "y": 3.5
+      },
+      "tier": 2
+    },
+    {
+      "id": "threads_of_fate",
+      "name": "Threads of Fate",
+      "description": "Nudge destiny subtly.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "oracle"
+      ],
+      "cost": 3,
+      "requires": [
+        "prophecy"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -2.5,
+        "y": 3.5
+      },
+      "tier": 3
+    },
+    {
+      "id": "fate_weaver_ascended",
+      "name": "Fate Weaver Ascended",
+      "description": "Rewrite outcomes.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "fate_weaver"
+      ],
+      "cost": 5,
+      "requires": [
+        "threads_of_fate"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -4.6,
+        "y": 6.4
+      },
+      "tier": 4
+    },
+    {
+      "id": "banish",
+      "name": "Banish",
+      "description": "Expel spirits violently.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "exorcist"
+      ],
+      "cost": 2,
+      "requires": [
+        "death_sense"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -4.1,
+        "y": -1.3
+      },
+      "tier": 2
+    },
+    {
+      "id": "spirit_chain",
+      "name": "Spirit Chain",
+      "description": "Bind ghosts to serve.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "exorcist"
+      ],
+      "cost": 3,
+      "requires": [
+        "banish"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -4.1,
+        "y": -1.3
+      },
+      "tier": 3
+    },
+    {
+      "id": "soul_binder_ascended",
+      "name": "Soul Binder Ascended",
+      "description": "Master of the dead.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "soul_binder"
+      ],
+      "cost": 5,
+      "requires": [
+        "spirit_chain"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -7.5,
+        "y": -2.4
+      },
+      "tier": 4
+    },
+    {
+      "id": "snipers_focus",
+      "name": "Sniper Focus",
+      "description": "Extreme range crits.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "marksman"
+      ],
+      "cost": 2,
+      "requires": [
+        "hunters_mark"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 0,
+        "y": -4.3
+      },
+      "tier": 2
+    },
+    {
+      "id": "piercing_shot",
+      "name": "Piercing Shot",
+      "description": "Arrows pass through lines.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "marksman"
+      ],
+      "cost": 3,
+      "requires": [
+        "snipers_focus"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 0,
+        "y": -4.3
+      },
+      "tier": 3
+    },
+    {
+      "id": "deadeye_ascended",
+      "name": "Deadeye Ascended",
+      "description": "Never miss.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "deadeye"
+      ],
+      "cost": 5,
+      "requires": [
+        "piercing_shot"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 0,
+        "y": -7.9
+      },
+      "tier": 4
+    },
+    {
+      "id": "pack_hunt",
+      "name": "Pack Hunt",
+      "description": "Coordinate beast attacks.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "beastmaster"
+      ],
+      "cost": 2,
+      "requires": [
+        "hunters_mark"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 4.1,
+        "y": -1.3
+      },
+      "tier": 2
+    },
+    {
+      "id": "primal_bond",
+      "name": "Primal Bond",
+      "description": "Share senses with beasts.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "beastmaster"
+      ],
+      "cost": 3,
+      "requires": [
+        "pack_hunt"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 4.1,
+        "y": -1.3
+      },
+      "tier": 3
+    },
+    {
+      "id": "alpha_prime_ascended",
+      "name": "Alpha Prime Ascended",
+      "description": "King of the wild.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "alpha_prime"
+      ],
+      "cost": 5,
+      "requires": [
+        "primal_bond"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 7.5,
+        "y": -2.4
+      },
+      "tier": 4
+    },
+    {
+      "id": "trail_ward",
+      "name": "Trail Ward",
+      "description": "Traps protect your paths.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "warden"
+      ],
+      "cost": 2,
+      "requires": [
+        "wilderness_survival"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 2.5,
+        "y": 3.5
+      },
+      "tier": 2
+    },
+    {
+      "id": "storm_arrow",
+      "name": "Storm Arrow",
+      "description": "Lightning-laced shots.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "warden"
+      ],
+      "cost": 3,
+      "requires": [
+        "trail_ward"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 2.5,
+        "y": 3.5
+      },
+      "tier": 3
+    },
+    {
+      "id": "storm_ranger_ascended",
+      "name": "Storm Ranger Ascended",
+      "description": "Sky-bowed fury.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "storm_ranger"
+      ],
+      "cost": 5,
+      "requires": [
+        "storm_arrow"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 4.6,
+        "y": 6.4
+      },
+      "tier": 4
+    },
+    {
+      "id": "camouflage",
+      "name": "Camouflage",
+      "description": "Vanish into terrain.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "stalker"
+      ],
+      "cost": 2,
+      "requires": [
+        "keen_eye"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -2.5,
+        "y": 3.5
+      },
+      "tier": 2
+    },
+    {
+      "id": "heartseeker",
+      "name": "Heartseeker",
+      "description": "Arrows find vitals.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "stalker"
+      ],
+      "cost": 3,
+      "requires": [
+        "camouflage"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -2.5,
+        "y": 3.5
+      },
+      "tier": 3
+    },
+    {
+      "id": "silent_death_ascended",
+      "name": "Silent Death Ascended",
+      "description": "Forest judgment.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "silent_death"
+      ],
+      "cost": 5,
+      "requires": [
+        "heartseeker"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -4.6,
+        "y": 6.4
+      },
+      "tier": 4
+    },
+    {
+      "id": "foragers_gift",
+      "name": "Forager Gift",
+      "description": "The land feeds you.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "survivalist"
+      ],
+      "cost": 2,
+      "requires": [
+        "wilderness_survival"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -4.1,
+        "y": -1.3
+      },
+      "tier": 2
+    },
+    {
+      "id": "natures_wrath",
+      "name": "Nature Wrath",
+      "description": "Vines and thorns obey.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "survivalist"
+      ],
+      "cost": 3,
+      "requires": [
+        "foragers_gift"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -4.1,
+        "y": -1.3
+      },
+      "tier": 3
+    },
+    {
+      "id": "wild_avatar_ascended",
+      "name": "Wild Avatar Ascended",
+      "description": "Become the storm.",
+      "treeScope": "character",
+      "classTags": [],
+      "subclassTags": [
+        "wild_avatar"
+      ],
+      "cost": 5,
+      "requires": [
+        "natures_wrath"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -7.5,
+        "y": -2.4
+      },
+      "tier": 4
+    }
+  ]
+}

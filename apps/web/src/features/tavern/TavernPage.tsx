@@ -1,0 +1,359 @@
+import { useState } from "react";
+import { useGameStore } from "@/stores/gameStore";
+import { BusyActivityBlock, useIsHeirBusyOnJob } from "@/components/game/BusyActivityBlock";
+import { useAuthStore } from "@/stores/authStore";
+import { useMissionBoard } from "@/hooks/useMissionBoard";
+import {
+  acceptPlayerMission,
+  advancePlayerMission,
+} from "@/firebase/missionBoard";
+import { getFirebaseErrorMessage } from "@/lib/firebaseErrors";
+import {
+  formatMissionCountdown,
+  getMissionTemplate,
+  normalizeAdventurerRank,
+} from "@/lib/missions";
+import {
+  ADVENTURER_RANK_XP_THRESHOLDS,
+  DIFFICULTY_RANK_COLORS,
+  getRankXpToNextRank,
+} from "@bloodline/shared/constants";
+import type { AdventurerRank } from "@bloodline/shared/types";
+import {
+  Beer,
+  ClipboardList,
+  Clock,
+  Coins,
+  Medal,
+  Scroll,
+  Star,
+  Swords,
+} from "lucide-react";
+
+import itemsData from "@game-data/items.json";
+
+const items = itemsData.items as Array<{ id: string; name: string }>;
+
+function getItemName(itemId: string): string {
+  return items.find((item) => item.id === itemId)?.name ?? itemId;
+}
+
+function DifficultyBadge({ difficulty }: { difficulty: AdventurerRank }) {
+  return (
+    <span
+      className="text-xs font-bold px-2 py-1 rounded border"
+      style={{
+        color: DIFFICULTY_RANK_COLORS[difficulty],
+        borderColor: `${DIFFICULTY_RANK_COLORS[difficulty]}55`,
+        backgroundColor: `${DIFFICULTY_RANK_COLORS[difficulty]}15`,
+      }}
+    >
+      {difficulty}-Rank
+    </span>
+  );
+}
+
+function RewardList({ rewards }: { rewards: { gold: number; xp: number; rankXp: number; items: string[] } }) {
+  return (
+    <div className="flex flex-wrap gap-3 text-sm mt-3">
+      {rewards.gold > 0 && (
+        <span className="flex items-center gap-1 text-gold">
+          <Coins className="w-4 h-4" />
+          {rewards.gold} gold
+        </span>
+      )}
+      {rewards.xp > 0 && (
+        <span className="flex items-center gap-1 text-blue-400">
+          <Star className="w-4 h-4" />
+          {rewards.xp} XP
+        </span>
+      )}
+      {rewards.rankXp > 0 && (
+        <span className="flex items-center gap-1 text-purple-400">
+          <Medal className="w-4 h-4" />
+          {rewards.rankXp} Rank XP
+        </span>
+      )}
+      {rewards.items.map((itemId) => (
+        <span key={itemId} className="text-muted-foreground">
+          + {getItemName(itemId)}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+export function TavernPage() {
+  const { user } = useAuthStore();
+  const {
+    lineage,
+    heir,
+    missionBoard,
+    setMissionBoard,
+    setActiveMission,
+    updateHeirGold,
+    updateHeirXp,
+    updateHeirLevel,
+    updateAdventurerRank,
+    addItemToInventory,
+  } = useGameStore();
+  const isBusyOnJob = useIsHeirBusyOnJob();
+  const { loading: boardLoading, countdownMs, refreshBoard } = useMissionBoard();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [completion, setCompletion] = useState<{
+    rewards: { gold: number; xp: number; rankXp: number; items: string[] };
+    rankUp: { rank: string; rankXp: number } | null;
+  } | null>(null);
+
+  const adventurerRank = (lineage?.adventurerRank ?? "F") as AdventurerRank;
+  const adventurerRankXp = lineage?.adventurerRankXp ?? 0;
+  const rankXpToNext = getRankXpToNextRank(adventurerRank);
+  const rankProgress =
+    rankXpToNext !== null
+      ? Math.min(100, (adventurerRankXp / rankXpToNext) * 100)
+      : 100;
+
+  const handleAcceptMission = async (slotIndex: number) => {
+    if (!lineage || !heir || !user) return;
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await acceptPlayerMission(user.uid, lineage.id, heir.id, slotIndex);
+      setActiveMission(response.activeMission);
+      setMissionBoard(response.board);
+    } catch (err: unknown) {
+      setError(getFirebaseErrorMessage(err));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAdvanceMission = async () => {
+    if (!lineage || !heir || !user || !heir.activeMission) return;
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await advancePlayerMission(user.uid, lineage.id, heir.id);
+
+      if (response.completed && response.rewards) {
+        setActiveMission(null);
+        setCompletion({
+          rewards: response.rewards,
+          rankUp: response.rankUp,
+        });
+        updateHeirGold(response.heirGoldAfter!);
+        updateHeirXp(response.heirXpAfter!);
+        if (response.leveledUp) {
+          updateHeirLevel(response.heirLevelAfter!);
+        }
+        updateAdventurerRank(
+          normalizeAdventurerRank(response.adventurerRank),
+          response.adventurerRankXp!
+        );
+        response.rewards.items.forEach((itemId) => addItemToInventory(itemId));
+        await refreshBoard();
+      } else if (response.activeMission) {
+        setActiveMission(response.activeMission);
+      }
+    } catch (err: unknown) {
+      setError(getFirebaseErrorMessage(err));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!heir) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <p className="text-muted-foreground">Create an heir to visit the tavern</p>
+      </div>
+    );
+  }
+
+  const activeMission = heir.activeMission;
+  const activeTemplate = activeMission ? getMissionTemplate(activeMission.missionId) : null;
+  const currentStepText =
+    activeMission && activeTemplate
+      ? activeTemplate.campaign.steps[activeMission.currentStep]?.text
+      : null;
+  const isFinalStep =
+    activeMission && activeMission.currentStep >= activeMission.totalSteps - 1;
+
+  return (
+    <div className="max-w-5xl mx-auto">
+      <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
+        <div className="flex items-center gap-3">
+          <Beer className="w-8 h-8 text-gold" />
+          <div>
+            <h1 className="font-display text-2xl font-bold">The Weary Traveler Tavern</h1>
+            <p className="text-muted-foreground">Guild mission board — pick a contract and begin your adventure</p>
+          </div>
+        </div>
+
+        <div className="card px-4 py-3 min-w-[220px]">
+          <div className="flex items-center justify-between gap-3 mb-2">
+            <span className="text-sm text-muted-foreground">Adventurer Rank</span>
+            <DifficultyBadge difficulty={adventurerRank} />
+          </div>
+          {rankXpToNext !== null ? (
+            <>
+              <div className="w-full h-1.5 bg-secondary rounded-full overflow-hidden mb-1">
+                <div
+                  className="h-full bg-purple-500 transition-all"
+                  style={{ width: `${rankProgress}%` }}
+                />
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {adventurerRankXp} / {rankXpToNext} Rank XP
+              </p>
+            </>
+          ) : (
+            <p className="text-xs text-gold">Maximum rank achieved</p>
+          )}
+        </div>
+      </div>
+
+      {isBusyOnJob && <BusyActivityBlock activityName="tavern" />}
+
+      {error && (
+        <div className="p-3 rounded-md bg-destructive/20 text-destructive text-sm mb-4">
+          {error}
+        </div>
+      )}
+
+      {completion ? (
+        <div className="card p-6 animate-fade-in">
+          <h2 className="font-display text-xl font-semibold mb-2">Mission Complete</h2>
+          <p className="text-muted-foreground mb-4">The guild recognizes your success.</p>
+          <RewardList rewards={completion.rewards} />
+          {completion.rankUp && (
+            <div className="mt-4 p-4 rounded-md bg-purple-500/10 border border-purple-500/30">
+              <p className="font-semibold text-purple-300">
+                Rank promoted to {completion.rankUp.rank}!
+              </p>
+            </div>
+          )}
+          <button onClick={() => setCompletion(null)} className="btn-primary mt-6">
+            Back to Mission Board
+          </button>
+        </div>
+      ) : activeMission && activeTemplate ? (
+        <div className="card p-6 animate-fade-in border-primary/30">
+          <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
+            <div>
+              <p className="text-sm text-primary mb-1">Active Campaign</p>
+              <h2 className="font-display text-xl font-semibold">{activeMission.missionName}</h2>
+            </div>
+            <DifficultyBadge difficulty={activeMission.difficulty} />
+          </div>
+
+          <p className="text-muted-foreground mb-6">{activeTemplate.description}</p>
+
+          <div className="mb-4">
+            <div className="flex items-center justify-between text-sm mb-2">
+              <span className="text-muted-foreground">Progress</span>
+              <span>
+                Step {activeMission.currentStep + 1} / {activeMission.totalSteps}
+              </span>
+            </div>
+            <div className="w-full h-2 bg-secondary rounded-full overflow-hidden">
+              <div
+                className="h-full bg-primary transition-all"
+                style={{
+                  width: `${((activeMission.currentStep + 1) / activeMission.totalSteps) * 100}%`,
+                }}
+              />
+            </div>
+          </div>
+
+          {currentStepText && (
+            <div className="p-4 rounded-md bg-secondary/40 mb-6">
+              <Scroll className="w-5 h-5 text-gold mb-2" />
+              <p className="leading-relaxed">{currentStepText}</p>
+            </div>
+          )}
+
+          <div className="mb-6">
+            <p className="text-sm font-semibold mb-2">Contract Rewards</p>
+            <RewardList rewards={activeTemplate.rewards} />
+          </div>
+
+          <button
+            onClick={handleAdvanceMission}
+            disabled={loading}
+            className="btn-primary flex items-center gap-2"
+          >
+            <Swords className="w-4 h-4" />
+            {isFinalStep ? "Complete Mission" : "Continue Adventure"}
+          </button>
+        </div>
+      ) : isBusyOnJob ? null : (
+        <div>
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <div className="flex items-center gap-2">
+              <ClipboardList className="w-5 h-5 text-gold" />
+              <h2 className="font-display text-lg font-semibold">Mission Board</h2>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Clock className="w-4 h-4" />
+              Board refreshes in {formatMissionCountdown(countdownMs)}
+            </div>
+          </div>
+
+          <p className="text-sm text-muted-foreground mb-4">
+            Contracts are tailored to your Adventurer Rank ({adventurerRank}). Unclaimed missions
+            reroll every hour.
+          </p>
+
+          {boardLoading && !missionBoard ? (
+            <p className="text-muted-foreground">Loading mission board...</p>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2">
+              {(missionBoard?.slots ?? []).map((slot) => {
+                if (slot.status !== "available" || !slot.missionId) {
+                  return (
+                    <div
+                      key={slot.slotIndex}
+                      className="card p-4 border-dashed opacity-50 min-h-[160px] flex items-center justify-center"
+                    >
+                      <p className="text-sm text-muted-foreground">Empty slot — refreshes on reroll</p>
+                    </div>
+                  );
+                }
+
+                const mission = getMissionTemplate(slot.missionId);
+                if (!mission) {
+                  return null;
+                }
+
+                return (
+                  <div key={slot.slotIndex} className="card p-4 hover:border-primary/40 transition-colors">
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <h3 className="font-semibold">{mission.name}</h3>
+                      <DifficultyBadge difficulty={mission.difficulty} />
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-1">{mission.description}</p>
+                    <p className="text-xs text-muted-foreground capitalize">{mission.type} mission</p>
+                    <RewardList rewards={mission.rewards} />
+                    <button
+                      onClick={() => handleAcceptMission(slot.slotIndex)}
+                      disabled={loading}
+                      className="btn-primary w-full mt-4"
+                    >
+                      Accept Mission
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}

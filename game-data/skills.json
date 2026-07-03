@@ -1,0 +1,749 @@
+{
+  "skills": [
+    {
+      "id": "basic_combat",
+      "name": "Basic Combat",
+      "description": "Fundamental combat training. The foundation upon which all martial skills are built.",
+      "classTags": [],
+      "cost": 0,
+      "requires": [],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "tier": 0,
+      "treeScope": "character",
+      "subclassTags": []
+    },
+    {
+      "id": "shield_wall",
+      "name": "Shield Wall",
+      "description": "A defensive stance that significantly reduces incoming damage. Cannot be used with dual wielding.",
+      "classTags": [
+        "warrior",
+        "priest"
+      ],
+      "cost": 2,
+      "requires": [
+        "basic_combat"
+      ],
+      "blocks": [
+        "dual_wield"
+      ],
+      "grants": [
+        {
+          "id": "shield_wall_buff",
+          "name": "Shield Wall",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "constitution",
+              "type": "percent",
+              "value": 15
+            }
+          ]
+        }
+      ],
+      "position": {
+        "x": -2,
+        "y": 1
+      },
+      "tier": 1,
+      "treeScope": "character",
+      "subclassTags": []
+    },
+    {
+      "id": "dual_wield",
+      "name": "Dual Wield",
+      "description": "Wield a weapon in each hand for increased attack speed. Cannot use shields.",
+      "classTags": [
+        "rogue",
+        "warrior"
+      ],
+      "cost": 2,
+      "requires": [
+        "basic_combat"
+      ],
+      "blocks": [
+        "shield_wall"
+      ],
+      "grants": [
+        {
+          "id": "dual_wield_buff",
+          "name": "Twin Blades",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "dexterity",
+              "type": "percent",
+              "value": 10
+            }
+          ]
+        }
+      ],
+      "position": {
+        "x": 2,
+        "y": 1
+      },
+      "tier": 1,
+      "treeScope": "character",
+      "subclassTags": []
+    },
+    {
+      "id": "power_strike",
+      "name": "Power Strike",
+      "description": "A devastating heavy attack that deals bonus damage based on strength.",
+      "classTags": [
+        "warrior"
+      ],
+      "cost": 3,
+      "requires": [
+        "basic_combat"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": 0,
+        "y": 2
+      },
+      "tier": 1,
+      "treeScope": "character",
+      "subclassTags": []
+    },
+    {
+      "id": "backstab",
+      "name": "Backstab",
+      "description": "Strike from the shadows for massive critical damage. Core rogue technique.",
+      "classTags": [
+        "rogue"
+      ],
+      "cost": 2,
+      "requires": [
+        "basic_combat"
+      ],
+      "blocks": [],
+      "grants": [
+        {
+          "id": "backstab_crit",
+          "name": "Assassin's Edge",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "luck",
+              "type": "flat",
+              "value": 3
+            }
+          ]
+        }
+      ],
+      "position": {
+        "x": 3,
+        "y": 2
+      },
+      "tier": 1,
+      "treeScope": "character",
+      "subclassTags": []
+    },
+    {
+      "id": "hunters_mark",
+      "name": "Hunter's Mark",
+      "description": "Mark your prey and strike with precision. Core ranger technique.",
+      "classTags": [
+        "ranger"
+      ],
+      "cost": 2,
+      "requires": [
+        "basic_combat"
+      ],
+      "blocks": [],
+      "grants": [
+        {
+          "id": "hunters_focus",
+          "name": "Hunter's Focus",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "dexterity",
+              "type": "flat",
+              "value": 2
+            }
+          ]
+        }
+      ],
+      "position": {
+        "x": 4,
+        "y": 2
+      },
+      "tier": 1,
+      "treeScope": "character",
+      "subclassTags": []
+    },
+    {
+      "id": "arcane_bolt",
+      "name": "Arcane Bolt",
+      "description": "Channel pure arcane energy into a damaging projectile. Basic mage attack.",
+      "classTags": [
+        "mage"
+      ],
+      "cost": 2,
+      "requires": [
+        "basic_combat"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -3,
+        "y": 2
+      },
+      "tier": 1,
+      "treeScope": "character",
+      "subclassTags": []
+    },
+    {
+      "id": "divine_light",
+      "name": "Divine Light",
+      "description": "Call upon holy power to smite enemies and heal wounds.",
+      "classTags": [
+        "priest"
+      ],
+      "cost": 2,
+      "requires": [
+        "basic_combat"
+      ],
+      "blocks": [],
+      "grants": [
+        {
+          "id": "divine_favor",
+          "name": "Divine Favor",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "faith",
+              "type": "flat",
+              "value": 2
+            }
+          ]
+        }
+      ],
+      "position": {
+        "x": -4,
+        "y": 3
+      },
+      "tier": 1,
+      "treeScope": "character",
+      "subclassTags": []
+    },
+    {
+      "id": "iron_stomach",
+      "name": "Iron Stomach",
+      "description": "Resist poison and disease. What doesn't kill you makes you stronger.",
+      "classTags": [],
+      "cost": 2,
+      "requires": [
+        "basic_combat"
+      ],
+      "blocks": [],
+      "grants": [
+        {
+          "id": "poison_resist",
+          "name": "Poison Resistance",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "constitution",
+              "type": "flat",
+              "value": 3
+            }
+          ]
+        }
+      ],
+      "position": {
+        "x": 1,
+        "y": 3
+      },
+      "tier": 1,
+      "treeScope": "character",
+      "subclassTags": []
+    },
+    {
+      "id": "ancient_knowledge",
+      "name": "Ancient Knowledge",
+      "description": "Unlocked through scribe work. Grants insight into forgotten lore.",
+      "classTags": [],
+      "cost": 3,
+      "requires": [],
+      "blocks": [],
+      "grants": [
+        {
+          "id": "lore_insight",
+          "name": "Lore Insight",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "intelligence",
+              "type": "flat",
+              "value": 2
+            }
+          ]
+        }
+      ],
+      "position": {
+        "x": -5,
+        "y": 4
+      },
+      "tier": 2,
+      "jobRequirement": {
+        "jobId": "scribe",
+        "level": 3
+      },
+      "treeScope": "character",
+      "subclassTags": []
+    },
+    {
+      "id": "death_sense",
+      "name": "Death Sense",
+      "description": "Unlocked through gravekeeper work. Sense the presence of undead and spirits.",
+      "classTags": [],
+      "cost": 3,
+      "requires": [],
+      "blocks": [],
+      "grants": [
+        {
+          "id": "death_awareness",
+          "name": "Death Awareness",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "faith",
+              "type": "flat",
+              "value": 2
+            }
+          ]
+        }
+      ],
+      "position": {
+        "x": 5,
+        "y": 4
+      },
+      "tier": 2,
+      "jobRequirement": {
+        "jobId": "gravekeeper",
+        "level": 3
+      },
+      "treeScope": "character",
+      "subclassTags": []
+    },
+    {
+      "id": "keen_eye",
+      "name": "Keen Eye",
+      "description": "Unlocked through trail warden work. Spot danger and opportunity from afar.",
+      "classTags": [],
+      "cost": 3,
+      "requires": [],
+      "blocks": [],
+      "grants": [
+        {
+          "id": "keen_eye_buff",
+          "name": "Keen Eye",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "luck",
+              "type": "flat",
+              "value": 2
+            }
+          ]
+        }
+      ],
+      "position": {
+        "x": 6,
+        "y": 4
+      },
+      "tier": 2,
+      "jobRequirement": {
+        "jobId": "trail_warden",
+        "level": 3
+      },
+      "treeScope": "character",
+      "subclassTags": []
+    },
+    {
+      "id": "wilderness_survival",
+      "name": "Wilderness Survival",
+      "description": "Unlocked through trail warden work. Endure harsh conditions and long journeys.",
+      "classTags": [],
+      "cost": 3,
+      "requires": [],
+      "blocks": [],
+      "grants": [
+        {
+          "id": "wilderness_hardy",
+          "name": "Trail Hardy",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "constitution",
+              "type": "flat",
+              "value": 2
+            }
+          ]
+        }
+      ],
+      "position": {
+        "x": 7,
+        "y": 4
+      },
+      "tier": 2,
+      "jobRequirement": {
+        "jobId": "trail_warden",
+        "level": 3
+      },
+      "treeScope": "character",
+      "subclassTags": []
+    },
+    {
+      "id": "berserker_rage",
+      "name": "Berserker Rage",
+      "description": "Enter a battle frenzy, gaining massive strength but reduced defense.",
+      "classTags": [
+        "warrior"
+      ],
+      "cost": 4,
+      "requires": [
+        "power_strike"
+      ],
+      "blocks": [
+        "tactical_mind"
+      ],
+      "grants": [
+        {
+          "id": "rage_buff",
+          "name": "Berserker",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "strength",
+              "type": "percent",
+              "value": 25
+            },
+            {
+              "stat": "constitution",
+              "type": "percent",
+              "value": -10
+            }
+          ]
+        }
+      ],
+      "position": {
+        "x": 0,
+        "y": 4
+      },
+      "tier": 2,
+      "treeScope": "character",
+      "subclassTags": []
+    },
+    {
+      "id": "tactical_mind",
+      "name": "Tactical Mind",
+      "description": "Fight with precision and strategy. Increased critical chance and reduced damage taken.",
+      "classTags": [
+        "warrior",
+        "rogue"
+      ],
+      "cost": 4,
+      "requires": [
+        "basic_combat"
+      ],
+      "blocks": [
+        "berserker_rage"
+      ],
+      "grants": [
+        {
+          "id": "tactics_buff",
+          "name": "Tactician",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "luck",
+              "type": "flat",
+              "value": 5
+            },
+            {
+              "stat": "intelligence",
+              "type": "flat",
+              "value": 2
+            }
+          ]
+        }
+      ],
+      "position": {
+        "x": 2,
+        "y": 4
+      },
+      "tier": 2,
+      "treeScope": "character",
+      "subclassTags": []
+    },
+    {
+      "id": "shadow_dance",
+      "name": "Shadow Dance",
+      "description": "Move like a shadow, dramatically increasing evasion and sneak attack damage.",
+      "classTags": [
+        "rogue"
+      ],
+      "cost": 4,
+      "requires": [
+        "backstab",
+        "dual_wield"
+      ],
+      "blocks": [],
+      "grants": [
+        {
+          "id": "shadow_dancer",
+          "name": "Shadow Dancer",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "dexterity",
+              "type": "percent",
+              "value": 20
+            }
+          ]
+        }
+      ],
+      "position": {
+        "x": 4,
+        "y": 5
+      },
+      "tier": 3,
+      "treeScope": "character",
+      "subclassTags": []
+    },
+    {
+      "id": "fireball",
+      "name": "Fireball",
+      "description": "Conjure a devastating ball of fire that explodes on impact.",
+      "classTags": [
+        "mage"
+      ],
+      "cost": 4,
+      "requires": [
+        "arcane_bolt"
+      ],
+      "blocks": [
+        "frost_mastery"
+      ],
+      "grants": [],
+      "position": {
+        "x": -3,
+        "y": 5
+      },
+      "tier": 2,
+      "treeScope": "character",
+      "subclassTags": []
+    },
+    {
+      "id": "frost_mastery",
+      "name": "Frost Mastery",
+      "description": "Command the cold, slowing enemies and freezing them in place.",
+      "classTags": [
+        "mage"
+      ],
+      "cost": 4,
+      "requires": [
+        "arcane_bolt"
+      ],
+      "blocks": [
+        "fireball"
+      ],
+      "grants": [
+        {
+          "id": "frost_affinity",
+          "name": "Frost Affinity",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "intelligence",
+              "type": "flat",
+              "value": 3
+            }
+          ]
+        }
+      ],
+      "position": {
+        "x": -4,
+        "y": 5
+      },
+      "tier": 2,
+      "treeScope": "character",
+      "subclassTags": []
+    },
+    {
+      "id": "holy_smite",
+      "name": "Holy Smite",
+      "description": "Channel divine wrath to destroy undead and demons with holy fire.",
+      "classTags": [
+        "priest"
+      ],
+      "cost": 4,
+      "requires": [
+        "divine_light"
+      ],
+      "blocks": [],
+      "grants": [],
+      "position": {
+        "x": -5,
+        "y": 6
+      },
+      "tier": 2,
+      "treeScope": "character",
+      "subclassTags": []
+    },
+    {
+      "id": "blessed_guardian",
+      "name": "Blessed Guardian",
+      "description": "Divine protection shields you and nearby allies from harm.",
+      "classTags": [
+        "priest",
+        "warrior"
+      ],
+      "cost": 5,
+      "requires": [
+        "divine_light",
+        "shield_wall"
+      ],
+      "blocks": [],
+      "grants": [
+        {
+          "id": "guardian_aura",
+          "name": "Guardian's Aura",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "constitution",
+              "type": "flat",
+              "value": 5
+            },
+            {
+              "stat": "faith",
+              "type": "flat",
+              "value": 3
+            }
+          ]
+        }
+      ],
+      "position": {
+        "x": -3,
+        "y": 7
+      },
+      "tier": 3,
+      "treeScope": "character",
+      "subclassTags": []
+    },
+    {
+      "id": "royal_favor",
+      "name": "Royal Favor",
+      "description": "Your family has earned the attention of the crown. Increased gold and better job opportunities.",
+      "classTags": [],
+      "cost": 5,
+      "requires": [],
+      "blocks": [
+        "thieves_pact"
+      ],
+      "grants": [
+        {
+          "id": "royal_blessing",
+          "name": "King's Blessing",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "charisma",
+              "type": "flat",
+              "value": 5
+            }
+          ]
+        }
+      ],
+      "position": {
+        "x": -1,
+        "y": 8
+      },
+      "tier": 3,
+      "specialRequirement": "royal_event_completed",
+      "treeScope": "character",
+      "subclassTags": []
+    },
+    {
+      "id": "thieves_pact",
+      "name": "Thieves' Pact",
+      "description": "You've sworn allegiance to the underworld. Access to illegal goods and dark jobs.",
+      "classTags": [],
+      "cost": 5,
+      "requires": [],
+      "blocks": [
+        "royal_favor"
+      ],
+      "grants": [
+        {
+          "id": "underworld_contacts",
+          "name": "Underworld Contacts",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "infamy",
+              "type": "flat",
+              "value": 5
+            },
+            {
+              "stat": "luck",
+              "type": "flat",
+              "value": 3
+            }
+          ]
+        }
+      ],
+      "position": {
+        "x": 1,
+        "y": 8
+      },
+      "tier": 3,
+      "specialRequirement": "thieves_guild_joined",
+      "treeScope": "character",
+      "subclassTags": []
+    }
+  ],
+  "uniqueSkills": [
+    {
+      "id": "unique_dragon_speaker",
+      "name": "The Last Dragon Speaker",
+      "description": "Only one living hero can speak the ancient dragon tongue. Dramatically increases fire resistance and unlocks dragon-related events.",
+      "availability": "unique_global",
+      "releaseCondition": "heir_death",
+      "grants": [
+        {
+          "id": "dragon_tongue",
+          "name": "Dragon Tongue",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "charisma",
+              "type": "flat",
+              "value": 10
+            },
+            {
+              "stat": "intelligence",
+              "type": "flat",
+              "value": 5
+            }
+          ]
+        }
+      ],
+      "specialEffects": {
+        "fireResistance": 50,
+        "dragonEventWeight": 4
+      }
+    }
+  ]
+}

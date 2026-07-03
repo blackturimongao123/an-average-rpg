@@ -1,0 +1,641 @@
+{
+  "events": [
+    {
+      "id": "mysterious_stranger",
+      "name": "The Mysterious Stranger",
+      "description": "A cloaked figure approaches you in the tavern, offering a deal that seems too good to be true.",
+      "requirements": {
+        "minLevel": 1
+      },
+      "weight": 20,
+      "choices": [
+        {
+          "id": "accept_deal",
+          "text": "Accept the stranger's offer",
+          "statCheck": { "stat": "charisma", "difficulty": 8 },
+          "outcomes": [
+            {
+              "weight": 60,
+              "description": "The deal pays off! The stranger rewards your trust with gold and information.",
+              "goldDelta": 50,
+              "xpDelta": 25,
+              "itemRewards": [],
+              "effectsAdded": [],
+              "effectsRemoved": [],
+              "heirDies": false
+            },
+            {
+              "weight": 40,
+              "description": "It was a trap! You lose your coin purse to the cunning thief.",
+              "goldDelta": -30,
+              "xpDelta": 10,
+              "itemRewards": [],
+              "effectsAdded": [],
+              "effectsRemoved": [],
+              "heirDies": false
+            }
+          ]
+        },
+        {
+          "id": "refuse_deal",
+          "text": "Politely refuse and walk away",
+          "outcomes": [
+            {
+              "weight": 100,
+              "description": "You avoid potential trouble. Sometimes caution is wisdom.",
+              "goldDelta": 0,
+              "xpDelta": 5,
+              "itemRewards": [],
+              "effectsAdded": [],
+              "effectsRemoved": [],
+              "heirDies": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "drunken_brawl",
+      "name": "Tavern Brawl",
+      "description": "A drunken patron takes offense at your presence and challenges you to a fight!",
+      "requirements": {
+        "minLevel": 2
+      },
+      "weight": 25,
+      "choices": [
+        {
+          "id": "fight_back",
+          "text": "Accept the challenge and fight",
+          "statCheck": { "stat": "strength", "difficulty": 10 },
+          "outcomes": [
+            {
+              "weight": 70,
+              "description": "You knock out the drunkard with a solid punch. The crowd cheers!",
+              "goldDelta": 15,
+              "xpDelta": 30,
+              "itemRewards": [],
+              "effectsAdded": [],
+              "effectsRemoved": [],
+              "heirDies": false
+            },
+            {
+              "weight": 30,
+              "description": "The fight goes poorly. You're beaten and humiliated.",
+              "goldDelta": -10,
+              "xpDelta": 15,
+              "itemRewards": [],
+              "effectsAdded": ["bruised"],
+              "effectsRemoved": [],
+              "heirDies": false
+            }
+          ]
+        },
+        {
+          "id": "talk_down",
+          "text": "Try to calm the situation with words",
+          "statCheck": { "stat": "charisma", "difficulty": 12 },
+          "outcomes": [
+            {
+              "weight": 50,
+              "description": "Your silver tongue defuses the situation. You even make a new drinking buddy!",
+              "goldDelta": 5,
+              "xpDelta": 20,
+              "itemRewards": [],
+              "effectsAdded": [],
+              "effectsRemoved": [],
+              "heirDies": false
+            },
+            {
+              "weight": 50,
+              "description": "Your words only enrage him further. You barely escape the tavern.",
+              "goldDelta": 0,
+              "xpDelta": 10,
+              "itemRewards": [],
+              "effectsAdded": [],
+              "effectsRemoved": [],
+              "heirDies": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fortune_teller",
+      "name": "The Fortune Teller",
+      "description": "An old woman with milky eyes beckons you to her table. 'I see your bloodline's fate,' she whispers.",
+      "requirements": {
+        "minLevel": 1
+      },
+      "weight": 15,
+      "choices": [
+        {
+          "id": "pay_for_fortune",
+          "text": "Pay 20 gold to hear your fortune",
+          "outcomes": [
+            {
+              "weight": 40,
+              "description": "She speaks of prosperity for your bloodline. A blessing settles upon your family.",
+              "goldDelta": -20,
+              "xpDelta": 15,
+              "itemRewards": [],
+              "effectsAdded": ["fortune_blessing"],
+              "effectsRemoved": [],
+              "heirDies": false
+            },
+            {
+              "weight": 40,
+              "description": "She speaks cryptic warnings, but her words fade from memory.",
+              "goldDelta": -20,
+              "xpDelta": 10,
+              "itemRewards": [],
+              "effectsAdded": [],
+              "effectsRemoved": [],
+              "heirDies": false
+            },
+            {
+              "weight": 20,
+              "description": "Her eyes turn black. 'A curse follows your blood!' Dark energy surrounds you.",
+              "goldDelta": -20,
+              "xpDelta": 25,
+              "itemRewards": [],
+              "effectsAdded": ["fortune_curse"],
+              "effectsRemoved": [],
+              "heirDies": false
+            }
+          ]
+        },
+        {
+          "id": "ignore_fortune",
+          "text": "Ignore her and continue your evening",
+          "outcomes": [
+            {
+              "weight": 100,
+              "description": "You walk past the strange woman. Some things are better left unknown.",
+              "goldDelta": 0,
+              "xpDelta": 0,
+              "itemRewards": [],
+              "effectsAdded": [],
+              "effectsRemoved": [],
+              "heirDies": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "royal_messenger",
+      "name": "A Royal Summons",
+      "description": "A herald in royal livery approaches your table. 'His Majesty has heard of your family.'",
+      "requirements": {
+        "minLevel": 5,
+        "minGeneration": 2
+      },
+      "weight": 10,
+      "choices": [
+        {
+          "id": "answer_summons",
+          "text": "Follow the herald to the castle",
+          "outcomes": [
+            {
+              "weight": 60,
+              "description": "The king grants your family a royal stipend for services rendered to the crown!",
+              "goldDelta": 100,
+              "xpDelta": 50,
+              "itemRewards": [],
+              "effectsAdded": ["royal_stipend"],
+              "effectsRemoved": [],
+              "heirDies": false
+            },
+            {
+              "weight": 30,
+              "description": "A minor noble affair. You're given a small reward and sent on your way.",
+              "goldDelta": 30,
+              "xpDelta": 25,
+              "itemRewards": [],
+              "effectsAdded": [],
+              "effectsRemoved": [],
+              "heirDies": false
+            },
+            {
+              "weight": 10,
+              "description": "It was a trap! Assassins ambush you on the way. You barely survive.",
+              "goldDelta": 0,
+              "xpDelta": 40,
+              "itemRewards": [],
+              "effectsAdded": ["wounded"],
+              "effectsRemoved": [],
+              "heirDies": false
+            }
+          ]
+        },
+        {
+          "id": "decline_summons",
+          "text": "Politely decline the invitation",
+          "outcomes": [
+            {
+              "weight": 100,
+              "description": "The herald frowns but accepts your refusal. Royal attention can be dangerous.",
+              "goldDelta": 0,
+              "xpDelta": 10,
+              "itemRewards": [],
+              "effectsAdded": [],
+              "effectsRemoved": [],
+              "heirDies": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gambling_den",
+      "name": "The Underground Game",
+      "description": "A shadowy figure offers you entry to a high-stakes gambling den in the cellar.",
+      "requirements": {
+        "minLevel": 3
+      },
+      "weight": 18,
+      "choices": [
+        {
+          "id": "gamble_big",
+          "text": "Bet 50 gold on the games",
+          "statCheck": { "stat": "luck", "difficulty": 12 },
+          "outcomes": [
+            {
+              "weight": 40,
+              "description": "Lady Luck smiles upon you! You walk away with a fortune!",
+              "goldDelta": 150,
+              "xpDelta": 20,
+              "itemRewards": ["lucky_coin"],
+              "effectsAdded": [],
+              "effectsRemoved": [],
+              "heirDies": false
+            },
+            {
+              "weight": 60,
+              "description": "The dice betray you. You lose everything you wagered.",
+              "goldDelta": -50,
+              "xpDelta": 10,
+              "itemRewards": [],
+              "effectsAdded": [],
+              "effectsRemoved": [],
+              "heirDies": false
+            }
+          ]
+        },
+        {
+          "id": "gamble_small",
+          "text": "Play it safe with a small wager (10 gold)",
+          "statCheck": { "stat": "luck", "difficulty": 8 },
+          "outcomes": [
+            {
+              "weight": 50,
+              "description": "A modest win! You double your money.",
+              "goldDelta": 10,
+              "xpDelta": 10,
+              "itemRewards": [],
+              "effectsAdded": [],
+              "effectsRemoved": [],
+              "heirDies": false
+            },
+            {
+              "weight": 50,
+              "description": "You lose your wager, but it's a small price for the experience.",
+              "goldDelta": -10,
+              "xpDelta": 5,
+              "itemRewards": [],
+              "effectsAdded": [],
+              "effectsRemoved": [],
+              "heirDies": false
+            }
+          ]
+        },
+        {
+          "id": "refuse_gambling",
+          "text": "Decline and leave",
+          "outcomes": [
+            {
+              "weight": 100,
+              "description": "You resist the temptation. Your purse remains intact.",
+              "goldDelta": 0,
+              "xpDelta": 5,
+              "itemRewards": [],
+              "effectsAdded": [],
+              "effectsRemoved": [],
+              "heirDies": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wandering_merchant",
+      "name": "The Wandering Merchant",
+      "description": "A traveling merchant spreads exotic wares across a table. 'I have items from distant lands...'",
+      "requirements": {
+        "minLevel": 1
+      },
+      "weight": 20,
+      "choices": [
+        {
+          "id": "buy_mystery_item",
+          "text": "Purchase a mysterious sealed box (30 gold)",
+          "outcomes": [
+            {
+              "weight": 30,
+              "description": "The box contains a rare artifact! What a find!",
+              "goldDelta": -30,
+              "xpDelta": 20,
+              "itemRewards": ["mystery_artifact"],
+              "effectsAdded": [],
+              "effectsRemoved": [],
+              "heirDies": false
+            },
+            {
+              "weight": 50,
+              "description": "Inside is a decent potion. Not bad for the price.",
+              "goldDelta": -30,
+              "xpDelta": 10,
+              "itemRewards": ["health_potion"],
+              "effectsAdded": [],
+              "effectsRemoved": [],
+              "heirDies": false
+            },
+            {
+              "weight": 20,
+              "description": "The box is empty! You've been swindled.",
+              "goldDelta": -30,
+              "xpDelta": 5,
+              "itemRewards": [],
+              "effectsAdded": [],
+              "effectsRemoved": [],
+              "heirDies": false
+            }
+          ]
+        },
+        {
+          "id": "browse_only",
+          "text": "Just browse the wares",
+          "outcomes": [
+            {
+              "weight": 100,
+              "description": "You examine the curious items but buy nothing today.",
+              "goldDelta": 0,
+              "xpDelta": 5,
+              "itemRewards": [],
+              "effectsAdded": [],
+              "effectsRemoved": [],
+              "heirDies": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "old_veteran",
+      "name": "The Old Veteran",
+      "description": "A scarred warrior nurses his drink alone. He notices your equipment and nods approvingly.",
+      "requirements": {
+        "minLevel": 2,
+        "requiredClass": "warrior"
+      },
+      "weight": 15,
+      "choices": [
+        {
+          "id": "ask_training",
+          "text": "Ask for combat advice",
+          "outcomes": [
+            {
+              "weight": 70,
+              "description": "The veteran shares hard-won wisdom. You feel stronger and more confident.",
+              "goldDelta": 0,
+              "xpDelta": 40,
+              "itemRewards": [],
+              "effectsAdded": ["veterans_wisdom"],
+              "effectsRemoved": [],
+              "heirDies": false
+            },
+            {
+              "weight": 30,
+              "description": "He grunts and turns away. Some warriors guard their secrets.",
+              "goldDelta": 0,
+              "xpDelta": 10,
+              "itemRewards": [],
+              "effectsAdded": [],
+              "effectsRemoved": [],
+              "heirDies": false
+            }
+          ]
+        },
+        {
+          "id": "buy_drink",
+          "text": "Buy him a drink (5 gold)",
+          "outcomes": [
+            {
+              "weight": 80,
+              "description": "Grateful, he tells war stories and gives you an old but reliable weapon.",
+              "goldDelta": -5,
+              "xpDelta": 25,
+              "itemRewards": ["veterans_blade"],
+              "effectsAdded": [],
+              "effectsRemoved": [],
+              "heirDies": false
+            },
+            {
+              "weight": 20,
+              "description": "He accepts the drink with a nod but says nothing more.",
+              "goldDelta": -5,
+              "xpDelta": 10,
+              "itemRewards": [],
+              "effectsAdded": [],
+              "effectsRemoved": [],
+              "heirDies": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thieves_guild_contact",
+      "name": "A Shadowy Proposition",
+      "description": "A hooded figure slides into the seat across from you. 'The Guild has noticed your... talents.'",
+      "requirements": {
+        "minLevel": 4,
+        "minInfamy": 3
+      },
+      "weight": 10,
+      "choices": [
+        {
+          "id": "join_guild",
+          "text": "Hear their offer",
+          "statCheck": { "stat": "dexterity", "difficulty": 10 },
+          "outcomes": [
+            {
+              "weight": 70,
+              "description": "You pass their test. Welcome to the Thieves' Guild. Dark opportunities await.",
+              "goldDelta": 75,
+              "xpDelta": 50,
+              "itemRewards": ["thieves_badge"],
+              "effectsAdded": ["thieves_guild_member"],
+              "effectsRemoved": [],
+              "heirDies": false
+            },
+            {
+              "weight": 30,
+              "description": "You fail their test. They vanish, but you sense you'll be watched.",
+              "goldDelta": 0,
+              "xpDelta": 20,
+              "itemRewards": [],
+              "effectsAdded": ["guild_watched"],
+              "effectsRemoved": [],
+              "heirDies": false
+            }
+          ]
+        },
+        {
+          "id": "refuse_guild",
+          "text": "Refuse their offer",
+          "outcomes": [
+            {
+              "weight": 100,
+              "description": "The figure shrugs and melts into the shadows. Perhaps a wise choice.",
+              "goldDelta": 0,
+              "xpDelta": 10,
+              "itemRewards": [],
+              "effectsAdded": [],
+              "effectsRemoved": [],
+              "heirDies": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cursed_artifact",
+      "name": "The Cursed Relic",
+      "description": "A desperate merchant begs you to take a strange artifact off his hands. 'It brings only misfortune!'",
+      "requirements": {
+        "minLevel": 5
+      },
+      "weight": 8,
+      "choices": [
+        {
+          "id": "take_artifact",
+          "text": "Accept the cursed artifact",
+          "outcomes": [
+            {
+              "weight": 30,
+              "description": "The curse was a lie! The artifact is actually quite valuable.",
+              "goldDelta": 0,
+              "xpDelta": 30,
+              "itemRewards": ["mysterious_relic"],
+              "effectsAdded": [],
+              "effectsRemoved": [],
+              "heirDies": false
+            },
+            {
+              "weight": 50,
+              "description": "The artifact is indeed cursed. Dark energy seeps into your bloodline.",
+              "goldDelta": 0,
+              "xpDelta": 40,
+              "itemRewards": ["cursed_amulet"],
+              "effectsAdded": ["bloodline_curse_minor"],
+              "effectsRemoved": [],
+              "heirDies": false
+            },
+            {
+              "weight": 20,
+              "description": "The curse is powerful. You feel your life force drain...",
+              "goldDelta": 0,
+              "xpDelta": 50,
+              "itemRewards": ["cursed_amulet"],
+              "effectsAdded": ["bloodline_curse_major"],
+              "effectsRemoved": [],
+              "heirDies": false
+            }
+          ]
+        },
+        {
+          "id": "refuse_artifact",
+          "text": "Refuse the artifact",
+          "outcomes": [
+            {
+              "weight": 100,
+              "description": "You wisely decline. The merchant runs off into the night.",
+              "goldDelta": 0,
+              "xpDelta": 10,
+              "itemRewards": [],
+              "effectsAdded": [],
+              "effectsRemoved": [],
+              "heirDies": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "deadly_challenge",
+      "name": "The Death Duel",
+      "description": "A notorious duelist blocks your path. 'Your bloodline ends tonight!' he declares.",
+      "requirements": {
+        "minLevel": 8,
+        "minGeneration": 3
+      },
+      "weight": 5,
+      "choices": [
+        {
+          "id": "accept_duel",
+          "text": "Accept the death duel",
+          "statCheck": { "stat": "strength", "difficulty": 15 },
+          "outcomes": [
+            {
+              "weight": 40,
+              "description": "Steel clashes! You emerge victorious, claiming the duelist's treasures!",
+              "goldDelta": 200,
+              "xpDelta": 100,
+              "itemRewards": ["duelist_sword"],
+              "effectsAdded": ["duelist_renown"],
+              "effectsRemoved": [],
+              "heirDies": false
+            },
+            {
+              "weight": 35,
+              "description": "A close fight! You win, but are gravely wounded.",
+              "goldDelta": 100,
+              "xpDelta": 75,
+              "itemRewards": [],
+              "effectsAdded": ["grievous_wound"],
+              "effectsRemoved": [],
+              "heirDies": false
+            },
+            {
+              "weight": 25,
+              "description": "The duelist's blade finds your heart. Your bloodline must continue without you...",
+              "goldDelta": 0,
+              "xpDelta": 0,
+              "itemRewards": [],
+              "effectsAdded": [],
+              "effectsRemoved": [],
+              "heirDies": true
+            }
+          ]
+        },
+        {
+          "id": "flee_duel",
+          "text": "Flee like a coward",
+          "outcomes": [
+            {
+              "weight": 100,
+              "description": "You escape with your life, but your reputation suffers.",
+              "goldDelta": 0,
+              "xpDelta": 5,
+              "itemRewards": [],
+              "effectsAdded": ["cowards_mark"],
+              "effectsRemoved": [],
+              "heirDies": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

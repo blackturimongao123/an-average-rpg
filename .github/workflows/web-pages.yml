@@ -1,0 +1,129 @@
+name: Deploy An Average RPG to GitHub Pages
+
+# Repo Pages setting (one-time):
+#   Settings → Pages → Build and deployment → Source: "Deploy from a branch"
+#   Branch: gh-pages  /  Folder: / (root)
+#
+# Site URL: https://<user>.github.io/an-average-rpg/
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
+      VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
+      VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
+      VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
+      VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+      VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
+      VITE_ALLOW_REGISTRATION: ${{ secrets.VITE_ALLOW_REGISTRATION }}
+      VITE_ALLOWED_USERNAMES: ${{ secrets.VITE_ALLOWED_USERNAMES }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify Firebase secrets are set
+        run: |
+          missing=0
+          for name in \
+            VITE_FIREBASE_API_KEY \
+            VITE_FIREBASE_AUTH_DOMAIN \
+            VITE_FIREBASE_PROJECT_ID \
+            VITE_FIREBASE_STORAGE_BUCKET \
+            VITE_FIREBASE_MESSAGING_SENDER_ID \
+            VITE_FIREBASE_APP_ID
+          do
+            if [ -z "${!name}" ]; then
+              echo "::error title=Missing GitHub secret::Repository secret $name is empty or not configured."
+              missing=1
+            else
+              echo "$name is set"
+            fi
+          done
+          if [ "$missing" -ne 0 ]; then
+            echo ""
+            echo "Add the missing values under Settings → Secrets and variables → Actions → Repository secrets,"
+            echo "then re-run this workflow."
+            exit 1
+          fi
+
+      - name: Build web app
+        run: pnpm --filter web build
+
+      - name: Read app version
+        id: version
+        run: |
+          VERSION=$(grep APP_VERSION apps/web/src/constants/version.ts | sed 's/.*"\(.*\)".*/\1/')
+          echo "value=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Deploying MVP v$VERSION"
+
+      - name: Validate build output
+        run: |
+          test -f apps/web/dist/index.html
+          test -d apps/web/dist/assets
+          grep -q "app-version\" content=\"${{ steps.version.outputs.value }}\"" apps/web/dist/index.html
+          touch apps/web/dist/.nojekyll
+          ls -la apps/web/dist
+
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: apps/web/dist
+          publish_branch: gh-pages
+          force_orphan: true
+
+      - name: Wait for GitHub Pages CDN
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for attempt in $(seq 1 36); do
+            status=$(gh api "repos/${{ github.repository }}/pages" --jq .status)
+            echo "Pages status: $status (attempt $attempt/36)"
+            if [ "$status" = "built" ]; then
+              break
+            fi
+            sleep 10
+          done
+
+      - name: Verify live site version
+        run: |
+          EXPECTED="${{ steps.version.outputs.value }}"
+          URL="https://blackturimongao123.github.io/an-average-rpg/"
+          for attempt in $(seq 1 18); do
+            HTML=$(curl -fsSL "$URL?deploy=$attempt" || true)
+            if echo "$HTML" | grep -q "app-version\" content=\"$EXPECTED\""; then
+              echo "Live site is serving MVP v$EXPECTED"
+              exit 0
+            fi
+            echo "Live site not on v$EXPECTED yet (attempt $attempt/18)"
+            sleep 10
+          done
+          echo "::warning::Live CDN has not picked up v$EXPECTED yet — try a hard refresh in a few minutes."

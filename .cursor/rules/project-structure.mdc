@@ -1,0 +1,94 @@
+---
+description: How this monorepo is structured and where code belongs
+alwaysApply: true
+---
+
+# Project structure
+
+**An Average RPG** — pnpm monorepo (`pnpm-workspace.yaml`). Firebase project: `an-average-rpg`.
+
+## Top-level layout
+
+```
+├── apps/web/          # React + Vite frontend (the live game UI)
+├── functions/         # Firebase Cloud Functions (authoritative game logic)
+├── packages/shared/   # Shared TypeScript types, Zod schemas, constants
+├── game-data/         # Static JSON content (classes, skills, dungeons, etc.)
+├── crates/            # Rust game simulation (game-core) + WASM bindings (game-wasm)
+├── .github/workflows/ # CI: web-pages.yml (GitHub Pages), firebase-deploy.yml
+├── firebase.json      # Firestore, Storage, Functions, emulator config
+├── firestore.rules    # Security rules
+└── storage.rules
+```
+
+**Workspace packages:** `apps/*`, `packages/*`, `functions`. Root scripts delegate via `pnpm --filter`.
+
+## Architecture
+
+```
+GitHub Pages (static)     Firebase
+  apps/web/dist    →    Auth, Firestore, Cloud Functions, Storage
+```
+
+- **Client is untrusted.** Combat, rewards, death, inheritance, bank ops, and skill claims run in **Cloud Functions** (`functions/src/actions/`).
+- **Firestore** holds live player state (`lineages`, heirs, bank, missions, etc.).
+- **game-data/** is read-only content imported by the web app (`@game-data` alias) — not written at runtime.
+
+## `apps/web/src/` conventions
+
+| Folder | Purpose |
+|--------|---------|
+| `features/` | Route-level pages (`CharacterPage`, `TavernPage`, …) — one folder per game area |
+| `components/` | Reusable UI (`layout/`, `game/`, `skills/`) |
+| `firebase/` | Firebase init (`config.ts`), callable wrappers (`functions.ts`), Firestore helpers, `*Bootstrap.ts` seed/setup |
+| `stores/` | Zustand state (`authStore`, `gameStore`, `uiStore`) |
+| `hooks/` | Custom React hooks |
+| `lib/` | Pure helpers (missions, skills, tavern, validation) — often reads `@game-data` |
+| `constants/` | App-wide constants — **`version.ts`** holds `APP_VERSION` |
+| `types/` | Ambient types (e.g. `game-data.d.ts` for JSON imports) |
+
+**Path alias:** `@/` → `apps/web/src/`. **Game data alias:** `@game-data` → repo root `game-data/`.
+
+**Routing:** `App.tsx` → `/login` public; everything else inside `GameShell` + `ProtectedRoute`. Default route: `/character`.
+
+**Live state flow:** `GameShell` subscribes to Firestore (`lineages`, active heir) → `gameStore`. Pages call `firebase/functions.ts` callables for mutations.
+
+## `functions/`
+
+- `src/index.ts` — exports all callable functions.
+- `src/actions/` — one file per game action (`createHeir`, `resolveDungeon`, `claimSkill`, …).
+- `src/utils/` — shared server helpers and types.
+- Builds to `functions/lib/` (gitignored). Deployed via `firebase-deploy.yml` using `FIREBASE_TOKEN`.
+
+## `packages/shared/` (`@bloodline/shared`)
+
+Single source of truth for **types** and **Zod schemas** used by web and functions. Import via `@bloodline/shared`, `@bloodline/shared/types`, etc. Add new domain types here before wiring UI or server code.
+
+## `game-data/`
+
+JSON content files: `classes.json`, `skills.json`, `dungeons.json`, `jobs.json`, `events.json`, `items.json`, `missions.json`, `races.json`, `subclasses.json`, `effects.json`, …
+
+Changes here are **user-facing** — bump `APP_VERSION` when shipping.
+
+## `crates/` (Rust / WASM)
+
+- `game-core/` — simulation modules (combat, dungeons, skills, inheritance, …).
+- `game-wasm/` — WASM bindings for the browser.
+
+Build WASM: `pnpm build:wasm` → output under `apps/web/src/wasm`. Most gameplay authority still lives in Cloud Functions today.
+
+## Where to put new work
+
+| Change | Location |
+|--------|----------|
+| New screen / route | `apps/web/src/features/<area>/` + route in `App.tsx` + sidebar link |
+| New server-side game rule | `functions/src/actions/` + export in `index.ts` + callable in `firebase/functions.ts` |
+| New shared type/schema | `packages/shared/src/` |
+| New class, skill, dungeon, event | `game-data/*.json` + types in `packages/shared` if needed |
+| New Firestore collection/field | Function action + `firestore.rules` + client read in `GameShell` or feature page |
+
+## Deploy & env
+
+- **Local dev:** `pnpm dev` (web), `firebase emulators:start`, `apps/web/.env.local` (see `.env.example`).
+- **Production web:** push to `main` → builds `apps/web/dist` → peaceiris → `gh-pages` branch.
+- **Firebase backend:** push changes under `functions/`, rules, or indexes → `firebase-deploy.yml`.

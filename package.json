@@ -1,0 +1,36 @@
+{
+  "name": "an-average-rpg",
+  "version": "0.1.0",
+  "private": true,
+  "description": "An Average RPG - A roguelite RPG with persistent bloodline progression",
+  "scripts": {
+    "dev": "pnpm --filter web dev",
+    "build": "pnpm --filter web build",
+    "build:wasm": "cd crates/game-wasm && wasm-pack build --target web --out-dir ../../apps/web/src/wasm",
+    "preview": "pnpm --filter web preview",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "test:rust": "cargo test --workspace",
+    "firebase:emulators": "firebase emulators:start",
+    "firebase:deploy": "firebase deploy",
+    "functions:build": "pnpm --filter functions build",
+    "functions:deploy": "firebase deploy --only functions"
+  },
+  "keywords": [
+    "game",
+    "roguelite",
+    "rpg",
+    "bloodline",
+    "firebase",
+    "react",
+    "rust",
+    "wasm"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=24.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.15.0"
+}

@@ -1,0 +1,83 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+functions/lib/
+
+# Dev caches
+.vite/
+.turbo/
+
+# Rust / Cargo
+target/
+Cargo.lock
+*.rs.bk
+
+# WASM build outputs
+pkg/
+*.wasm
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+pubsub-debug.log
+database-debug.log
+.runtimeconfig.json
+firebase-export-*/
+.firebase-emulator-hub.json
+# Credentials (never commit)
+*-firebase-adminsdk-*.json
+serviceAccount*.json
+google-services.json
+GoogleService-Info.plist
+*.local
+
+# Environment files (keep .env.example committed)
+.env*
+!.env.example
+!**/.env.example
+
+# IDE
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Test coverage
+coverage/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Tauri
+apps/desktop/src-tauri/target/
+
+# Generated types
+*.d.ts.map
+
+# Cursor (track shared rules)
+.cursor/*
+!.cursor/rules/
+!.cursor/rules/**

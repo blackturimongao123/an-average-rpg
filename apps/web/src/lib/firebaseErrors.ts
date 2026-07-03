@@ -1,0 +1,42 @@
+import { FirebaseError } from "firebase/app";
+
+const friendlyMessages: Record<string, string> = {
+  "auth/email-already-in-use": "That email is already registered.",
+  "auth/invalid-email": "Please enter a valid email address.",
+  "auth/weak-password": "Password must be at least 6 characters.",
+  "auth/invalid-credential": "Incorrect email or password.",
+  "auth/popup-closed-by-user": "Sign-in was cancelled.",
+  "auth/unauthorized-domain":
+    "This site is not authorized for sign-in. Add it in Firebase Auth → Settings → Authorized domains.",
+  "functions/not-found":
+    "Game server is not set up yet. Using direct save — make sure Firestore rules are deployed.",
+  "functions/unavailable":
+    "Game server is temporarily unavailable. Trying direct save instead.",
+  "functions/internal":
+    "Game server is not set up yet. Trying direct save instead.",
+  "functions/already-exists": "You already have a bloodline.",
+  "functions/invalid-argument": "Invalid family name or username.",
+  "functions/unauthenticated": "You must be signed in first.",
+  "permission-denied":
+    "Database access denied. Deploy the latest Firestore rules from the project.",
+};
+
+export function getFirebaseErrorMessage(error: unknown): string {
+  if (error instanceof FirebaseError) {
+    return friendlyMessages[error.code] ?? error.message;
+  }
+
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return "Something went wrong. Please try again.";
+}
+
+export function isFunctionsUnavailable(error: unknown): boolean {
+  if (!(error instanceof FirebaseError)) return false;
+
+  return ["functions/not-found", "functions/unavailable", "functions/internal"].includes(
+    error.code
+  );
+}

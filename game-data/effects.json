@@ -1,0 +1,218 @@
+{
+  "effects": [
+    {
+      "id": "bruised",
+      "name": "Bruised",
+      "description": "Minor injuries from a brawl. Reduced constitution until healed.",
+      "effectType": "debuff",
+      "scope": "heir",
+      "duration": { "type": "temporary", "value": 5 },
+      "modifiers": [
+        { "stat": "constitution", "type": "flat", "value": -2 }
+      ]
+    },
+    {
+      "id": "wounded",
+      "name": "Wounded",
+      "description": "Serious injuries that hamper your abilities.",
+      "effectType": "debuff",
+      "scope": "heir",
+      "duration": { "type": "temporary", "value": 10 },
+      "modifiers": [
+        { "stat": "strength", "type": "flat", "value": -3 },
+        { "stat": "dexterity", "type": "flat", "value": -2 }
+      ]
+    },
+    {
+      "id": "grievous_wound",
+      "name": "Grievous Wound",
+      "description": "A life-threatening injury that may never fully heal.",
+      "effectType": "debuff",
+      "scope": "heir",
+      "duration": { "type": "until_death", "value": 0 },
+      "modifiers": [
+        { "stat": "constitution", "type": "percent", "value": -20 }
+      ]
+    },
+    {
+      "id": "fortune_blessing",
+      "name": "Fortune's Blessing",
+      "description": "The fortune teller's prophecy brings luck to your bloodline.",
+      "effectType": "blessing",
+      "scope": "generations",
+      "duration": { "type": "generations", "value": 3 },
+      "modifiers": [
+        { "stat": "luck", "type": "flat", "value": 3 }
+      ]
+    },
+    {
+      "id": "fortune_curse",
+      "name": "Fortune's Curse",
+      "description": "Dark words spoken by the fortune teller haunt your bloodline.",
+      "effectType": "curse",
+      "scope": "generations",
+      "duration": { "type": "generations", "value": 2 },
+      "modifiers": [
+        { "stat": "luck", "type": "flat", "value": -3 }
+      ]
+    },
+    {
+      "id": "royal_stipend",
+      "name": "Royal Stipend",
+      "description": "The king has granted your family a daily payment from the treasury.",
+      "effectType": "blessing",
+      "scope": "generations",
+      "duration": { "type": "generations", "value": 4 },
+      "modifiers": [],
+      "specialEffects": {
+        "dailyGoldBonus": 5
+      }
+    },
+    {
+      "id": "veterans_wisdom",
+      "name": "Veteran's Wisdom",
+      "description": "Combat lessons from an experienced warrior sharpen your skills.",
+      "effectType": "buff",
+      "scope": "heir",
+      "duration": { "type": "until_death", "value": 0 },
+      "modifiers": [
+        { "stat": "strength", "type": "flat", "value": 2 },
+        { "stat": "constitution", "type": "flat", "value": 1 }
+      ]
+    },
+    {
+      "id": "thieves_guild_member",
+      "name": "Thieves' Guild Member",
+      "description": "You are a member of the Thieves' Guild. Dark opportunities await.",
+      "effectType": "passive",
+      "scope": "heir",
+      "duration": { "type": "until_death", "value": 0 },
+      "modifiers": [
+        { "stat": "infamy", "type": "flat", "value": 5 }
+      ],
+      "specialEffects": {
+        "unlocksDarkJobs": true,
+        "blackMarketAccess": true
+      }
+    },
+    {
+      "id": "guild_watched",
+      "name": "Guild's Eye",
+      "description": "The Thieves' Guild is watching you. They may approach again.",
+      "effectType": "passive",
+      "scope": "heir",
+      "duration": { "type": "temporary", "value": 20 },
+      "modifiers": [],
+      "specialEffects": {
+        "increasedGuildEventChance": true
+      }
+    },
+    {
+      "id": "bloodline_curse_minor",
+      "name": "Minor Bloodline Curse",
+      "description": "A dark energy has attached itself to your bloodline.",
+      "effectType": "curse",
+      "scope": "generations",
+      "duration": { "type": "generations", "value": 2 },
+      "modifiers": [
+        { "stat": "faith", "type": "flat", "value": -2 },
+        { "stat": "luck", "type": "flat", "value": -1 }
+      ]
+    },
+    {
+      "id": "bloodline_curse_major",
+      "name": "Major Bloodline Curse",
+      "description": "A powerful curse afflicts your family line. Seek a way to break it.",
+      "effectType": "curse",
+      "scope": "generations",
+      "duration": { "type": "generations", "value": 5 },
+      "modifiers": [
+        { "stat": "constitution", "type": "flat", "value": -3 },
+        { "stat": "faith", "type": "flat", "value": -4 },
+        { "stat": "luck", "type": "flat", "value": -2 }
+      ]
+    },
+    {
+      "id": "duelist_renown",
+      "name": "Duelist's Renown",
+      "description": "Your victory over a notorious duelist has earned you fame.",
+      "effectType": "buff",
+      "scope": "heir",
+      "duration": { "type": "until_death", "value": 0 },
+      "modifiers": [
+        { "stat": "charisma", "type": "flat", "value": 3 }
+      ]
+    },
+    {
+      "id": "cowards_mark",
+      "name": "Coward's Mark",
+      "description": "You fled from a duel. Your reputation suffers.",
+      "effectType": "debuff",
+      "scope": "heir",
+      "duration": { "type": "until_death", "value": 0 },
+      "modifiers": [
+        { "stat": "charisma", "type": "flat", "value": -5 }
+      ]
+    },
+    {
+      "id": "curse_whispers",
+      "name": "Whispers of Madness",
+      "description": "The cursed amulet speaks to you. The whispers never stop.",
+      "effectType": "curse",
+      "scope": "heir",
+      "duration": { "type": "until_death", "value": 0 },
+      "modifiers": [
+        { "stat": "intelligence", "type": "flat", "value": 3 },
+        { "stat": "faith", "type": "flat", "value": -5 }
+      ]
+    },
+    {
+      "id": "bloodline_bond",
+      "name": "Bloodline Bond",
+      "description": "This heirloom is bound to your bloodline, growing stronger each generation.",
+      "effectType": "passive",
+      "scope": "bloodline",
+      "duration": { "type": "permanent", "value": 0 },
+      "modifiers": [],
+      "specialEffects": {
+        "heirloomPowerGrowth": true
+      }
+    },
+    {
+      "id": "goblin_intimidation",
+      "name": "Goblin Intimidation",
+      "description": "The crown's presence unnerves goblinoids.",
+      "effectType": "passive",
+      "scope": "heir",
+      "duration": { "type": "until_death", "value": 0 },
+      "modifiers": [],
+      "specialEffects": {
+        "goblinDamageBonus": 25
+      }
+    },
+    {
+      "id": "fire_immunity",
+      "name": "Fire Immunity",
+      "description": "You are immune to fire damage.",
+      "effectType": "passive",
+      "scope": "heir",
+      "duration": { "type": "until_death", "value": 0 },
+      "modifiers": [],
+      "specialEffects": {
+        "fireImmunity": true
+      }
+    },
+    {
+      "id": "restore_hp_30",
+      "name": "Minor Restoration",
+      "description": "Restores 30% of maximum HP.",
+      "effectType": "buff",
+      "scope": "heir",
+      "duration": { "type": "instant", "value": 0 },
+      "modifiers": [],
+      "specialEffects": {
+        "healPercent": 30
+      }
+    }
+  ]
+}

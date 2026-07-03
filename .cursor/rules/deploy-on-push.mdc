@@ -1,0 +1,20 @@
+---
+description: Deploy apps/web/dist to GitHub Pages via peaceiris when pushing to main
+alwaysApply: true
+---
+
+# Deploy on push to main
+
+Live site deploys are **not** manual uploads of `apps/web/dist` into `main`. They run in CI:
+
+1. **Trigger**: Push to `main` (or manual `workflow_dispatch`) runs `.github/workflows/web-pages.yml`.
+2. **Build**: CI runs `pnpm --filter web build` and validates `apps/web/dist` (`index.html`, `assets/`, app version meta tag).
+3. **Publish**: `peaceiris/actions-gh-pages@v4` publishes `apps/web/dist` to the **`gh-pages`** branch (`force_orphan: true`).
+4. **Do not commit `dist/` to `main`** — `dist/` is gitignored and produced in the workflow. Never add build output to source commits.
+
+When the user asks to push or deploy:
+
+- Push **source changes** to `main`; the workflow handles build + peaceiris deploy.
+- If deploy fails, check the Actions run (missing Firebase secrets, build errors, version mismatch).
+- After a successful deploy, confirm the live sidebar shows the bumped `APP_VERSION` (see bump-app-version rule).
+- GitHub Pages source must stay: **Deploy from a branch → `gh-pages` → `/` (root)**.

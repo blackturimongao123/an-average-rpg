@@ -1,0 +1,232 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return signedIn() && request.auth.token.admin == true;
+    }
+
+    function validString(field, minLen, maxLen) {
+      return field is string && field.size() >= minLen && field.size() <= maxLen;
+    }
+
+    function validUsername(username) {
+      return username is string
+        && username.size() >= 2
+        && username.size() <= 30
+        && username != '.'
+        && username != '..'
+        && !username.matches('.*[/].*');
+    }
+
+    function validHeirName(name) {
+      return name is string
+        && name.size() >= 2
+        && name.size() <= 50
+        && name != '.'
+        && name != '..'
+        && !name.matches('.*[/].*');
+    }
+
+    function userHasNoLineage() {
+      return !exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.activeLineageId == null;
+    }
+
+    function validLineageCreate() {
+      return request.resource.data.ownerUid == request.auth.uid
+        && validString(request.resource.data.familyName, 2, 30)
+        && request.resource.data.generation == 1
+        && request.resource.data.activeHeirId == null
+        && request.resource.data.bankGold == 0
+        && request.resource.data.bankSlots == 10
+        && request.resource.data.keys().hasAll([
+          'id', 'ownerUid', 'familyName', 'generation', 'activeHeirId',
+          'bankGold', 'bankSlots', 'publicSummary'
+        ]);
+    }
+
+    // Reserved usernames (doc id is lowercase key for case-insensitive uniqueness)
+    match /usernames/{usernameKey} {
+      allow read: if signedIn();
+      allow create: if signedIn()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.usernameKey == usernameKey
+        && validUsername(request.resource.data.username);
+      allow update, delete: if false;
+    }
+
+    // User profiles - users can read/update their own profile (limited fields)
+    match /users/{uid} {
+      allow read: if isOwner(uid);
+      
+      allow create: if isOwner(uid) 
+        && validString(request.resource.data.displayName, 1, 50)
+        && validUsername(request.resource.data.username)
+        && userHasNoLineage();
+      
+      allow update: if isOwner(uid)
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['displayName', 'username', 'settings', 'activeLineageId']);
+      
+      allow delete: if false;
+    }
+
+    function ownsLineage(lineageId) {
+      return signedIn()
+        && get(/databases/$(database)/documents/lineages/$(lineageId)).data.ownerUid == request.auth.uid;
+    }
+
+    function validHeirCreate(lineageId) {
+      let lineage = get(/databases/$(database)/documents/lineages/$(lineageId)).data;
+      return request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.lineageId == lineageId
+        && request.resource.data.generation == lineage.generation
+        && validString(request.resource.data.name, 2, 50)
+        && validHeirName(request.resource.data.name)
+        && request.resource.data.status == 'alive'
+        && request.resource.data.level == 1
+        && request.resource.data.xp == 0
+        && request.resource.data.gold == 0;
+    }
+
+    // Lineages - owners can create their first lineage; limited updates for heir setup
+    match /lineages/{lineageId} {
+      allow read: if signedIn() && resource.data.ownerUid == request.auth.uid;
+      allow create: if signedIn() && validLineageCreate() && userHasNoLineage();
+      allow update: if signedIn()
+        && resource.data.ownerUid == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly([
+            'activeHeirId', 'updatedAt', 'publicSummary', 'generation',
+            'adventurerRank', 'adventurerRankXp', 'bloodlineSkillIds',
+            'partyId', 'merchantBoard'
+          ]);
+      allow delete: if false;
+
+      // Heirs subcollection
+      match /heirs/{heirId} {
+        allow read: if signedIn() && resource.data.ownerUid == request.auth.uid;
+        allow create: if ownsLineage(lineageId) && validHeirCreate(lineageId);
+        allow update: if ownsLineage(lineageId)
+          && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly([
+              'activeJobShift', 'gold', 'jobRecords', 'xp', 'level', 'inventory',
+              'status', 'diedAt', 'deathCause', 'activeMission', 'subclassId', 'subclassTier',
+              'unspentStatPoints', 'missionCooldowns', 'itemInstances'
+            ]);
+        allow delete: if false;
+      }
+
+      // Bank items subcollection
+      match /bank/{bankItemId} {
+        allow read: if signedIn() 
+          && get(/databases/$(database)/documents/lineages/$(lineageId)).data.ownerUid == request.auth.uid;
+        allow write: if false;
+      }
+
+      // Bloodline effects subcollection
+      match /effects/{effectId} {
+        allow read: if signedIn() 
+          && get(/databases/$(database)/documents/lineages/$(lineageId)).data.ownerUid == request.auth.uid;
+        allow write: if false;
+      }
+
+      // Dungeon progress subcollection
+      match /dungeonProgress/{dungeonId} {
+        allow read: if signedIn() 
+          && get(/databases/$(database)/documents/lineages/$(lineageId)).data.ownerUid == request.auth.uid;
+        allow write: if false;
+      }
+
+      // Mission board subcollection
+      match /missionBoard/{docId} {
+        allow read: if signedIn()
+          && get(/databases/$(database)/documents/lineages/$(lineageId)).data.ownerUid == request.auth.uid;
+        allow create, update: if ownsLineage(lineageId);
+        allow delete: if false;
+      }
+    }
+
+    // Public game data - anyone can read, only admins can write
+    match /publicGameData/{collection}/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // World state - unique skills, global events, etc.
+    match /world/{doc=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Parties - members can read; writes via Cloud Functions only
+    match /parties/{partyId} {
+      allow read: if signedIn()
+        && request.auth.uid in resource.data.memberUids;
+      allow write: if false;
+    }
+
+    // Party invites - sender or recipient can read
+    match /partyInvites/{inviteId} {
+      allow read: if signedIn()
+        && (resource.data.fromUid == request.auth.uid
+            || resource.data.toUid == request.auth.uid);
+      allow write: if false;
+    }
+
+    // Unique item registry (world state)
+    match /world/uniqueItems/{itemId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Battle logs - players can read their own battles
+    match /battleLogs/{battleId} {
+      allow read: if signedIn() 
+        && (resource.data.attackerUid == request.auth.uid 
+            || resource.data.defenderUid == request.auth.uid);
+      allow write: if false;
+    }
+
+    // Leaderboards - public read, no direct write
+    match /leaderboards/{seasonId} {
+      allow read: if true;
+      allow write: if false;
+
+      match /entries/{entryId} {
+        allow read: if true;
+        allow write: if false;
+      }
+    }
+
+    // Mail system - users can read their own mail
+    match /mail/{uid}/messages/{messageId} {
+      allow read: if isOwner(uid);
+      allow update: if isOwner(uid) 
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']);
+      allow create, delete: if false;
+    }
+
+    // Guilds
+    match /guilds/{guildId} {
+      allow read: if signedIn();
+      allow write: if false;
+
+      match /members/{memberId} {
+        allow read: if signedIn();
+        allow write: if false;
+      }
+    }
+  }
+}

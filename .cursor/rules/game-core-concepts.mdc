@@ -1,0 +1,102 @@
+---
+description: Core game design concepts for An Average RPG
+alwaysApply: true
+---
+
+# Game core concepts
+
+**An Average RPG** is a fantasy **idle roguelite** about a **cursed bloodline**, not a single hero. Every heir dies eventually; the family line persists and grows stronger across generations.
+
+## Player identity
+
+- One **account** → one **lineage** (family name + username).
+- A lineage owns a **bank**, **bloodline skills**, **lineage-wide effects**, and **adventurer rank**.
+- At any time there is at most **one living heir** — the character the player actively controls.
+
+## The heir loop
+
+```
+Create lineage → Create heir → Play (tavern, dungeons, jobs, missions, skills)
+      → Heir dies → Inheritance resolves → Create next heir (generation +1)
+```
+
+**Death is progression**, not game over. Fallen heirs become family history (`publicSummary.deadHeirs`, generation count). After death, `activeHeirId` is cleared until the player creates a new heir at `/create-heir`.
+
+## What persists vs what resets
+
+| Persists on the lineage | Resets or lost with the heir |
+|---------------------------|------------------------------|
+| Bank gold & banked items | Carried gold (only ~10% moves to bank on death) |
+| Bloodline skills & bloodline-scoped effects | Most inventory (non-heirloom items lost) |
+| Adventurer rank / rank XP | Level, XP, personal gear on the heir |
+| Generation count, family name | Heir-scoped effects (curses, buffs on one life) |
+| Mission board state | Active job shift / active mission |
+
+Design new features with this split in mind: **long-term power** belongs on the lineage or bank; **short-term risk** belongs on the active heir.
+
+## Inheritance rules (on death)
+
+- **Gold:** ~10% of carried gold goes to `lineage.bankGold`; the rest is lost.
+- **Items:** Heirlooms survive across heirs; soulbound and normal carried items are lost (banked items stay in the bank).
+- **Effects** by scope:
+  - `bloodline` — persists indefinitely
+  - `generations` — ticks down; expires when generations run out
+  - `heir` — removed on death
+- **Unique skills** (`unique_*`, globally one holder): released back to the world when the holder dies.
+
+## Core activities (MVP)
+
+| Activity | Role |
+|----------|------|
+| **Character** | Stats, class, equipment, current heir overview |
+| **Tavern** | Branching story events — choices can grant gold, XP, items, effects, or **death** |
+| **Dungeons** | Floor-based combat with monsters/bosses; rewards and death risk |
+| **Jobs** | Timed work shifts — salary, job XP, promotions, occasional events; **blocks other activities while on shift** |
+| **Bank** | Deposit/withdraw gold; store **bankable** items across generations |
+| **Skills** | Web-shaped skill trees with `requires` / `blocks` / point costs |
+| **Bloodline** | Lineage legacy — generation, fallen heirs, family-wide progression |
+
+## Skills & progression
+
+Three skill layers:
+
+1. **Character skills** — per heir, class-tagged; some need job level or subclass path.
+2. **Subclass skills** — unlocked by advancing along a class subclass chain (tier 1 → tier 2).
+3. **Bloodline skills** — permanent family upgrades; points = `1 + (generation − 1) + floor(deadHeirs / 2)`.
+
+Skill nodes can **grant effects**, **block** other nodes, and have **job requirements**. Respect the web layout — picking one path may lock out another.
+
+## Classes, stats & items
+
+- **Classes:** Warrior, Rogue, Mage, Cleric — each with main stat, starting gear, and class ability.
+- **Stats:** strength, dexterity, intelligence, constitution, luck, charisma, faith, **infamy** (used for some event requirements).
+- **Items:** weapons, armor, accessories, consumables — with rarity and flags:
+  - `isBankable` — can go in the family bank
+  - `isSoulbound` — lost on death
+  - `isHeirloom` — survives death on the heir
+
+## Jobs & idle time
+
+Jobs are **real-time shifts** (`activeJobShift` with `endsAtMs`). While on duty, the heir cannot use other locations (tavern, dungeons, etc.). Jobs have positions (apprentice → guildmaster), promotion thresholds, and can unlock job-linked skills.
+
+## Missions & adventurer rank
+
+The **mission board** rolls hourly slots with ranked missions (F → SSS). Rank gates difficulty. Active missions progress through campaign steps. Rank XP rewards advance `lineage.adventurerRank`.
+
+## Effects & flavor
+
+Effects are typed: buff, debuff, curse, blessing, mutation, passive — with stat modifiers and optional special behavior. They can target an heir, the whole bloodline, or last N generations. Tavern events, dungeons, and skills are primary sources.
+
+Mutations may alter ancestry/race over generations (see Rust `inheritance` engine for intended long-term behavior).
+
+## Design principles when adding content
+
+1. **Meaningful death** — risk/reward should matter; not every outcome should be safe.
+2. **Generational payoff** — long grinds (bank, bloodline skills, rank) should feel worth losing an heir.
+3. **Branching builds** — skills and subclasses use lockouts; avoid “take everything” trees.
+4. **Server authority** — rewards, combat, death, bank ops, and skill claims must stay in Cloud Functions; the client displays and requests only.
+5. **JSON-driven content** — classes, skills, dungeons, events, jobs, items live in `game-data/`; keep IDs stable and cross-reference consistently.
+
+## Tone
+
+Dark fantasy family saga: debts, blessings, curses, mutations, royal favors, enemies, and relics passed (or lost) between generations. UI copy should feel like chronicle and consequence, not generic MMO quest text.

@@ -1,0 +1,440 @@
+{
+  "dungeons": [
+    {
+      "id": "goblin_caves",
+      "name": "Goblin Caves",
+      "description": "A network of caves infested with goblins. The entrance reeks of smoke and rotting meat. An ideal training ground for new adventurers.",
+      "requiredLevel": 1,
+      "difficulty": "easy",
+      "floors": [
+        {
+          "floor": 1,
+          "monsterPool": ["goblin_scout"],
+          "bossId": null,
+          "lootModifier": 1.0,
+          "xpModifier": 1.0
+        },
+        {
+          "floor": 2,
+          "monsterPool": ["goblin_scout", "goblin_warrior"],
+          "bossId": null,
+          "lootModifier": 1.1,
+          "xpModifier": 1.1
+        },
+        {
+          "floor": 3,
+          "monsterPool": ["goblin_warrior"],
+          "bossId": null,
+          "lootModifier": 1.2,
+          "xpModifier": 1.2
+        },
+        {
+          "floor": 4,
+          "monsterPool": ["goblin_warrior", "goblin_archer"],
+          "bossId": null,
+          "lootModifier": 1.3,
+          "xpModifier": 1.3
+        },
+        {
+          "floor": 5,
+          "monsterPool": ["goblin_archer", "goblin_shaman"],
+          "bossId": null,
+          "lootModifier": 1.4,
+          "xpModifier": 1.4
+        },
+        {
+          "floor": 6,
+          "monsterPool": ["goblin_warrior", "goblin_shaman"],
+          "bossId": null,
+          "lootModifier": 1.5,
+          "xpModifier": 1.5
+        },
+        {
+          "floor": 7,
+          "monsterPool": ["goblin_elite"],
+          "bossId": null,
+          "lootModifier": 1.6,
+          "xpModifier": 1.6
+        },
+        {
+          "floor": 8,
+          "monsterPool": ["goblin_elite", "goblin_shaman"],
+          "bossId": null,
+          "lootModifier": 1.7,
+          "xpModifier": 1.7
+        },
+        {
+          "floor": 9,
+          "monsterPool": ["goblin_elite"],
+          "bossId": null,
+          "lootModifier": 1.8,
+          "xpModifier": 1.8
+        },
+        {
+          "floor": 10,
+          "monsterPool": ["goblin_king"],
+          "bossId": "goblin_king",
+          "lootModifier": 2.5,
+          "xpModifier": 2.5
+        }
+      ],
+      "rewards": {
+        "completionBonus": {
+          "gold": 100,
+          "xp": 200,
+          "items": ["goblin_crown_shard"]
+        }
+      },
+      "flavorText": "They say the Goblin King hoards a crown of stolen gold..."
+    },
+    {
+      "id": "undead_crypt",
+      "name": "The Forsaken Crypt",
+      "description": "An ancient burial ground where the dead refuse to rest. Cold mist seeps from the entrance, and whispers echo from within.",
+      "requiredLevel": 5,
+      "difficulty": "medium",
+      "floors": [
+        {
+          "floor": 1,
+          "monsterPool": ["skeleton_warrior"],
+          "bossId": null,
+          "lootModifier": 1.0,
+          "xpModifier": 1.2
+        },
+        {
+          "floor": 2,
+          "monsterPool": ["skeleton_warrior", "zombie"],
+          "bossId": null,
+          "lootModifier": 1.1,
+          "xpModifier": 1.3
+        },
+        {
+          "floor": 3,
+          "monsterPool": ["zombie", "ghost"],
+          "bossId": null,
+          "lootModifier": 1.2,
+          "xpModifier": 1.4
+        },
+        {
+          "floor": 4,
+          "monsterPool": ["skeleton_archer", "ghost"],
+          "bossId": null,
+          "lootModifier": 1.3,
+          "xpModifier": 1.5
+        },
+        {
+          "floor": 5,
+          "monsterPool": ["skeleton_mage", "wraith"],
+          "bossId": null,
+          "lootModifier": 1.4,
+          "xpModifier": 1.6
+        },
+        {
+          "floor": 6,
+          "monsterPool": ["wraith", "skeleton_knight"],
+          "bossId": null,
+          "lootModifier": 1.5,
+          "xpModifier": 1.7
+        },
+        {
+          "floor": 7,
+          "monsterPool": ["skeleton_knight", "bone_golem"],
+          "bossId": null,
+          "lootModifier": 1.6,
+          "xpModifier": 1.8
+        },
+        {
+          "floor": 8,
+          "monsterPool": ["bone_golem", "death_knight"],
+          "bossId": null,
+          "lootModifier": 1.7,
+          "xpModifier": 1.9
+        },
+        {
+          "floor": 9,
+          "monsterPool": ["death_knight"],
+          "bossId": null,
+          "lootModifier": 1.8,
+          "xpModifier": 2.0
+        },
+        {
+          "floor": 10,
+          "monsterPool": ["lich_lord"],
+          "bossId": "lich_lord",
+          "lootModifier": 3.0,
+          "xpModifier": 3.0
+        }
+      ],
+      "rewards": {
+        "completionBonus": {
+          "gold": 250,
+          "xp": 500,
+          "items": ["lich_phylactery_shard"]
+        }
+      },
+      "specialMechanics": {
+        "undeadDamageBonus": "Faith stat reduces damage taken from undead"
+      },
+      "flavorText": "The Lich Lord was once a great king. Now he rules only the dead."
+    },
+    {
+      "id": "dragon_lair",
+      "name": "The Dragon's Lair",
+      "description": "A volcanic mountain home to an ancient wyrm. Few who enter ever return, but the legends of its treasure are irresistible.",
+      "requiredLevel": 10,
+      "difficulty": "hard",
+      "floors": [
+        {
+          "floor": 1,
+          "monsterPool": ["fire_elemental", "magma_slug"],
+          "bossId": null,
+          "lootModifier": 1.2,
+          "xpModifier": 1.5
+        },
+        {
+          "floor": 2,
+          "monsterPool": ["magma_slug", "fire_imp"],
+          "bossId": null,
+          "lootModifier": 1.3,
+          "xpModifier": 1.6
+        },
+        {
+          "floor": 3,
+          "monsterPool": ["fire_imp", "salamander"],
+          "bossId": null,
+          "lootModifier": 1.4,
+          "xpModifier": 1.7
+        },
+        {
+          "floor": 4,
+          "monsterPool": ["salamander", "flame_hound"],
+          "bossId": null,
+          "lootModifier": 1.5,
+          "xpModifier": 1.8
+        },
+        {
+          "floor": 5,
+          "monsterPool": ["flame_hound", "drake_hatchling"],
+          "bossId": null,
+          "lootModifier": 1.6,
+          "xpModifier": 1.9
+        },
+        {
+          "floor": 6,
+          "monsterPool": ["drake_hatchling", "fire_giant"],
+          "bossId": null,
+          "lootModifier": 1.7,
+          "xpModifier": 2.0
+        },
+        {
+          "floor": 7,
+          "monsterPool": ["fire_giant", "young_drake"],
+          "bossId": null,
+          "lootModifier": 1.8,
+          "xpModifier": 2.2
+        },
+        {
+          "floor": 8,
+          "monsterPool": ["young_drake", "lava_golem"],
+          "bossId": null,
+          "lootModifier": 2.0,
+          "xpModifier": 2.4
+        },
+        {
+          "floor": 9,
+          "monsterPool": ["lava_golem", "adult_drake"],
+          "bossId": null,
+          "lootModifier": 2.2,
+          "xpModifier": 2.6
+        },
+        {
+          "floor": 10,
+          "monsterPool": ["ancient_red_dragon"],
+          "bossId": "ancient_red_dragon",
+          "lootModifier": 5.0,
+          "xpModifier": 5.0
+        }
+      ],
+      "rewards": {
+        "completionBonus": {
+          "gold": 1000,
+          "xp": 2000,
+          "items": ["dragon_scale", "dragon_heart_shard"]
+        }
+      },
+      "specialMechanics": {
+        "fireDamage": "All enemies deal bonus fire damage",
+        "heatExhaustion": "Constitution check each floor or take damage"
+      },
+      "flavorText": "Eldragos the Eternal has slumbered for a thousand years. Your bloodline may be his next meal."
+    }
+  ],
+  "monsters": [
+    {
+      "id": "goblin_scout",
+      "name": "Goblin Scout",
+      "level": 1,
+      "hp": 25,
+      "damage": 4,
+      "defense": 2,
+      "dexterity": 8,
+      "xpReward": 10,
+      "goldRewardMin": 2,
+      "goldRewardMax": 6,
+      "lootTable": [
+        { "itemId": "rusty_dagger", "weight": 20, "minQuantity": 1, "maxQuantity": 1 }
+      ]
+    },
+    {
+      "id": "goblin_warrior",
+      "name": "Goblin Warrior",
+      "level": 2,
+      "hp": 40,
+      "damage": 7,
+      "defense": 5,
+      "dexterity": 6,
+      "xpReward": 18,
+      "goldRewardMin": 4,
+      "goldRewardMax": 10,
+      "lootTable": [
+        { "itemId": "crude_sword", "weight": 15, "minQuantity": 1, "maxQuantity": 1 },
+        { "itemId": "leather_scraps", "weight": 30, "minQuantity": 1, "maxQuantity": 2 }
+      ]
+    },
+    {
+      "id": "goblin_archer",
+      "name": "Goblin Archer",
+      "level": 3,
+      "hp": 30,
+      "damage": 10,
+      "defense": 3,
+      "dexterity": 12,
+      "xpReward": 22,
+      "goldRewardMin": 5,
+      "goldRewardMax": 12,
+      "lootTable": [
+        { "itemId": "shortbow", "weight": 10, "minQuantity": 1, "maxQuantity": 1 }
+      ]
+    },
+    {
+      "id": "goblin_shaman",
+      "name": "Goblin Shaman",
+      "level": 4,
+      "hp": 35,
+      "damage": 12,
+      "defense": 4,
+      "dexterity": 7,
+      "xpReward": 30,
+      "goldRewardMin": 8,
+      "goldRewardMax": 18,
+      "lootTable": [
+        { "itemId": "shaman_staff", "weight": 8, "minQuantity": 1, "maxQuantity": 1 },
+        { "itemId": "mana_herb", "weight": 25, "minQuantity": 1, "maxQuantity": 3 }
+      ]
+    },
+    {
+      "id": "goblin_elite",
+      "name": "Goblin Elite",
+      "level": 6,
+      "hp": 70,
+      "damage": 15,
+      "defense": 10,
+      "dexterity": 9,
+      "xpReward": 45,
+      "goldRewardMin": 12,
+      "goldRewardMax": 25,
+      "lootTable": [
+        { "itemId": "elite_goblin_blade", "weight": 12, "minQuantity": 1, "maxQuantity": 1 }
+      ]
+    },
+    {
+      "id": "goblin_king",
+      "name": "Goblin King",
+      "level": 10,
+      "hp": 180,
+      "damage": 25,
+      "defense": 18,
+      "dexterity": 10,
+      "xpReward": 150,
+      "goldRewardMin": 50,
+      "goldRewardMax": 100,
+      "lootTable": [
+        { "itemId": "goblin_kings_crown", "weight": 25, "minQuantity": 1, "maxQuantity": 1 },
+        { "itemId": "kings_treasure_key", "weight": 50, "minQuantity": 1, "maxQuantity": 1 }
+      ],
+      "isBoss": true,
+      "bossAbilities": ["rally_minions", "royal_decree"]
+    },
+    {
+      "id": "skeleton_warrior",
+      "name": "Skeleton Warrior",
+      "level": 5,
+      "hp": 45,
+      "damage": 12,
+      "defense": 8,
+      "dexterity": 5,
+      "xpReward": 35,
+      "goldRewardMin": 5,
+      "goldRewardMax": 15,
+      "lootTable": [
+        { "itemId": "bone_fragment", "weight": 40, "minQuantity": 1, "maxQuantity": 3 }
+      ],
+      "traits": ["undead"]
+    },
+    {
+      "id": "zombie",
+      "name": "Shambling Zombie",
+      "level": 5,
+      "hp": 60,
+      "damage": 10,
+      "defense": 5,
+      "dexterity": 2,
+      "xpReward": 30,
+      "goldRewardMin": 3,
+      "goldRewardMax": 8,
+      "lootTable": [
+        { "itemId": "rotting_flesh", "weight": 50, "minQuantity": 1, "maxQuantity": 2 }
+      ],
+      "traits": ["undead", "slow"]
+    },
+    {
+      "id": "lich_lord",
+      "name": "Lich Lord Malvorath",
+      "level": 15,
+      "hp": 350,
+      "damage": 45,
+      "defense": 25,
+      "dexterity": 12,
+      "xpReward": 500,
+      "goldRewardMin": 150,
+      "goldRewardMax": 300,
+      "lootTable": [
+        { "itemId": "lich_staff", "weight": 20, "minQuantity": 1, "maxQuantity": 1 },
+        { "itemId": "soul_gem", "weight": 35, "minQuantity": 1, "maxQuantity": 2 }
+      ],
+      "isBoss": true,
+      "traits": ["undead", "spellcaster"],
+      "bossAbilities": ["life_drain", "summon_undead", "death_nova"]
+    },
+    {
+      "id": "ancient_red_dragon",
+      "name": "Eldragos the Eternal",
+      "level": 25,
+      "hp": 800,
+      "damage": 80,
+      "defense": 50,
+      "dexterity": 15,
+      "xpReward": 2000,
+      "goldRewardMin": 500,
+      "goldRewardMax": 1500,
+      "lootTable": [
+        { "itemId": "dragon_scale_armor", "weight": 15, "minQuantity": 1, "maxQuantity": 1 },
+        { "itemId": "dragon_fang", "weight": 30, "minQuantity": 1, "maxQuantity": 2 },
+        { "itemId": "dragon_hoard_key", "weight": 100, "minQuantity": 1, "maxQuantity": 1 }
+      ],
+      "isBoss": true,
+      "traits": ["dragon", "fire_immune", "flying"],
+      "bossAbilities": ["fire_breath", "tail_swipe", "terrifying_roar", "wing_buffet"]
+    }
+  ]
+}

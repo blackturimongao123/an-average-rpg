@@ -1,0 +1,274 @@
+{
+  "missions": [
+    {
+      "id": "rat_infestation",
+      "name": "Rat Infestation",
+      "description": "Clear the cellar of oversized rats before they reach the grain stores.",
+      "difficulty": "F",
+      "minAdventurerRank": "F",
+      "minHeirLevel": 1,
+      "weight": 100,
+      "type": "combat",
+      "rewards": { "gold": 8, "xp": 15, "rankXp": 10, "items": [] },
+      "campaign": {
+        "steps": [
+          { "text": "You descend into the damp cellar, torch in hand. Squeaks echo from the shadows." },
+          { "text": "A swarm of rats charges. You fight them off with quick strikes." },
+          { "text": "The last rat falls. The innkeeper owes you a drink—and coin." }
+        ]
+      }
+    },
+    {
+      "id": "lost_package",
+      "name": "Lost Package",
+      "description": "A merchant's courier vanished on the forest road. Recover the parcel.",
+      "difficulty": "F",
+      "minAdventurerRank": "F",
+      "minHeirLevel": 1,
+      "weight": 90,
+      "type": "deliver",
+      "rewards": { "gold": 12, "xp": 20, "rankXp": 10, "items": [] },
+      "campaign": {
+        "steps": [
+          { "text": "You follow muddy tracks into the woods." },
+          { "text": "A bandit camp holds the crate. You slip in and grab it." },
+          { "text": "The merchant pays well for discretion." }
+        ]
+      }
+    },
+    {
+      "id": "herb_gathering",
+      "name": "Herb Gathering",
+      "description": "Collect moonpetal flowers from the meadow before dawn.",
+      "difficulty": "E",
+      "minAdventurerRank": "F",
+      "minHeirLevel": 2,
+      "weight": 85,
+      "type": "explore",
+      "rewards": { "gold": 15, "xp": 25, "rankXp": 15, "items": ["health_potion"] },
+      "campaign": {
+        "steps": [
+          { "text": "Moonlight washes the meadow silver." },
+          { "text": "Wolves prowl nearby—you gather quickly and retreat." },
+          { "text": "The apothecary inspects your haul and nods approvingly." }
+        ]
+      }
+    },
+    {
+      "id": "bandit_scouts",
+      "name": "Bandit Scouts",
+      "description": "Scouts report bandits near the trade road. Drive them off.",
+      "difficulty": "E",
+      "minAdventurerRank": "E",
+      "minHeirLevel": 3,
+      "weight": 80,
+      "type": "combat",
+      "rewards": { "gold": 22, "xp": 35, "rankXp": 15, "items": [] },
+      "campaign": {
+        "steps": [
+          { "text": "You spot smoke from a roadside camp." },
+          { "text": "The bandits scatter after a brief skirmish." },
+          { "text": "The guild clerk stamps your contract complete." }
+        ]
+      }
+    },
+    {
+      "id": "haunted_mill",
+      "name": "Haunted Mill",
+      "description": "Strange lights flicker in the abandoned mill. Investigate the source.",
+      "difficulty": "D",
+      "minAdventurerRank": "E",
+      "minHeirLevel": 4,
+      "weight": 70,
+      "type": "investigate",
+      "rewards": { "gold": 35, "xp": 50, "rankXp": 25, "items": [] },
+      "campaign": {
+        "steps": [
+          { "text": "The mill wheel creaks though no water flows." },
+          { "text": "Will-o-wisps lead you to a smuggler's stash—not ghosts." },
+          { "text": "You turn evidence over to the guard captain for pay." }
+        ]
+      }
+    },
+    {
+      "id": "escort_caravan",
+      "name": "Escort Caravan",
+      "description": "Guard a spice caravan through goblin territory.",
+      "difficulty": "D",
+      "minAdventurerRank": "D",
+      "minHeirLevel": 5,
+      "weight": 65,
+      "type": "deliver",
+      "rewards": { "gold": 45, "xp": 60, "rankXp": 25, "items": [] },
+      "campaign": {
+        "steps": [
+          { "text": "The caravan rolls out at first light." },
+          { "text": "Goblins ambush at the ravine—you hold the line." },
+          { "text": "Spices delivered. The merchant shares a generous cut." }
+        ]
+      }
+    },
+    {
+      "id": "crypt_cleanup",
+      "name": "Crypt Cleanup",
+      "description": "Undead stir in the old burial grounds. Put them back to rest.",
+      "difficulty": "C",
+      "minAdventurerRank": "D",
+      "minHeirLevel": 6,
+      "weight": 55,
+      "type": "combat",
+      "rewards": { "gold": 60, "xp": 80, "rankXp": 40, "items": ["iron_sword"] },
+      "campaign": {
+        "steps": [
+          { "text": "Tombstones lean like rotten teeth." },
+          { "text": "Skeletons rise—you shatter bone and curse alike." },
+          { "text": "The gravekeeper pays from the church coffers." }
+        ]
+      }
+    },
+    {
+      "id": "noble_errand",
+      "name": "Noble's Errand",
+      "description": "Deliver a sealed letter to a rival house without being caught.",
+      "difficulty": "C",
+      "minAdventurerRank": "C",
+      "minHeirLevel": 7,
+      "weight": 50,
+      "type": "deliver",
+      "rewards": { "gold": 75, "xp": 90, "rankXp": 40, "items": [] },
+      "campaign": {
+        "steps": [
+          { "text": "You blend into the city crowds at dusk." },
+          { "text": "House guards almost spot you—you use a side alley." },
+          { "text": "The letter is delivered. Gold follows by morning." }
+        ]
+      }
+    },
+    {
+      "id": "wyvern_nest",
+      "name": "Wyvern Nest",
+      "description": "A wyvern nests too close to farmland. Scare it off or slay it.",
+      "difficulty": "B",
+      "minAdventurerRank": "C",
+      "minHeirLevel": 8,
+      "weight": 40,
+      "type": "combat",
+      "rewards": { "gold": 100, "xp": 120, "rankXp": 60, "items": ["chain_mail"] },
+      "campaign": {
+        "steps": [
+          { "text": "Wingbeats shake the cliffs as you climb." },
+          { "text": "The wyvern dives—you dodge and strike its wing." },
+          { "text": "It flees the valley. Farmers cheer your name." }
+        ]
+      }
+    },
+    {
+      "id": "artifact_recovery",
+      "name": "Artifact Recovery",
+      "description": "Recover a stolen relic from a cult hideout in the sewers.",
+      "difficulty": "B",
+      "minAdventurerRank": "B",
+      "minHeirLevel": 9,
+      "weight": 35,
+      "type": "investigate",
+      "rewards": { "gold": 120, "xp": 140, "rankXp": 60, "items": [] },
+      "campaign": {
+        "steps": [
+          { "text": "Sewer tunnels reek of incense and rot." },
+          { "text": "Cultists guard the relic—you fight through chanting halls." },
+          { "text": "The temple rewards you with gold and a blessing." }
+        ]
+      }
+    },
+    {
+      "id": "dragon_scales",
+      "name": "Dragon Scale Hunt",
+      "description": "Collect shed scales from a young dragon's hunting grounds.",
+      "difficulty": "A",
+      "minAdventurerRank": "B",
+      "minHeirLevel": 10,
+      "weight": 28,
+      "type": "explore",
+      "rewards": { "gold": 160, "xp": 180, "rankXp": 85, "items": ["dragon_scale_armor"] },
+      "campaign": {
+        "steps": [
+          { "text": "Scorched earth marks the dragon's territory." },
+          { "text": "You wait until it hunts, then gather scales under ash clouds." },
+          { "text": "The armorer pays a fortune for rare material." }
+        ]
+      }
+    },
+    {
+      "id": "demon_binding",
+      "name": "Demon Binding",
+      "description": "A summoning circle flickers in the ruins. Break the ritual.",
+      "difficulty": "A",
+      "minAdventurerRank": "A",
+      "minHeirLevel": 11,
+      "weight": 22,
+      "type": "combat",
+      "rewards": { "gold": 200, "xp": 220, "rankXp": 85, "items": [] },
+      "campaign": {
+        "steps": [
+          { "text": "Arcane symbols pulse with sickly light." },
+          { "text": "A lesser demon manifests—you shatter the focus stone." },
+          { "text": "The circle collapses. Mages guild pays hazard rates." }
+        ]
+      }
+    },
+    {
+      "id": "lich_sigil",
+      "name": "Lich Sigil",
+      "description": "Destroy a phylactery fragment before it regrows full power.",
+      "difficulty": "S",
+      "minAdventurerRank": "A",
+      "minHeirLevel": 12,
+      "weight": 15,
+      "type": "combat",
+      "rewards": { "gold": 280, "xp": 300, "rankXp": 120, "items": ["lucky_coin"] },
+      "campaign": {
+        "steps": [
+          { "text": "Cold drains warmth from the tomb air." },
+          { "text": "Wraiths guard the sigil—you destroy it in a blaze of faith." },
+          { "text": "The lich's influence wanes. Royal coin follows." }
+        ]
+      }
+    },
+    {
+      "id": "void_rift",
+      "name": "Void Rift",
+      "description": "Seal a tear in reality before horrors spill into the kingdom.",
+      "difficulty": "SS",
+      "minAdventurerRank": "S",
+      "minHeirLevel": 14,
+      "weight": 8,
+      "type": "investigate",
+      "rewards": { "gold": 400, "xp": 420, "rankXp": 170, "items": [] },
+      "campaign": {
+        "steps": [
+          { "text": "Reality warps—grass floats, stars show at noon." },
+          { "text": "You anchor the rift with ancient wards and sheer will." },
+          { "text": "Scholars record your deed. The crown pays in gold." }
+        ]
+      }
+    },
+    {
+      "id": "world_ender",
+      "name": "World-Ender's Echo",
+      "description": "Face the echo of an ancient destroyer trapped in a crystal prison.",
+      "difficulty": "SSS",
+      "minAdventurerRank": "SS",
+      "minHeirLevel": 16,
+      "weight": 3,
+      "type": "combat",
+      "rewards": { "gold": 600, "xp": 650, "rankXp": 250, "items": ["veterans_blade"] },
+      "campaign": {
+        "steps": [
+          { "text": "The crystal hums with apocalyptic memory." },
+          { "text": "The echo takes form—you battle across shattered time." },
+          { "text": "Silence returns. Legends will speak of this day." }
+        ]
+      }
+    }
+  ]
+}

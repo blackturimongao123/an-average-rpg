@@ -1,0 +1,1453 @@
+{
+  "jobs": [
+    {
+      "id": "guard",
+      "name": "City Guard",
+      "classTags": [
+        "warrior"
+      ],
+      "description": "Patrol the streets and maintain order. A respectable position that builds strength and earns the trust of the city watch.",
+      "baseSalary": 18,
+      "xpPerShift": 15,
+      "requiredStats": {
+        "strength": 6,
+        "constitution": 5
+      },
+      "unlockedSkills": [
+        "shield_wall",
+        "vigilant_eye"
+      ],
+      "promotionThresholds": [
+        100,
+        300,
+        700,
+        1500
+      ],
+      "positions": [
+        {
+          "name": "Recruit",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Watchman",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Sergeant",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Captain",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Commander",
+          "salaryMultiplier": 3
+        }
+      ],
+      "flavorText": "The law is my sword, duty is my shield."
+    },
+    {
+      "id": "pit_handler",
+      "name": "Pit Handler",
+      "classTags": [
+        "warrior"
+      ],
+      "subclassTags": [
+        "brawler",
+        "martial_artist"
+      ],
+      "description": "Work the fighting pits—breaking up brawls, hauling bodies, and keeping the crowd from rioting. Builds raw strength and street reputation.",
+      "baseSalary": 17,
+      "xpPerShift": 17,
+      "requiredStats": {
+        "strength": 7,
+        "constitution": 6
+      },
+      "unlockedSkills": [
+        "iron_body"
+      ],
+      "promotionThresholds": [
+        90,
+        280,
+        650,
+        1400
+      ],
+      "positions": [
+        {
+          "name": "Apprentice",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Journeyman",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Specialist",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Master",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Guildmaster",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "Work the fighting pits—breaking up brawls, hauling bodies, and keeping the crowd from rioting."
+    },
+    {
+      "id": "garrison_sergeant",
+      "name": "Garrison Sergeant",
+      "classTags": [
+        "warrior"
+      ],
+      "subclassTags": [
+        "guardian",
+        "bulwark_knight"
+      ],
+      "description": "Train recruits and oversee wall patrols. The garrison trusts those who stand when others flee.",
+      "baseSalary": 19,
+      "xpPerShift": 15,
+      "requiredStats": {
+        "strength": 6,
+        "constitution": 7,
+        "faith": 4
+      },
+      "unlockedSkills": [],
+      "promotionThresholds": [
+        90,
+        280,
+        650,
+        1400
+      ],
+      "positions": [
+        {
+          "name": "Apprentice",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Journeyman",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Specialist",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Master",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Guildmaster",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "Train recruits and oversee wall patrols."
+    },
+    {
+      "id": "weaponsmith",
+      "name": "Weaponsmith",
+      "classTags": [
+        "warrior"
+      ],
+      "subclassTags": [
+        "weaponmaster",
+        "blade_dancer"
+      ],
+      "description": "Forge and maintain blades at the city armory. Precision at the anvil mirrors precision in combat.",
+      "baseSalary": 22,
+      "xpPerShift": 18,
+      "requiredStats": {
+        "strength": 8,
+        "dexterity": 6
+      },
+      "unlockedSkills": [
+        "master_repair",
+        "forge_blessing"
+      ],
+      "promotionThresholds": [
+        90,
+        280,
+        650,
+        1400
+      ],
+      "positions": [
+        {
+          "name": "Apprentice",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Journeyman",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Specialist",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Master",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Guildmaster",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "Forge and maintain blades at the city armory."
+    },
+    {
+      "id": "mercenary_captain",
+      "name": "Mercenary Captain",
+      "classTags": [
+        "warrior"
+      ],
+      "subclassTags": [
+        "warlord",
+        "siegebreaker"
+      ],
+      "description": "Broker contracts for sellsword companies and drill hired blades. Leadership pays better than blood.",
+      "baseSalary": 24,
+      "xpPerShift": 16,
+      "requiredStats": {
+        "strength": 6,
+        "charisma": 7,
+        "intelligence": 5
+      },
+      "unlockedSkills": [],
+      "promotionThresholds": [
+        90,
+        280,
+        650,
+        1400
+      ],
+      "positions": [
+        {
+          "name": "Apprentice",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Journeyman",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Specialist",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Master",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Guildmaster",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "Broker contracts for sellsword companies and drill hired blades."
+    },
+    {
+      "id": "paladin_order",
+      "name": "Paladin Order Aide",
+      "classTags": [
+        "warrior",
+        "priest"
+      ],
+      "subclassTags": [
+        "paladin",
+        "paladin_ascended"
+      ],
+      "description": "Serve the holy orders—maintaining reliquaries, escorting pilgrims, and carrying sacred burdens.",
+      "baseSalary": 14,
+      "xpPerShift": 14,
+      "requiredStats": {
+        "faith": 6,
+        "constitution": 5
+      },
+      "unlockedSkills": [
+        "paladin_oath"
+      ],
+      "promotionThresholds": [
+        90,
+        280,
+        650,
+        1400
+      ],
+      "positions": [
+        {
+          "name": "Apprentice",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Journeyman",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Specialist",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Master",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Guildmaster",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "Serve the flagellant orders—maintaining reliquaries, escorting pilgrims, and carrying holy burdens."
+    },
+    {
+      "id": "fence",
+      "name": "Guild Fence",
+      "classTags": [
+        "rogue"
+      ],
+      "description": "Move questionable goods through back alleys and appraise stolen trinkets for the thieves guild. Discretion is the whole trade.",
+      "baseSalary": 20,
+      "xpPerShift": 18,
+      "requiredStats": {
+        "dexterity": 7,
+        "charisma": 5
+      },
+      "unlockedSkills": [
+        "silver_tongue"
+      ],
+      "promotionThresholds": [
+        100,
+        300,
+        700,
+        1500
+      ],
+      "positions": [
+        {
+          "name": "Apprentice",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Journeyman",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Specialist",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Master",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Guildmaster",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "No questions asked."
+    },
+    {
+      "id": "contract_broker",
+      "name": "Contract Broker",
+      "classTags": [
+        "rogue"
+      ],
+      "subclassTags": [
+        "assassin",
+        "ghostblade"
+      ],
+      "description": "Collect bounties, deliver sealed contracts, and verify targets for the assassins guild. You never meet the blade—only the payment.",
+      "baseSalary": 22,
+      "xpPerShift": 20,
+      "requiredStats": {
+        "dexterity": 8,
+        "intelligence": 5
+      },
+      "unlockedSkills": [],
+      "promotionThresholds": [
+        90,
+        280,
+        650,
+        1400
+      ],
+      "positions": [
+        {
+          "name": "Apprentice",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Journeyman",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Specialist",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Master",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Guildmaster",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "Collect bounties, deliver sealed contracts, and verify targets for the assassins guild."
+    },
+    {
+      "id": "street_con_artist",
+      "name": "Street Con Artist",
+      "classTags": [
+        "rogue"
+      ],
+      "subclassTags": [
+        "trickster",
+        "grand_illusionist"
+      ],
+      "description": "Run shell games, rigged dice, and distraction schemes in the market square. The mark never sees the hand that takes their purse.",
+      "baseSalary": 18,
+      "xpPerShift": 19,
+      "requiredStats": {
+        "charisma": 8,
+        "dexterity": 6
+      },
+      "unlockedSkills": [],
+      "promotionThresholds": [
+        90,
+        280,
+        650,
+        1400
+      ],
+      "positions": [
+        {
+          "name": "Apprentice",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Journeyman",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Specialist",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Master",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Guildmaster",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "Run shell games, rigged dice, and distraction schemes in the market square."
+    },
+    {
+      "id": "dock_rigger",
+      "name": "Dock Rigger",
+      "classTags": [
+        "rogue"
+      ],
+      "subclassTags": [
+        "swashbuckler",
+        "sea_devil"
+      ],
+      "description": "Rig sails, unload contraband, and settle tavern debts on the waterfront. Fast hands and faster feet keep you alive.",
+      "baseSalary": 19,
+      "xpPerShift": 17,
+      "requiredStats": {
+        "dexterity": 7,
+        "constitution": 5
+      },
+      "unlockedSkills": [],
+      "promotionThresholds": [
+        90,
+        280,
+        650,
+        1400
+      ],
+      "positions": [
+        {
+          "name": "Apprentice",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Journeyman",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Specialist",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Master",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Guildmaster",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "Rig sails, unload contraband, and settle tavern debts on the waterfront."
+    },
+    {
+      "id": "night_runner",
+      "name": "Night Runner",
+      "classTags": [
+        "rogue"
+      ],
+      "subclassTags": [
+        "shadow",
+        "void_walker"
+      ],
+      "description": "Carry messages and packages through lightless routes the watch never patrols. You are paid to not be seen.",
+      "baseSalary": 17,
+      "xpPerShift": 18,
+      "requiredStats": {
+        "dexterity": 8,
+        "luck": 5
+      },
+      "unlockedSkills": [],
+      "promotionThresholds": [
+        90,
+        280,
+        650,
+        1400
+      ],
+      "positions": [
+        {
+          "name": "Apprentice",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Journeyman",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Specialist",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Master",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Guildmaster",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "Carry messages and packages through lightless routes the watch never patrols."
+    },
+    {
+      "id": "apothecary_assistant",
+      "name": "Apothecary Assistant",
+      "classTags": [
+        "rogue"
+      ],
+      "subclassTags": [
+        "poisoner",
+        "plague_lord"
+      ],
+      "description": "Mix tinctures, label vials, and dispose of failed experiments for a discreet herbalist. Some bottles have no ingredient list.",
+      "baseSalary": 16,
+      "xpPerShift": 20,
+      "requiredStats": {
+        "intelligence": 7,
+        "dexterity": 5
+      },
+      "unlockedSkills": [],
+      "promotionThresholds": [
+        90,
+        280,
+        650,
+        1400
+      ],
+      "positions": [
+        {
+          "name": "Apprentice",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Journeyman",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Specialist",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Master",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Guildmaster",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "Mix tinctures, label vials, and dispose of failed experiments for a discreet herbalist."
+    },
+    {
+      "id": "scribe",
+      "name": "Scribe",
+      "classTags": [
+        "mage"
+      ],
+      "description": "Copy documents, maintain records, and occasionally uncover secrets hidden in ancient texts. Knowledge is its own reward.",
+      "baseSalary": 12,
+      "xpPerShift": 20,
+      "requiredStats": {
+        "intelligence": 8
+      },
+      "unlockedSkills": [
+        "ancient_knowledge",
+        "contract_reader"
+      ],
+      "promotionThresholds": [
+        80,
+        250,
+        600,
+        1200
+      ],
+      "positions": [
+        {
+          "name": "Copyist",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Scribe",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Archivist",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Lorekeeper",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Master Scholar",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "In ink and parchment, history lives."
+    },
+    {
+      "id": "kiln_stoker",
+      "name": "Kiln Stoker",
+      "classTags": [
+        "mage"
+      ],
+      "subclassTags": [
+        "pyromancer",
+        "inferno_archon"
+      ],
+      "description": "Tend arcane furnaces and fireglass kilns for the pyromancers guild. Heat that would kill others barely warms your sleeves.",
+      "baseSalary": 15,
+      "xpPerShift": 18,
+      "requiredStats": {
+        "intelligence": 7,
+        "constitution": 5
+      },
+      "unlockedSkills": [],
+      "promotionThresholds": [
+        90,
+        280,
+        650,
+        1400
+      ],
+      "positions": [
+        {
+          "name": "Apprentice",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Journeyman",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Specialist",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Master",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Guildmaster",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "Tend arcane furnaces and fireglass kilns for the pyromancers guild."
+    },
+    {
+      "id": "icehouse_keeper",
+      "name": "Icehouse Keeper",
+      "classTags": [
+        "mage"
+      ],
+      "subclassTags": [
+        "cryomancer",
+        "frost_sovereign"
+      ],
+      "description": "Preserve reagents in enchanted cold vaults. Frost runes hum under your touch.",
+      "baseSalary": 14,
+      "xpPerShift": 19,
+      "requiredStats": {
+        "intelligence": 8,
+        "constitution": 4
+      },
+      "unlockedSkills": [],
+      "promotionThresholds": [
+        90,
+        280,
+        650,
+        1400
+      ],
+      "positions": [
+        {
+          "name": "Apprentice",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Journeyman",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Specialist",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Master",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Guildmaster",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "Preserve reagents in enchanted cold vaults."
+    },
+    {
+      "id": "leyline_surveyor",
+      "name": "Leyline Surveyor",
+      "classTags": [
+        "mage"
+      ],
+      "subclassTags": [
+        "arcanist",
+        "void_scholar"
+      ],
+      "description": "Map ambient mana flows and calibrate ward stones for the arcanists circle. Theory made practical.",
+      "baseSalary": 16,
+      "xpPerShift": 22,
+      "requiredStats": {
+        "intelligence": 9
+      },
+      "unlockedSkills": [],
+      "promotionThresholds": [
+        90,
+        280,
+        650,
+        1400
+      ],
+      "positions": [
+        {
+          "name": "Apprentice",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Journeyman",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Specialist",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Master",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Guildmaster",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "Map ambient mana flows and calibrate ward stones for the arcanists circle."
+    },
+    {
+      "id": "familiar_keeper",
+      "name": "Familiar Keeper",
+      "classTags": [
+        "mage"
+      ],
+      "subclassTags": [
+        "summoner",
+        "pact_master"
+      ],
+      "description": "Feed, bind, and soothe summoned familiars between contracts. Creatures from beyond still need kibble.",
+      "baseSalary": 15,
+      "xpPerShift": 20,
+      "requiredStats": {
+        "intelligence": 7,
+        "charisma": 5
+      },
+      "unlockedSkills": [],
+      "promotionThresholds": [
+        90,
+        280,
+        650,
+        1400
+      ],
+      "positions": [
+        {
+          "name": "Apprentice",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Journeyman",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Specialist",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Master",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Guildmaster",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "Feed, bind, and soothe summoned familiars between contracts."
+    },
+    {
+      "id": "rune_engraver",
+      "name": "Rune Engraver",
+      "classTags": [
+        "mage"
+      ],
+      "subclassTags": [
+        "enchanter",
+        "rune_emperor"
+      ],
+      "description": "Etch enchantment sigils onto weapons, jewelry, and armor for paying clients. One slip ruins the whole batch.",
+      "baseSalary": 18,
+      "xpPerShift": 21,
+      "requiredStats": {
+        "intelligence": 8,
+        "dexterity": 6
+      },
+      "unlockedSkills": [],
+      "promotionThresholds": [
+        90,
+        280,
+        650,
+        1400
+      ],
+      "positions": [
+        {
+          "name": "Apprentice",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Journeyman",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Specialist",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Master",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Guildmaster",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "Etch enchantment sigils onto weapons, jewelry, and armor for paying clients."
+    },
+    {
+      "id": "gravekeeper",
+      "name": "Gravekeeper",
+      "classTags": [
+        "priest"
+      ],
+      "description": "Tend to the dead and maintain the sacred grounds. A grim profession that offers unique insights into mortality... and beyond.",
+      "baseSalary": 10,
+      "xpPerShift": 12,
+      "requiredStats": {
+        "faith": 4,
+        "constitution": 5
+      },
+      "unlockedSkills": [
+        "death_sense",
+        "grave_whispers",
+        "undead_resistance"
+      ],
+      "promotionThresholds": [
+        60,
+        180,
+        450,
+        1000
+      ],
+      "positions": [
+        {
+          "name": "Digger",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Keeper",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Warden",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Deathspeaker",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Gravemast",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "I walk between the living and the dead."
+    },
+    {
+      "id": "hospice_caretaker",
+      "name": "Hospice Caretaker",
+      "classTags": [
+        "priest"
+      ],
+      "subclassTags": [
+        "cleric",
+        "high_cleric"
+      ],
+      "description": "Comfort the sick and administer blessings at the temple hospice. Mercy is measured in small, steady acts.",
+      "baseSalary": 12,
+      "xpPerShift": 14,
+      "requiredStats": {
+        "faith": 7,
+        "charisma": 5
+      },
+      "unlockedSkills": [],
+      "promotionThresholds": [
+        90,
+        280,
+        650,
+        1400
+      ],
+      "positions": [
+        {
+          "name": "Apprentice",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Journeyman",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Specialist",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Master",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Guildmaster",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "Comfort the sick and administer blessings at the temple hospice."
+    },
+    {
+      "id": "inquisition_aide",
+      "name": "Inquisition Aide",
+      "classTags": [
+        "priest"
+      ],
+      "subclassTags": [
+        "inquisitor",
+        "witch_hunter"
+      ],
+      "description": "Catalog evidence, escort prisoners, and maintain the inquisitors ledgers. Heresy leaves paperwork.",
+      "baseSalary": 14,
+      "xpPerShift": 16,
+      "requiredStats": {
+        "faith": 6,
+        "strength": 5,
+        "intelligence": 5
+      },
+      "unlockedSkills": [],
+      "promotionThresholds": [
+        90,
+        280,
+        650,
+        1400
+      ],
+      "positions": [
+        {
+          "name": "Apprentice",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Journeyman",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Specialist",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Master",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Guildmaster",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "Catalog evidence, escort prisoners, and maintain the inquisitors ledgers."
+    },
+    {
+      "id": "shrine_guard",
+      "name": "Shrine Guard",
+      "classTags": [
+        "priest"
+      ],
+      "subclassTags": [
+        "paladin",
+        "paladin_ascended"
+      ],
+      "description": "Stand watch over reliquaries and escort holy processions. Your shield protects more than flesh.",
+      "baseSalary": 16,
+      "xpPerShift": 15,
+      "requiredStats": {
+        "faith": 6,
+        "strength": 6,
+        "constitution": 5
+      },
+      "unlockedSkills": [],
+      "promotionThresholds": [
+        90,
+        280,
+        650,
+        1400
+      ],
+      "positions": [
+        {
+          "name": "Apprentice",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Journeyman",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Specialist",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Master",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Guildmaster",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "Stand watch over reliquaries and escort holy processions."
+    },
+    {
+      "id": "temple_augur",
+      "name": "Temple Augur",
+      "classTags": [
+        "priest"
+      ],
+      "subclassTags": [
+        "oracle",
+        "fate_weaver"
+      ],
+      "description": "Record visions, maintain the divination chamber, and interpret omens for visiting pilgrims.",
+      "baseSalary": 13,
+      "xpPerShift": 18,
+      "requiredStats": {
+        "faith": 7,
+        "intelligence": 6
+      },
+      "unlockedSkills": [],
+      "promotionThresholds": [
+        90,
+        280,
+        650,
+        1400
+      ],
+      "positions": [
+        {
+          "name": "Apprentice",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Journeyman",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Specialist",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Master",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Guildmaster",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "Record visions, maintain the divination chamber, and interpret omens for visiting pilgrims."
+    },
+    {
+      "id": "spirit_warden",
+      "name": "Spirit Warden",
+      "classTags": [
+        "priest"
+      ],
+      "subclassTags": [
+        "exorcist",
+        "soul_binder"
+      ],
+      "description": "Seal haunted rooms, maintain exorcism circles, and catalog restless spirits bound to holy ground.",
+      "baseSalary": 11,
+      "xpPerShift": 17,
+      "requiredStats": {
+        "faith": 8,
+        "constitution": 5
+      },
+      "unlockedSkills": [
+        "banish"
+      ],
+      "promotionThresholds": [
+        90,
+        280,
+        650,
+        1400
+      ],
+      "positions": [
+        {
+          "name": "Apprentice",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Journeyman",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Specialist",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Master",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Guildmaster",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "Seal haunted rooms, maintain exorcism circles, and catalog restless spirits bound to holy ground."
+    },
+    {
+      "id": "trail_warden",
+      "name": "Trail Warden",
+      "classTags": [
+        "ranger"
+      ],
+      "description": "Patrol forest paths, guide travelers, and keep the wilds in check. Honest work for those who know the land.",
+      "baseSalary": 16,
+      "xpPerShift": 16,
+      "requiredStats": {
+        "dexterity": 7,
+        "constitution": 5
+      },
+      "unlockedSkills": [
+        "keen_eye",
+        "wilderness_survival"
+      ],
+      "promotionThresholds": [
+        90,
+        280,
+        650,
+        1400
+      ],
+      "positions": [
+        {
+          "name": "Tracker",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Warden",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Pathfinder",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Trail Captain",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Wild Marshal",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "Every trail tells a story."
+    },
+    {
+      "id": "range_instructor",
+      "name": "Range Instructor",
+      "classTags": [
+        "ranger"
+      ],
+      "subclassTags": [
+        "marksman",
+        "deadeye"
+      ],
+      "description": "Maintain the militia archery butts and train new recruits to draw without shaking.",
+      "baseSalary": 17,
+      "xpPerShift": 16,
+      "requiredStats": {
+        "dexterity": 8,
+        "constitution": 5
+      },
+      "unlockedSkills": [],
+      "promotionThresholds": [
+        90,
+        280,
+        650,
+        1400
+      ],
+      "positions": [
+        {
+          "name": "Apprentice",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Journeyman",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Specialist",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Master",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Guildmaster",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "Maintain the militia archery butts and train new recruits to draw without shaking."
+    },
+    {
+      "id": "kennel_master",
+      "name": "Kennel Master",
+      "classTags": [
+        "ranger"
+      ],
+      "subclassTags": [
+        "beastmaster",
+        "alpha_prime"
+      ],
+      "description": "Care for hunting hounds, hawks, and stranger beasts bonded to rangers. The animals trust you first.",
+      "baseSalary": 15,
+      "xpPerShift": 17,
+      "requiredStats": {
+        "dexterity": 6,
+        "charisma": 6,
+        "constitution": 5
+      },
+      "unlockedSkills": [],
+      "promotionThresholds": [
+        90,
+        280,
+        650,
+        1400
+      ],
+      "positions": [
+        {
+          "name": "Apprentice",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Journeyman",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Specialist",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Master",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Guildmaster",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "Care for hunting hounds, hawks, and stranger beasts bonded to rangers."
+    },
+    {
+      "id": "border_patrol",
+      "name": "Border Patrol",
+      "classTags": [
+        "ranger"
+      ],
+      "subclassTags": [
+        "warden",
+        "storm_ranger"
+      ],
+      "description": "Mark trees, repair trail signs, and report incursions along the forest border.",
+      "baseSalary": 16,
+      "xpPerShift": 16,
+      "requiredStats": {
+        "dexterity": 7,
+        "constitution": 6
+      },
+      "unlockedSkills": [],
+      "promotionThresholds": [
+        90,
+        280,
+        650,
+        1400
+      ],
+      "positions": [
+        {
+          "name": "Apprentice",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Journeyman",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Specialist",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Master",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Guildmaster",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "Mark trees, repair trail signs, and report incursions along the forest border."
+    },
+    {
+      "id": "bounty_tracker",
+      "name": "Bounty Tracker",
+      "classTags": [
+        "ranger"
+      ],
+      "subclassTags": [
+        "stalker",
+        "silent_death"
+      ],
+      "description": "Pick up trail contracts for poachers, deserters, and fugitives. Payment follows the footprints.",
+      "baseSalary": 18,
+      "xpPerShift": 18,
+      "requiredStats": {
+        "dexterity": 8,
+        "intelligence": 5
+      },
+      "unlockedSkills": [],
+      "promotionThresholds": [
+        90,
+        280,
+        650,
+        1400
+      ],
+      "positions": [
+        {
+          "name": "Apprentice",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Journeyman",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Specialist",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Master",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Guildmaster",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "Pick up trail contracts for poachers, deserters, and fugitives."
+    },
+    {
+      "id": "wilderness_guide",
+      "name": "Wilderness Guide",
+      "classTags": [
+        "ranger"
+      ],
+      "subclassTags": [
+        "survivalist",
+        "wild_avatar"
+      ],
+      "description": "Lead caravans through dangerous terrain and forage for expeditions. The wild provides—for a fee.",
+      "baseSalary": 14,
+      "xpPerShift": 17,
+      "requiredStats": {
+        "constitution": 6,
+        "intelligence": 5,
+        "luck": 4
+      },
+      "unlockedSkills": [],
+      "promotionThresholds": [
+        90,
+        280,
+        650,
+        1400
+      ],
+      "positions": [
+        {
+          "name": "Apprentice",
+          "salaryMultiplier": 0.5
+        },
+        {
+          "name": "Journeyman",
+          "salaryMultiplier": 1
+        },
+        {
+          "name": "Specialist",
+          "salaryMultiplier": 1.5
+        },
+        {
+          "name": "Master",
+          "salaryMultiplier": 2
+        },
+        {
+          "name": "Guildmaster",
+          "salaryMultiplier": 2.5
+        }
+      ],
+      "flavorText": "Lead caravans through dangerous terrain and forage for expeditions."
+    }
+  ]
+}

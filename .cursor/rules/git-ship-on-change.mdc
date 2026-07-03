@@ -1,0 +1,36 @@
+---
+description: After every change, stage, commit, and push to remote
+alwaysApply: true
+---
+
+# Ship every change with git
+
+After **any completed task** that modifies the repo (code, rules, game data, workflows, etc.), finish by shipping to git:
+
+```bash
+git add .
+git commit -m "..."
+git push
+```
+
+Do this **without waiting for the user to ask** — committing and pushing is part of delivering the work.
+
+## Before committing
+
+1. Run `git status`, `git diff`, and `git log -1` to see what changed and match commit message style.
+2. Write a **1–2 sentence** commit message focused on **why**, not a file list.
+3. **Never commit** secrets or gitignored sensitive files (`.env`, credentials, `.firebase/`, etc.). If `git add .` would stage them, unstage or fix `.gitignore` first.
+4. If the change is **user-facing**, bump `APP_VERSION` first (see `bump-app-version` rule).
+
+## Push
+
+- Push to the current branch (usually `main`) with a normal `git push` — **never** `push --force` to `main`/`master` unless the user explicitly requests it.
+- Do **not** update git config, skip hooks, or amend unless the user's git safety rules allow it.
+- Push triggers deploy workflows on `main` (see `deploy-on-push` rule).
+
+## When to skip
+
+- **Question-only** or **read-only** tasks with no file changes — nothing to commit.
+- The user **explicitly** says not to commit or push for that task.
+
+If commit or push **fails**, fix the issue and retry with a **new** commit (do not amend a failed hook run unless amend rules apply).

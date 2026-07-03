@@ -1,0 +1,52 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Helper functions
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function isValidImage() {
+      return request.resource.contentType.matches('image/.*')
+        && request.resource.size < 5 * 1024 * 1024; // 5MB max
+    }
+
+    function isValidJson() {
+      return request.resource.contentType == 'application/json'
+        && request.resource.size < 1 * 1024 * 1024; // 1MB max
+    }
+
+    // Public game assets - read only
+    match /assets/{allPaths=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // User avatars
+    match /avatars/{uid}/{fileName} {
+      allow read: if true;
+      allow write: if isOwner(uid) && isValidImage();
+      allow delete: if isOwner(uid);
+    }
+
+    // User screenshots/exports
+    match /exports/{uid}/{fileName} {
+      allow read: if isOwner(uid);
+      allow write: if isOwner(uid) && isValidImage();
+      allow delete: if isOwner(uid);
+    }
+
+    // Bloodline tree exports
+    match /bloodlines/{uid}/{lineageId}/{fileName} {
+      allow read: if isOwner(uid);
+      allow write: if isOwner(uid) && (isValidImage() || isValidJson());
+      allow delete: if isOwner(uid);
+    }
+  }
+}
