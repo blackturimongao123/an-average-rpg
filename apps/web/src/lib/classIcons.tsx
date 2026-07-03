@@ -1,22 +1,26 @@
-const ICON_PATHS: Record<string, string> = {
-  warrior: "/class-icons/WarriorIcon.png",
-  rogue: "/class-icons/RogueIcon.png",
-  mage: "/class-icons/MageIcon.png",
-  priest: "/class-icons/PriestIcon.png",
-  ranger: "/class-icons/RangerIcon.png",
-  brawler: "/class-icons/BrawlerIcon.png",
-  bard: "/class-icons/BardIcon.png",
+const ICON_FILES: Record<string, string> = {
+  warrior: "WarriorIcon.png",
+  rogue: "RogueIcon.png",
+  mage: "MageIcon.png",
+  priest: "PriestIcon.png",
+  ranger: "RangerIcon.png",
+  brawler: "BrawlerIcon.png",
+  bard: "BardIcon.png",
 };
+
+function iconUrl(fileName: string): string {
+  return `${import.meta.env.BASE_URL}class-icons/${fileName}`;
+}
 
 /** Resolve icon for base class or committed subclass (subclass wins when mapped). */
 export function getClassIconSrc(
   classId: string,
   subclassId?: string | null
 ): string | null {
-  if (subclassId && ICON_PATHS[subclassId]) {
-    return ICON_PATHS[subclassId];
-  }
-  return ICON_PATHS[classId] ?? null;
+  const id =
+    subclassId && ICON_FILES[subclassId] ? subclassId : classId;
+  const fileName = ICON_FILES[id];
+  return fileName ? iconUrl(fileName) : null;
 }
 
 export function ClassIcon({
@@ -31,7 +35,8 @@ export function ClassIcon({
   className?: string;
 }) {
   const src = getClassIconSrc(classId, subclassId);
-  const label = subclassId && ICON_PATHS[subclassId] ? subclassId : classId;
+  const label =
+    subclassId && ICON_FILES[subclassId] ? subclassId : classId;
 
   if (src) {
     return (
