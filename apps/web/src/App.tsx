@@ -15,6 +15,7 @@ import { ProfilePage } from "./features/profile/ProfilePage";
 import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase/config";
+import { useAppVersionRefresh } from "./hooks/useAppVersionRefresh";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuthStore();
@@ -36,6 +37,8 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   const { setUser, setLoading } = useAuthStore();
+
+  useAppVersionRefresh();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
