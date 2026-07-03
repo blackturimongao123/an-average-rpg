@@ -17,14 +17,13 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    outputs:
+      version: ${{ steps.version.outputs.value }}
     env:
       VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
       VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
@@ -101,13 +100,21 @@ jobs:
         with:
           path: apps/web/dist
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
 
       - name: Verify live site version
         run: |
-          EXPECTED="${{ steps.version.outputs.value }}"
+          EXPECTED="${{ needs.build.outputs.version }}"
           URL="https://blackturimongao123.github.io/an-average-rpg/"
           for attempt in $(seq 1 18); do
             HTML=$(curl -fsSL "$URL?deploy=$attempt" || true)
