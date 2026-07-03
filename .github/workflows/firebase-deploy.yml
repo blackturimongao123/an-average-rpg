@@ -33,7 +33,10 @@ jobs:
         run: firebase deploy --only firestore:rules --project ${{ env.FIREBASE_PROJECT }} --token "${{ secrets.FIREBASE_TOKEN }}"
 
       - name: Deploy Storage Rules
-        run: firebase deploy --only storage:rules --project ${{ env.FIREBASE_PROJECT }} --token "${{ secrets.FIREBASE_TOKEN }}"
+        continue-on-error: true
+        run: |
+          firebase deploy --only storage:rules --project ${{ env.FIREBASE_PROJECT }} --token "${{ secrets.FIREBASE_TOKEN }}" \
+            || echo "::warning::Storage rules not deployed. Enable Storage once at https://console.firebase.google.com/project/an-average-rpg/storage (Get Started), then re-run this workflow."
 
       - name: Deploy Firestore Indexes
         run: firebase deploy --only firestore:indexes --project ${{ env.FIREBASE_PROJECT }} --token "${{ secrets.FIREBASE_TOKEN }}"

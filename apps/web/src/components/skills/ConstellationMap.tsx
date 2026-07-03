@@ -2,11 +2,13 @@ import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react"
 import type { Heir, Lineage, SkillNode } from "@bloodline/shared/types";
 import { ClassIcon } from "@/lib/classIcons";
 import {
-  computeAuthoredLayout,
   getNodeRadius,
   getSkillRevealState,
-  getSkillWebBounds,
 } from "@/lib/skills";
+import {
+  computeConstellationLayout,
+  getConstellationBounds,
+} from "@/lib/constellationLayout";
 import { computeSkillWebLayout, getLayoutBounds } from "@/lib/skillWebLayout";
 import { Minus, Plus, RotateCcw } from "lucide-react";
 import "./constellation-map.css";
@@ -140,6 +142,8 @@ function renderHiddenNode(style: SkillNode["hiddenStyle"], radius: number) {
   );
 }
 
+const CORE_SKILL_ID = "basic_combat";
+
 export function ConstellationMap({
   skills,
   ownedSkillIds,
@@ -170,20 +174,28 @@ export function ConstellationMap({
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
 
+  const hideCoreSkill = showCoreNode && variant === "character";
+  const renderSkills = useMemo(
+    () => (hideCoreSkill ? skills.filter((skill) => skill.id !== CORE_SKILL_ID) : skills),
+    [hideCoreSkill, skills]
+  );
+
   const useAuthored = skills.every((skill) => skill.position);
   const layout = useMemo(() => {
     if (useAuthored) {
-      return computeAuthoredLayout(skills);
+      return computeConstellationLayout(skills, {
+        hideCoreSkillId: hideCoreSkill ? CORE_SKILL_ID : undefined,
+      });
     }
     return computeSkillWebLayout(skills);
-  }, [skills, useAuthored]);
+  }, [skills, useAuthored, hideCoreSkill]);
 
   const bounds = useMemo(() => {
     if (useAuthored) {
-      return getSkillWebBounds(skills);
+      return getConstellationBounds(layout, renderSkills);
     }
     return getLayoutBounds(layout);
-  }, [layout, skills, useAuthored]);
+  }, [layout, renderSkills, useAuthored]);
 
   const width = Math.max(bounds.maxX - bounds.minX, 520);
   const height = Math.max(bounds.maxY - bounds.minY, 520);
@@ -227,7 +239,7 @@ export function ConstellationMap({
       partial: boolean;
     }> = [];
 
-    for (const skill of skills) {
+    for (const skill of renderSkills) {
       const targetPos = layout.get(skill.id);
       if (!targetPos) {
         continue;
@@ -247,8 +259,13 @@ export function ConstellationMap({
         }
 
         const requiredSkill = skillById.get(requiredId);
-        const sourcePos = layout.get(requiredId);
-        if (!requiredSkill || !sourcePos) {
+        if (!requiredSkill) {
+          continue;
+        }
+
+        const useCoreAnchor = hideCoreSkill && requiredId === CORE_SKILL_ID;
+        const sourcePos = useCoreAnchor ? { x: 0, y: 0 } : layout.get(requiredId);
+        if (!sourcePos) {
           continue;
         }
 
@@ -284,7 +301,7 @@ export function ConstellationMap({
     }
 
     return lines;
-  }, [skills, layout, bounds.minX, bounds.minY, ownedSkillIds, canClaimSkill, heir, lineage]);
+  }, [renderSkills, skills, layout, bounds.minX, bounds.minY, ownedSkillIds, canClaimSkill, heir, lineage, hideCoreSkill]);
 
   const zoomBy = useCallback((factor: number) => {
     setZoom((current) => clampZoom(current * factor));
@@ -434,7 +451,7 @@ export function ConstellationMap({
               </g>
             )}
 
-            {skills.map((skill) => {
+            {renderSkills.map((skill) => {
               const pos = layout.get(skill.id);
               if (!pos) {
                 return null;
@@ -527,7 +544,7 @@ export function ConstellationMap({
                       : "•"}
                   </text>
 
-                  {(state === "owned" || state === "available" || state === "selected") && (
+                  {(state === "owned" || state === "selected") && (
                     <text
                       textAnchor="middle"
                       y={radius + 14}

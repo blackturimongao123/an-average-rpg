@@ -48,8 +48,8 @@
         }
       ],
       "position": {
-        "x": 1.4,
-        "y": -2.2
+        "x": -2.2,
+        "y": -3.1
       },
       "tier": 1,
       "treeScope": "character",
@@ -86,8 +86,8 @@
         }
       ],
       "position": {
-        "x": 1.1,
-        "y": 2.5
+        "x": 2.2,
+        "y": -3.1
       },
       "tier": 1,
       "treeScope": "character",
@@ -108,8 +108,8 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 1.5,
-        "y": -2.1
+        "x": -3.8,
+        "y": 0
       },
       "tier": 1,
       "treeScope": "character",
@@ -143,8 +143,8 @@
         }
       ],
       "position": {
-        "x": 1,
-        "y": 2.5
+        "x": -3.7,
+        "y": -1
       },
       "tier": 1,
       "treeScope": "character",
@@ -178,8 +178,8 @@
         }
       ],
       "position": {
-        "x": -2.7,
-        "y": -0.5
+        "x": -3.7,
+        "y": -0.7
       },
       "tier": 1,
       "treeScope": "character",
@@ -200,8 +200,8 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 1.2,
-        "y": 2.4
+        "x": -3.8,
+        "y": -0.3
       },
       "tier": 1,
       "treeScope": "character",
@@ -235,8 +235,8 @@
         }
       ],
       "position": {
-        "x": 1.2,
-        "y": 2.4
+        "x": -3.7,
+        "y": -0.7
       },
       "tier": 1,
       "treeScope": "character",
@@ -268,8 +268,8 @@
         }
       ],
       "position": {
-        "x": 2.6,
-        "y": 0
+        "x": 2.2,
+        "y": 3.1
       },
       "tier": 1,
       "treeScope": "character",
@@ -299,8 +299,8 @@
         }
       ],
       "position": {
-        "x": -1.8,
-        "y": -3.4
+        "x": -3.1,
+        "y": -4.4
       },
       "tier": 2,
       "jobRequirement": {
@@ -334,8 +334,8 @@
         }
       ],
       "position": {
-        "x": 2.1,
-        "y": -3.4
+        "x": 3,
+        "y": -4.5
       },
       "tier": 2,
       "jobRequirement": {
@@ -369,8 +369,8 @@
         }
       ],
       "position": {
-        "x": -3.8,
-        "y": 0.1
+        "x": -5.4,
+        "y": -0.5
       },
       "tier": 2,
       "jobRequirement": {
@@ -404,8 +404,8 @@
         }
       ],
       "position": {
-        "x": 2.1,
-        "y": -3.4
+        "x": 3.1,
+        "y": -4.4
       },
       "tier": 2,
       "jobRequirement": {
@@ -450,7 +450,7 @@
         }
       ],
       "position": {
-        "x": 4,
+        "x": -5.4,
         "y": 0
       },
       "tier": 2,
@@ -493,8 +493,8 @@
         }
       ],
       "position": {
-        "x": 1.8,
-        "y": 3.4
+        "x": 5.4,
+        "y": 0
       },
       "tier": 2,
       "treeScope": "character",
@@ -529,8 +529,8 @@
         }
       ],
       "position": {
-        "x": 1.7,
-        "y": 5
+        "x": 2.1,
+        "y": 6.7
       },
       "tier": 3,
       "treeScope": "character",
@@ -553,8 +553,8 @@
       ],
       "grants": [],
       "position": {
-        "x": 3.9,
-        "y": 0.3
+        "x": -5.1,
+        "y": -1.8
       },
       "tier": 2,
       "treeScope": "character",
@@ -590,8 +590,8 @@
         }
       ],
       "position": {
-        "x": -3.9,
-        "y": -0.3
+        "x": -5.3,
+        "y": -0.8
       },
       "tier": 2,
       "treeScope": "character",
@@ -612,8 +612,8 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -1.8,
-        "y": -3.7
+        "x": -4.9,
+        "y": -2.3
       },
       "tier": 2,
       "treeScope": "character",
@@ -654,8 +654,8 @@
         }
       ],
       "position": {
-        "x": 5.4,
-        "y": 0.5
+        "x": -3,
+        "y": -6.3
       },
       "tier": 3,
       "treeScope": "character",
@@ -687,8 +687,8 @@
         }
       ],
       "position": {
-        "x": 5.4,
-        "y": 0
+        "x": 2.4,
+        "y": 6.6
       },
       "tier": 3,
       "specialRequirement": "royal_event_completed",
@@ -728,8 +728,8 @@
         }
       ],
       "position": {
-        "x": 5.5,
-        "y": 0.1
+        "x": 1.2,
+        "y": 6.9
       },
       "tier": 3,
       "specialRequirement": "thieves_guild_joined",
@@ -766,8 +766,8 @@
         }
       ],
       "position": {
-        "x": 0.77,
-        "y": -1.2100000000000002
+        "x": -1,
+        "y": -0.6
       },
       "tier": 1,
       "treeScope": "character",
@@ -801,8 +801,8 @@
         }
       ],
       "position": {
-        "x": 0.77,
-        "y": -1.2100000000000002
+        "x": -0.3,
+        "y": -1.2
       },
       "tier": 1,
       "treeScope": "character",
@@ -836,8 +836,8 @@
         }
       ],
       "position": {
-        "x": 0.6050000000000001,
-        "y": 1.375
+        "x": 0.3,
+        "y": -1.2
       },
       "tier": 1,
       "treeScope": "character",
@@ -871,8 +871,8 @@
         }
       ],
       "position": {
-        "x": 0.6050000000000001,
-        "y": 1.375
+        "x": 0.3,
+        "y": -1.2
       },
       "tier": 1,
       "treeScope": "character",
@@ -906,8 +906,8 @@
         }
       ],
       "position": {
-        "x": 0.8250000000000001,
-        "y": -1.1550000000000002
+        "x": -1.1,
+        "y": 0.5
       },
       "tier": 1,
       "treeScope": "character",
@@ -941,8 +941,8 @@
         }
       ],
       "position": {
-        "x": 0.55,
-        "y": 1.375
+        "x": -0.9,
+        "y": -0.7
       },
       "tier": 1,
       "treeScope": "character",
@@ -976,8 +976,8 @@
         }
       ],
       "position": {
-        "x": -1.4850000000000003,
-        "y": -0.275
+        "x": -1.2,
+        "y": 0.2
       },
       "tier": 1,
       "treeScope": "character",
@@ -1011,8 +1011,8 @@
         }
       ],
       "position": {
-        "x": 0.66,
-        "y": 1.32
+        "x": -1.1,
+        "y": -0.5
       },
       "tier": 1,
       "treeScope": "character",
@@ -1046,8 +1046,8 @@
         }
       ],
       "position": {
-        "x": 0.66,
-        "y": 1.32
+        "x": -1,
+        "y": -0.6
       },
       "tier": 1,
       "treeScope": "character",
@@ -1081,8 +1081,8 @@
         }
       ],
       "position": {
-        "x": 0.9900000000000001,
-        "y": 1.87
+        "x": 1.1,
+        "y": -0.4
       },
       "tier": 1,
       "treeScope": "character",
@@ -1116,8 +1116,8 @@
         }
       ],
       "position": {
-        "x": 0.9900000000000001,
-        "y": 1.87
+        "x": 1.1,
+        "y": 0.5
       },
       "tier": 1,
       "treeScope": "character",

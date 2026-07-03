@@ -83,32 +83,55 @@ const CLASS_ARMS = {
   ],
 };
 
-function assignConstellationPosition(skill, index, classId) {
+const SKILL_ARM_BY_ID = {
+  power_strike: -90,
+  shield_wall: -35,
+  dual_wield: 35,
+  tactical_mind: 90,
+  berserker_rage: -90,
+  backstab: -75,
+  shadow_step: -60,
+  poison_blade: -45,
+  arcane_bolt: -85,
+  fireball: -70,
+  frost_nova: -55,
+  divine_light: -80,
+  holy_smite: -65,
+  hunters_mark: -80,
+  volley: -65,
+  iron_stomach: 145,
+  blessed_guardian: -25,
+  royal_favor: 160,
+  thieves_pact: 170,
+  generation_bonus: 155,
+};
+
+function assignConstellationPosition(skill, classId) {
   if (skill.id === "basic_combat") {
     return { x: 0, y: 0 };
   }
 
+  const mappedAngle = SKILL_ARM_BY_ID[skill.id];
   const arms = CLASS_ARMS[classId] ?? CLASS_ARMS.warrior;
-  const primaryClass =
-    skill.classTags.find((t) => CLASS_ARMS[t]) ??
-    (skill.originClassTags?.[0] && CLASS_ARMS[skill.originClassTags[0]]
-      ? skill.originClassTags[0]
-      : classId);
-
   const armIndex =
-    skill.subclassTags?.length > 0
-      ? hashString(skill.subclassTags[0]) % arms.length
-      : hashString(skill.id) % arms.length;
+    mappedAngle !== undefined
+      ? null
+      : skill.subclassTags?.length > 0
+        ? hashString(skill.subclassTags[0]) % arms.length
+        : hashString(skill.id) % arms.length;
 
-  const arm = arms[armIndex];
+  const angleDeg =
+    mappedAngle ??
+    arms[armIndex].angle +
+      ((hashString(`${skill.id}_j`) % 100) - 50) / 8;
+
   const tier = skill.tier ?? 1;
-  const radius = 1.2 + tier * 1.4;
-  const rad = (arm.angle * Math.PI) / 180;
-  const jitter = ((hashString(skill.id) % 100) - 50) / 200;
+  const radius = 2.2 + tier * 1.6;
+  const rad = (angleDeg * Math.PI) / 180;
 
   return {
-    x: Math.round((Math.sin(rad) * radius + jitter) * 10) / 10,
-    y: Math.round((-Math.cos(rad) * radius + jitter * 0.5) * 10) / 10,
+    x: Math.round(Math.sin(rad) * radius * 10) / 10,
+    y: Math.round(-Math.cos(rad) * radius * 10) / 10,
   };
 }
 
@@ -155,7 +178,7 @@ skillsFile.skills = skillsFile.skills.filter((s) => !s.id.startsWith("minor_"));
 for (const skill of skillsFile.skills) {
   skill.nodeType = inferNodeType(skill);
   const classId = skill.classTags[0] ?? "warrior";
-  skill.position = assignConstellationPosition(skill, 0, classId);
+  skill.position = assignConstellationPosition(skill, classId);
 
   if (skill.specialRequirement === "generation_3") {
     skill.isHidden = true;
@@ -195,9 +218,15 @@ for (const baseSkill of skillsFile.skills) {
       continue;
     }
 
+    const px = baseSkill.position.x;
+    const py = baseSkill.position.y;
+    const len = Math.hypot(px, py) || 1;
+    const nx = px / len;
+    const ny = py / len;
+    const side = hashString(id) % 2 === 0 ? 1 : -1;
     const pos = {
-      x: (baseSkill.position.x + 0) * 0.55,
-      y: (baseSkill.position.y + 0) * 0.55,
+      x: Math.round((nx * 1.1 + -ny * side * 0.45) * 10) / 10,
+      y: Math.round((ny * 1.1 + nx * side * 0.45) * 10) / 10,
     };
 
     minorNodes.push(
@@ -223,7 +252,7 @@ for (const skill of subclassFile.skills) {
     skill.classTags[0] ??
     (skill.subclassTags?.[0]?.includes("paladin") ? "warrior" : "warrior");
   if (!skill.position || (skill.position.x === 0 && skill.position.y === 0 && skill.tier > 0)) {
-    skill.position = assignConstellationPosition(skill, 0, classId);
+    skill.position = assignConstellationPosition(skill, classId);
   } else {
     skill.position = {
       x: skill.position.x * 1.15,

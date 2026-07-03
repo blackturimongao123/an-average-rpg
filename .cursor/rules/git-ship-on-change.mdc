@@ -18,9 +18,14 @@ Do this **without waiting for the user to ask** — committing and pushing is pa
 ## Before committing
 
 1. Run `git status`, `git diff`, and `git log -1` to see what changed and match commit message style.
-2. Write a **1–2 sentence** commit message focused on **why**, not a file list.
-3. **Never commit** secrets or gitignored sensitive files (`.env`, credentials, `.firebase/`, etc.). If `git add .` would stage them, unstage or fix `.gitignore` first.
-4. If the change is **user-facing**, bump `APP_VERSION` first (see `bump-app-version` rule).
+2. Write **one short commit subject line** — a few words or one brief sentence. Focus on **why**, not a file list.
+3. **Never** write super detailed commit messages: no multi-paragraph bodies, no `-m` second paragraph, no bullet lists of every file or phase, no essay-style summaries. One line is enough.
+4. **Never commit** secrets or gitignored sensitive files (`.env`, credentials, `.firebase/`, etc.). If `git add .` would stage them, unstage or fix `.gitignore` first.
+5. If the change is **user-facing**, bump `APP_VERSION` first (see `bump-app-version` rule).
+
+**Good:** `Fix Firebase deploy when Storage is not set up`
+
+**Bad:** `Redesign skill tree as explorable constellation atlas (v0.4.0).` + second paragraph listing shared package, UI, game-data, server validation, etc.
 
 ## Push
 

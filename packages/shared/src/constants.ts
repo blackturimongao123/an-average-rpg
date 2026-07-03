@@ -82,7 +82,7 @@ export const CLASS_ACCENT_COLORS: Record<string, string> = {
   ranger: "#eab308",
 };
 
-export const SKILL_GRID_SIZE = 72;
+export const SKILL_GRID_SIZE = 88;
 
 export const NODE_RADIUS_BY_TYPE: Record<string, number> = {
   minor: 24,
