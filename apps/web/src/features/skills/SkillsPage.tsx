@@ -2,7 +2,7 @@ import { useState } from "react";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useAuthStore } from "@/stores/authStore";
 import { useGameStore } from "@/stores/gameStore";
-import { SkillWebCanvas } from "@/components/skills/SkillWebCanvas";
+import { ConstellationMap } from "@/components/skills/ConstellationMap";
 import { claimPlayerSkill } from "@/firebase/skills";
 import { getFirebaseErrorMessage } from "@/lib/firebaseErrors";
 import {
@@ -12,9 +12,11 @@ import {
   getBloodlinePointsRemaining,
   getBloodlineSkillPoints,
   getCharacterSkillPoints,
+  getClassAccentColor,
+  getSkillRevealState,
 } from "@/lib/skills";
 import type { SkillNode } from "@bloodline/shared/types";
-import { AlertCircle, Check, Crown, Scroll, Skull, X } from "lucide-react";
+import { AlertCircle, Check, Crown, Scroll, Skull, Sparkles, X } from "lucide-react";
 
 export function SkillsPage() {
   const { user } = useAuthStore();
@@ -39,11 +41,12 @@ export function SkillsPage() {
     );
   }
 
-  const characterSkills = getCharacterWebSkills(heir);
+  const characterSkills = getCharacterWebSkills(heir, lineage);
   const bloodlineSkills = filterBloodlineSkills();
   const bloodlineOwned = lineage.bloodlineSkillIds ?? [];
   const characterPoints = getCharacterSkillPoints(heir);
   const bloodlinePoints = getBloodlinePointsRemaining(lineage);
+  const classAccent = getClassAccentColor(heir.classId);
 
   const ownedForTab =
     activeTab === "bloodline" ? bloodlineOwned : heir.skillIds;
@@ -55,6 +58,12 @@ export function SkillsPage() {
       ownedSkillIds: ownedForTab,
       treeScope: activeTab,
     });
+
+  const selectedRevealState = selectedSkill
+    ? getSkillRevealState(selectedSkill, heir, lineage)
+    : "revealed";
+  const isHiddenUnrevealed =
+    selectedSkill?.isHidden && selectedRevealState === "hidden";
 
   const handleClaimSkill = async () => {
     if (!user || !selectedSkill) return;
@@ -89,9 +98,9 @@ export function SkillsPage() {
         <div className="flex items-center gap-3">
           <Scroll className="w-8 h-8 text-gold" />
           <div>
-            <h1 className="font-display text-2xl font-bold">Skill Tree</h1>
+            <h1 className="font-display text-2xl font-bold">Constellation Atlas</h1>
             <p className="text-muted-foreground text-sm">
-              Character talents fade on death. Bloodline legacy endures forever.
+              Chart your heir&apos;s path through the stars. Bloodline legacy endures forever.
             </p>
           </div>
         </div>
@@ -99,7 +108,9 @@ export function SkillsPage() {
         <div className="flex gap-3">
           <div className="card px-4 py-2 text-center min-w-[110px]">
             <p className="text-xs text-muted-foreground">Character</p>
-            <p className="text-xl font-bold text-blue-400">{characterPoints}</p>
+            <p className="text-xl font-bold" style={{ color: classAccent }}>
+              {characterPoints}
+            </p>
           </div>
           <div className="card px-4 py-2 text-center min-w-[110px]">
             <p className="text-xs text-muted-foreground">Bloodline</p>
@@ -133,7 +144,7 @@ export function SkillsPage() {
             value="character"
             className="px-4 py-2 rounded-md text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground bg-secondary/50"
           >
-            Character Web
+            Class Constellation
           </Tabs.Trigger>
           <Tabs.Trigger
             value="bloodline"
@@ -145,20 +156,23 @@ export function SkillsPage() {
 
         <div className="relative flex-1 min-h-0">
           <Tabs.Content value="character" className="h-full outline-none">
-            <SkillWebCanvas
+            <ConstellationMap
               className="h-full"
               skills={characterSkills}
               ownedSkillIds={heir.skillIds}
               selectedSkillId={selectedSkill?.id ?? null}
               canClaimSkill={validateClaim}
               onSelectSkill={setSelectedSkill}
-              accentColor="#3b82f6"
+              accentColor={classAccent}
               variant="character"
+              heir={heir}
+              lineage={lineage}
+              showCoreNode
             />
           </Tabs.Content>
 
           <Tabs.Content value="bloodline" className="h-full outline-none">
-            <SkillWebCanvas
+            <ConstellationMap
               className="h-full"
               skills={bloodlineSkills}
               ownedSkillIds={bloodlineOwned}
@@ -167,6 +181,8 @@ export function SkillsPage() {
               onSelectSkill={setSelectedSkill}
               accentColor="#c9a227"
               variant="bloodline"
+              heir={heir}
+              lineage={lineage}
             />
           </Tabs.Content>
 
@@ -187,7 +203,9 @@ export function SkillsPage() {
           {selectedSkill && (
             <div className="absolute top-4 right-4 w-80 max-w-[calc(100%-2rem)] card p-4 shadow-xl border-border/80 z-10">
               <div className="flex items-start justify-between gap-2 mb-2">
-                <h3 className="font-display text-lg font-semibold">{selectedSkill.name}</h3>
+                <h3 className="font-display text-lg font-semibold">
+                  {isHiddenUnrevealed ? "Hidden Node" : selectedSkill.name}
+                </h3>
                 <button
                   type="button"
                   onClick={() => setSelectedSkill(null)}
@@ -197,54 +215,74 @@ export function SkillsPage() {
                   <X className="w-4 h-4" />
                 </button>
               </div>
-              <p className="text-sm text-muted-foreground mb-4">{selectedSkill.description}</p>
 
-              <div className="space-y-2 text-sm mb-4">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Cost</span>
-                  <span className="font-semibold">{selectedSkill.cost} points</span>
-                </div>
-                {selectedSkill.requires.length > 0 && (
-                  <div>
-                    <span className="text-muted-foreground">Requires</span>
-                    <div className="mt-1 flex flex-wrap gap-1">
-                      {selectedSkill.requires.map((reqId) => (
-                        <span key={reqId} className="text-xs px-2 py-0.5 rounded bg-secondary">
-                          {reqId.replace(/_/g, " ")}
-                        </span>
-                      ))}
-                    </div>
+              {isHiddenUnrevealed ? (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Sparkles className="w-4 h-4" />
+                    <p className="text-sm">
+                      Something is hidden here—a shadow on the constellation. Complete the required
+                      adventure milestone to awaken this node.
+                    </p>
                   </div>
-                )}
-              </div>
-
-              {ownedForTab.includes(selectedSkill.id) ? (
-                <div className="flex items-center gap-2 text-green-400 text-sm">
-                  <Check className="w-4 h-4" />
-                  Already mastered
                 </div>
               ) : (
                 <>
-                  {(() => {
-                    const { canClaim, reason } = validateClaim(selectedSkill);
-                    if (!canClaim) {
-                      return (
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-                          <AlertCircle className="w-4 h-4" />
-                          <span>{reason}</span>
-                        </div>
-                      );
-                    }
-                    return null;
-                  })()}
+                  {selectedSkill.nodeType && (
+                    <p className="text-xs uppercase tracking-wide text-muted-foreground mb-2">
+                      {selectedSkill.nodeType} node
+                    </p>
+                  )}
+                  <p className="text-sm text-muted-foreground mb-4">{selectedSkill.description}</p>
 
-                  <button
-                    onClick={handleClaimSkill}
-                    disabled={loading || !validateClaim(selectedSkill).canClaim}
-                    className="btn-primary w-full"
-                  >
-                    {loading ? "Learning..." : "Learn Skill"}
-                  </button>
+                  <div className="space-y-2 text-sm mb-4">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Cost</span>
+                      <span className="font-semibold">{selectedSkill.cost} points</span>
+                    </div>
+                    {selectedSkill.requires.length > 0 && (
+                      <div>
+                        <span className="text-muted-foreground">Requires</span>
+                        <div className="mt-1 flex flex-wrap gap-1">
+                          {selectedSkill.requires.map((reqId) => (
+                            <span key={reqId} className="text-xs px-2 py-0.5 rounded bg-secondary">
+                              {reqId.replace(/_/g, " ")}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {ownedForTab.includes(selectedSkill.id) ? (
+                    <div className="flex items-center gap-2 text-green-400 text-sm">
+                      <Check className="w-4 h-4" />
+                      Already mastered
+                    </div>
+                  ) : (
+                    <>
+                      {(() => {
+                        const { canClaim, reason } = validateClaim(selectedSkill);
+                        if (!canClaim) {
+                          return (
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
+                              <AlertCircle className="w-4 h-4" />
+                              <span>{reason}</span>
+                            </div>
+                          );
+                        }
+                        return null;
+                      })()}
+
+                      <button
+                        onClick={handleClaimSkill}
+                        disabled={loading || !validateClaim(selectedSkill).canClaim}
+                        className="btn-primary w-full"
+                      >
+                        {loading ? "Learning..." : "Learn Skill"}
+                      </button>
+                    </>
+                  )}
                 </>
               )}
             </div>

@@ -15,7 +15,8 @@
         "x": 0,
         "y": 0
       },
-      "tier": 0
+      "tier": 0,
+      "nodeType": "special"
     },
     {
       "id": "ancestral_strength",
@@ -34,7 +35,8 @@
         "x": -2,
         "y": 1
       },
-      "tier": 2
+      "tier": 2,
+      "nodeType": "active"
     },
     {
       "id": "iron_will",
@@ -53,7 +55,8 @@
         "x": 2,
         "y": 1
       },
-      "tier": 2
+      "tier": 2,
+      "nodeType": "active"
     },
     {
       "id": "cursed_blood",
@@ -72,7 +75,8 @@
         "x": 0,
         "y": 2
       },
-      "tier": 3
+      "tier": 3,
+      "nodeType": "active"
     },
     {
       "id": "noble_lineage",
@@ -91,7 +95,8 @@
         "x": -1,
         "y": 2
       },
-      "tier": 2
+      "tier": 2,
+      "nodeType": "active"
     },
     {
       "id": "scavenger_instinct",
@@ -110,7 +115,8 @@
         "x": 1,
         "y": 2
       },
-      "tier": 2
+      "tier": 2,
+      "nodeType": "active"
     },
     {
       "id": "generation_bonus",
@@ -131,7 +137,10 @@
         "y": 3
       },
       "tier": 3,
-      "specialRequirement": "generation_3"
+      "specialRequirement": "generation_3",
+      "nodeType": "special",
+      "isHidden": true,
+      "hiddenStyle": "shadow_orb"
     },
     {
       "id": "death_gift",
@@ -150,7 +159,8 @@
         "x": 2,
         "y": 3
       },
-      "tier": 3
+      "tier": 3,
+      "nodeType": "active"
     },
     {
       "id": "bank_whispers",
@@ -169,7 +179,8 @@
         "x": -1,
         "y": 4
       },
-      "tier": 3
+      "tier": 3,
+      "nodeType": "active"
     },
     {
       "id": "mission_kinship",
@@ -188,7 +199,8 @@
         "x": 1,
         "y": 4
       },
-      "tier": 3
+      "tier": 3,
+      "nodeType": "active"
     },
     {
       "id": "blood_memory",
@@ -207,7 +219,8 @@
         "x": 0,
         "y": 4
       },
-      "tier": 4
+      "tier": 4,
+      "nodeType": "active"
     },
     {
       "id": "echo_of_the_fallen",
@@ -228,7 +241,11 @@
         "y": 5
       },
       "tier": 5,
-      "specialRequirement": "fallen_heirs_3"
+      "specialRequirement": "fallen_heirs_3",
+      "nodeType": "special",
+      "isHidden": true,
+      "hiddenStyle": "crystal",
+      "revealsPaths": []
     },
     {
       "id": "eternal_legacy",
@@ -249,7 +266,8 @@
         "x": 0,
         "y": 7
       },
-      "tier": 6
+      "tier": 6,
+      "nodeType": "active"
     }
   ]
 }

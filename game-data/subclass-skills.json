@@ -17,9 +17,10 @@
       "grants": [],
       "position": {
         "x": 0,
-        "y": -4.3
+        "y": -5.686749999999999
       },
-      "tier": 2
+      "tier": 2,
+      "nodeType": "special"
     },
     {
       "id": "iron_body",
@@ -38,9 +39,10 @@
       "grants": [],
       "position": {
         "x": 0,
-        "y": -4.3
+        "y": -5.686749999999999
       },
-      "tier": 3
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "iron_fist_sage",
@@ -59,9 +61,10 @@
       "grants": [],
       "position": {
         "x": 0,
-        "y": -7.9
+        "y": -10.447749999999997
       },
-      "tier": 4
+      "tier": 4,
+      "nodeType": "special"
     },
     {
       "id": "guardian_stand",
@@ -79,10 +82,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 4.1,
-        "y": -1.3
+        "x": 5.422249999999998,
+        "y": -1.7192499999999997
       },
-      "tier": 2
+      "tier": 2,
+      "nodeType": "special"
     },
     {
       "id": "aegis_pulse",
@@ -100,10 +104,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 4.1,
-        "y": -1.3
+        "x": 5.422249999999998,
+        "y": -1.7192499999999997
       },
-      "tier": 3
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "living_fortress",
@@ -121,10 +126,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 7.5,
-        "y": -2.4
+        "x": 9.91875,
+        "y": -3.1739999999999995
       },
-      "tier": 4
+      "tier": 4,
+      "nodeType": "special"
     },
     {
       "id": "weapon_flow",
@@ -142,10 +148,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 2.5,
-        "y": 3.5
+        "x": 3.30625,
+        "y": 4.628749999999999
       },
-      "tier": 2
+      "tier": 2,
+      "nodeType": "special"
     },
     {
       "id": "parry_master",
@@ -163,10 +170,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 2.5,
-        "y": 3.5
+        "x": 3.30625,
+        "y": 4.628749999999999
       },
-      "tier": 3
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "blade_dance_ascended",
@@ -184,10 +192,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 4.6,
-        "y": 6.4
+        "x": 6.083499999999998,
+        "y": 8.463999999999999
       },
-      "tier": 4
+      "tier": 4,
+      "nodeType": "special"
     },
     {
       "id": "war_cry",
@@ -205,10 +214,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -2.5,
-        "y": 3.5
+        "x": -3.30625,
+        "y": 4.628749999999999
       },
-      "tier": 2
+      "tier": 2,
+      "nodeType": "special"
     },
     {
       "id": "momentum_crush",
@@ -226,10 +236,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -2.5,
-        "y": 3.5
+        "x": -3.30625,
+        "y": 4.628749999999999
       },
-      "tier": 3
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "siegebreaker_ascended",
@@ -247,10 +258,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -4.6,
-        "y": 6.4
+        "x": -6.083499999999998,
+        "y": 8.463999999999999
       },
-      "tier": 4
+      "tier": 4,
+      "nodeType": "special"
     },
     {
       "id": "paladin_oath",
@@ -258,14 +270,24 @@
       "description": "Swear holy vengeance. Sword strikes carry divine fire.",
       "treeScope": "character",
       "classTags": [],
-      "subclassTags": ["paladin"],
-      "originClassTags": ["warrior"],
+      "subclassTags": [
+        "paladin"
+      ],
+      "originClassTags": [
+        "warrior"
+      ],
       "cost": 2,
-      "requires": ["power_strike"],
+      "requires": [
+        "power_strike"
+      ],
       "blocks": [],
       "grants": [],
-      "position": { "x": -4.1, "y": -1.3 },
-      "tier": 2
+      "position": {
+        "x": -5.422249999999998,
+        "y": -1.7192499999999997
+      },
+      "tier": 2,
+      "nodeType": "special"
     },
     {
       "id": "holy_strike",
@@ -273,14 +295,24 @@
       "description": "A radiant sword blow that burns unholy foes.",
       "treeScope": "character",
       "classTags": [],
-      "subclassTags": ["paladin"],
-      "originClassTags": ["warrior"],
+      "subclassTags": [
+        "paladin"
+      ],
+      "originClassTags": [
+        "warrior"
+      ],
       "cost": 3,
-      "requires": ["paladin_oath"],
+      "requires": [
+        "paladin_oath"
+      ],
       "blocks": [],
       "grants": [],
-      "position": { "x": -4.1, "y": -1.3 },
-      "tier": 3
+      "position": {
+        "x": -5.422249999999998,
+        "y": -1.7192499999999997
+      },
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "paladin_aegis",
@@ -288,14 +320,25 @@
       "description": "Shield and faith combine for superior defense.",
       "treeScope": "character",
       "classTags": [],
-      "subclassTags": ["paladin"],
-      "originClassTags": ["warrior"],
+      "subclassTags": [
+        "paladin"
+      ],
+      "originClassTags": [
+        "warrior"
+      ],
       "cost": 3,
-      "requires": ["paladin_oath", "shield_wall"],
+      "requires": [
+        "paladin_oath",
+        "shield_wall"
+      ],
       "blocks": [],
       "grants": [],
-      "position": { "x": -5.5, "y": 0.5 },
-      "tier": 3
+      "position": {
+        "x": -7.273749999999999,
+        "y": 0.6612499999999999
+      },
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "paladin_conviction",
@@ -303,14 +346,24 @@
       "description": "Channel faith through your blade. Healing and holy damage intertwine.",
       "treeScope": "character",
       "classTags": [],
-      "subclassTags": ["paladin"],
-      "originClassTags": ["priest"],
+      "subclassTags": [
+        "paladin"
+      ],
+      "originClassTags": [
+        "priest"
+      ],
       "cost": 2,
-      "requires": ["holy_smite"],
+      "requires": [
+        "holy_smite"
+      ],
       "blocks": [],
       "grants": [],
-      "position": { "x": 2.5, "y": 3.5 },
-      "tier": 2
+      "position": {
+        "x": 3.30625,
+        "y": 4.628749999999999
+      },
+      "tier": 2,
+      "nodeType": "special"
     },
     {
       "id": "sacred_blade",
@@ -318,14 +371,24 @@
       "description": "Holy damage flows through sword and scripture alike.",
       "treeScope": "character",
       "classTags": [],
-      "subclassTags": ["paladin"],
-      "originClassTags": ["priest"],
+      "subclassTags": [
+        "paladin"
+      ],
+      "originClassTags": [
+        "priest"
+      ],
       "cost": 3,
-      "requires": ["paladin_conviction"],
+      "requires": [
+        "paladin_conviction"
+      ],
       "blocks": [],
       "grants": [],
-      "position": { "x": 2.5, "y": 3.5 },
-      "tier": 3
+      "position": {
+        "x": 3.30625,
+        "y": 4.628749999999999
+      },
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "tome_of_light",
@@ -333,14 +396,25 @@
       "description": "Offhand scripture amplifies healing and holy bolts.",
       "treeScope": "character",
       "classTags": [],
-      "subclassTags": ["paladin"],
-      "originClassTags": ["priest"],
+      "subclassTags": [
+        "paladin"
+      ],
+      "originClassTags": [
+        "priest"
+      ],
       "cost": 3,
-      "requires": ["paladin_conviction", "divine_light"],
+      "requires": [
+        "paladin_conviction",
+        "divine_light"
+      ],
       "blocks": [],
       "grants": [],
-      "position": { "x": 4.0, "y": 2.5 },
-      "tier": 3
+      "position": {
+        "x": 5.289999999999999,
+        "y": 3.30625
+      },
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "lay_on_hands",
@@ -348,13 +422,21 @@
       "description": "Limited but reliable healing in the thick of battle.",
       "treeScope": "character",
       "classTags": [],
-      "subclassTags": ["paladin"],
+      "subclassTags": [
+        "paladin"
+      ],
       "cost": 2,
-      "requires": ["paladin_oath"],
+      "requires": [
+        "paladin_oath"
+      ],
       "blocks": [],
       "grants": [],
-      "position": { "x": -3.0, "y": -2.5 },
-      "tier": 3
+      "position": {
+        "x": -3.9674999999999994,
+        "y": -3.30625
+      },
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "paladin_ascended_skill",
@@ -362,13 +444,21 @@
       "description": "Divine wrath incarnate. Undead flee your banner.",
       "treeScope": "character",
       "classTags": [],
-      "subclassTags": ["paladin_ascended"],
+      "subclassTags": [
+        "paladin_ascended"
+      ],
       "cost": 5,
-      "requires": ["holy_strike"],
+      "requires": [
+        "holy_strike"
+      ],
       "blocks": [],
       "grants": [],
-      "position": { "x": -7.5, "y": -2.4 },
-      "tier": 4
+      "position": {
+        "x": -9.91875,
+        "y": -3.1739999999999995
+      },
+      "tier": 4,
+      "nodeType": "special"
     },
     {
       "id": "paladin_ascended_priest",
@@ -376,14 +466,24 @@
       "description": "Avatar of divine wrath. Your aura melts unholy steel.",
       "treeScope": "character",
       "classTags": [],
-      "subclassTags": ["paladin_ascended"],
-      "originClassTags": ["priest"],
+      "subclassTags": [
+        "paladin_ascended"
+      ],
+      "originClassTags": [
+        "priest"
+      ],
       "cost": 5,
-      "requires": ["sacred_blade"],
+      "requires": [
+        "sacred_blade"
+      ],
       "blocks": [],
       "grants": [],
-      "position": { "x": 7.5, "y": -2.4 },
-      "tier": 4
+      "position": {
+        "x": 9.91875,
+        "y": -3.1739999999999995
+      },
+      "tier": 4,
+      "nodeType": "special"
     },
     {
       "id": "lethal_precision",
@@ -402,9 +502,10 @@
       "grants": [],
       "position": {
         "x": 0,
-        "y": -4.3
+        "y": -5.686749999999999
       },
-      "tier": 2
+      "tier": 2,
+      "nodeType": "special"
     },
     {
       "id": "vanish",
@@ -423,9 +524,10 @@
       "grants": [],
       "position": {
         "x": 0,
-        "y": -4.3
+        "y": -5.686749999999999
       },
-      "tier": 3
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "ghostblade_ascended",
@@ -444,9 +546,10 @@
       "grants": [],
       "position": {
         "x": 0,
-        "y": -7.9
+        "y": -10.447749999999997
       },
-      "tier": 4
+      "tier": 4,
+      "nodeType": "special"
     },
     {
       "id": "feint_master",
@@ -464,10 +567,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 4.1,
-        "y": -1.3
+        "x": 5.422249999999998,
+        "y": -1.7192499999999997
       },
-      "tier": 2
+      "tier": 2,
+      "nodeType": "special"
     },
     {
       "id": "mirror_self",
@@ -485,10 +589,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 4.1,
-        "y": -1.3
+        "x": 5.422249999999998,
+        "y": -1.7192499999999997
       },
-      "tier": 3
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "grand_illusionist_ascended",
@@ -506,10 +611,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 7.5,
-        "y": -2.4
+        "x": 9.91875,
+        "y": -3.1739999999999995
       },
-      "tier": 4
+      "tier": 4,
+      "nodeType": "special"
     },
     {
       "id": "riposte",
@@ -527,10 +633,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 2.5,
-        "y": 3.5
+        "x": 3.30625,
+        "y": 4.628749999999999
       },
-      "tier": 2
+      "tier": 2,
+      "nodeType": "special"
     },
     {
       "id": "crowd_pleaser",
@@ -548,10 +655,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 2.5,
-        "y": 3.5
+        "x": 3.30625,
+        "y": 4.628749999999999
       },
-      "tier": 3
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "sea_devil_ascended",
@@ -569,10 +677,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 4.6,
-        "y": 6.4
+        "x": 6.083499999999998,
+        "y": 8.463999999999999
       },
-      "tier": 4
+      "tier": 4,
+      "nodeType": "special"
     },
     {
       "id": "umbral_step",
@@ -590,10 +699,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -2.5,
-        "y": 3.5
+        "x": -3.30625,
+        "y": 4.628749999999999
       },
-      "tier": 2
+      "tier": 2,
+      "nodeType": "special"
     },
     {
       "id": "shadow_bind",
@@ -611,10 +721,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -2.5,
-        "y": 3.5
+        "x": -3.30625,
+        "y": 4.628749999999999
       },
-      "tier": 3
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "void_walker_ascended",
@@ -632,10 +743,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -4.6,
-        "y": 6.4
+        "x": -6.083499999999998,
+        "y": 8.463999999999999
       },
-      "tier": 4
+      "tier": 4,
+      "nodeType": "special"
     },
     {
       "id": "venom_art",
@@ -653,10 +765,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -4.1,
-        "y": -1.3
+        "x": -5.422249999999998,
+        "y": -1.7192499999999997
       },
-      "tier": 2
+      "tier": 2,
+      "nodeType": "special"
     },
     {
       "id": "miasma",
@@ -674,10 +787,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -4.1,
-        "y": -1.3
+        "x": -5.422249999999998,
+        "y": -1.7192499999999997
       },
-      "tier": 3
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "plague_lord_ascended",
@@ -695,10 +809,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -7.5,
-        "y": -2.4
+        "x": -9.91875,
+        "y": -3.1739999999999995
       },
-      "tier": 4
+      "tier": 4,
+      "nodeType": "special"
     },
     {
       "id": "immolation",
@@ -717,9 +832,10 @@
       "grants": [],
       "position": {
         "x": 0,
-        "y": -4.3
+        "y": -5.686749999999999
       },
-      "tier": 2
+      "tier": 2,
+      "nodeType": "special"
     },
     {
       "id": "phoenix_ash",
@@ -738,9 +854,10 @@
       "grants": [],
       "position": {
         "x": 0,
-        "y": -4.3
+        "y": -5.686749999999999
       },
-      "tier": 3
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "inferno_archon_ascended",
@@ -759,9 +876,10 @@
       "grants": [],
       "position": {
         "x": 0,
-        "y": -7.9
+        "y": -10.447749999999997
       },
-      "tier": 4
+      "tier": 4,
+      "nodeType": "special"
     },
     {
       "id": "absolute_zero",
@@ -779,10 +897,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 4.1,
-        "y": -1.3
+        "x": 5.422249999999998,
+        "y": -1.7192499999999997
       },
-      "tier": 2
+      "tier": 2,
+      "nodeType": "special"
     },
     {
       "id": "ice_prison",
@@ -800,10 +919,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 4.1,
-        "y": -1.3
+        "x": 5.422249999999998,
+        "y": -1.7192499999999997
       },
-      "tier": 3
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "frost_sovereign_ascended",
@@ -821,10 +941,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 7.5,
-        "y": -2.4
+        "x": 9.91875,
+        "y": -3.1739999999999995
       },
-      "tier": 4
+      "tier": 4,
+      "nodeType": "special"
     },
     {
       "id": "arcane_overload",
@@ -842,10 +963,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 2.5,
-        "y": 3.5
+        "x": 3.30625,
+        "y": 4.628749999999999
       },
-      "tier": 2
+      "tier": 2,
+      "nodeType": "special"
     },
     {
       "id": "rune_weave",
@@ -863,10 +985,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 2.5,
-        "y": 3.5
+        "x": 3.30625,
+        "y": 4.628749999999999
       },
-      "tier": 3
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "void_scholar_ascended",
@@ -884,10 +1007,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 4.6,
-        "y": 6.4
+        "x": 6.083499999999998,
+        "y": 8.463999999999999
       },
-      "tier": 4
+      "tier": 4,
+      "nodeType": "special"
     },
     {
       "id": "bound_familiar",
@@ -905,10 +1029,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -2.5,
-        "y": 3.5
+        "x": -3.30625,
+        "y": 4.628749999999999
       },
-      "tier": 2
+      "tier": 2,
+      "nodeType": "special"
     },
     {
       "id": "legion_call",
@@ -926,10 +1051,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -2.5,
-        "y": 3.5
+        "x": -3.30625,
+        "y": 4.628749999999999
       },
-      "tier": 3
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "pact_master_ascended",
@@ -947,10 +1073,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -4.6,
-        "y": 6.4
+        "x": -6.083499999999998,
+        "y": 8.463999999999999
       },
-      "tier": 4
+      "tier": 4,
+      "nodeType": "special"
     },
     {
       "id": "artifact_bond",
@@ -968,10 +1095,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -4.1,
-        "y": -1.3
+        "x": -5.422249999999998,
+        "y": -1.7192499999999997
       },
-      "tier": 2
+      "tier": 2,
+      "nodeType": "special"
     },
     {
       "id": "sigil_storm",
@@ -989,10 +1117,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -4.1,
-        "y": -1.3
+        "x": -5.422249999999998,
+        "y": -1.7192499999999997
       },
-      "tier": 3
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "rune_emperor_ascended",
@@ -1010,10 +1139,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -7.5,
-        "y": -2.4
+        "x": -9.91875,
+        "y": -3.1739999999999995
       },
-      "tier": 4
+      "tier": 4,
+      "nodeType": "special"
     },
     {
       "id": "mass_benediction",
@@ -1032,9 +1162,10 @@
       "grants": [],
       "position": {
         "x": 0,
-        "y": -4.3
+        "y": -5.686749999999999
       },
-      "tier": 2
+      "tier": 2,
+      "nodeType": "special"
     },
     {
       "id": "resurrection_touch",
@@ -1053,9 +1184,10 @@
       "grants": [],
       "position": {
         "x": 0,
-        "y": -4.3
+        "y": -5.686749999999999
       },
-      "tier": 3
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "high_cleric_ascended",
@@ -1074,9 +1206,10 @@
       "grants": [],
       "position": {
         "x": 0,
-        "y": -7.9
+        "y": -10.447749999999997
       },
-      "tier": 4
+      "tier": 4,
+      "nodeType": "special"
     },
     {
       "id": "purge",
@@ -1094,10 +1227,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 4.1,
-        "y": -1.3
+        "x": 5.422249999999998,
+        "y": -1.7192499999999997
       },
-      "tier": 2
+      "tier": 2,
+      "nodeType": "special"
     },
     {
       "id": "sanctified_chain",
@@ -1115,10 +1249,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 4.1,
-        "y": -1.3
+        "x": 5.422249999999998,
+        "y": -1.7192499999999997
       },
-      "tier": 3
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "witch_hunter_ascended",
@@ -1136,10 +1271,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 7.5,
-        "y": -2.4
+        "x": 9.91875,
+        "y": -3.1739999999999995
       },
-      "tier": 4
+      "tier": 4,
+      "nodeType": "special"
     },
     {
       "id": "traveling_melody",
@@ -1147,13 +1283,21 @@
       "description": "Strum your guitar; a note becomes a sonic blade.",
       "treeScope": "character",
       "classTags": [],
-      "subclassTags": ["bard"],
+      "subclassTags": [
+        "bard"
+      ],
       "cost": 2,
-      "requires": ["divine_light"],
+      "requires": [
+        "divine_light"
+      ],
       "blocks": [],
       "grants": [],
-      "position": { "x": 5.5, "y": 1.5 },
-      "tier": 2
+      "position": {
+        "x": 7.273749999999999,
+        "y": 1.9837499999999997
+      },
+      "tier": 2,
+      "nodeType": "special"
     },
     {
       "id": "rallying_song",
@@ -1161,13 +1305,21 @@
       "description": "Buff allies with an uplifting chorus.",
       "treeScope": "character",
       "classTags": [],
-      "subclassTags": ["bard"],
+      "subclassTags": [
+        "bard"
+      ],
       "cost": 3,
-      "requires": ["traveling_melody"],
+      "requires": [
+        "traveling_melody"
+      ],
       "blocks": [],
       "grants": [],
-      "position": { "x": 5.5, "y": 1.5 },
-      "tier": 3
+      "position": {
+        "x": 7.273749999999999,
+        "y": 1.9837499999999997
+      },
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "discordant_chord",
@@ -1175,13 +1327,21 @@
       "description": "A jarring note that debilitates foes.",
       "treeScope": "character",
       "classTags": [],
-      "subclassTags": ["bard"],
+      "subclassTags": [
+        "bard"
+      ],
       "cost": 3,
-      "requires": ["traveling_melody"],
+      "requires": [
+        "traveling_melody"
+      ],
       "blocks": [],
       "grants": [],
-      "position": { "x": 6.5, "y": 0.5 },
-      "tier": 3
+      "position": {
+        "x": 8.59625,
+        "y": 0.6612499999999999
+      },
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "maestro_finale",
@@ -1189,13 +1349,21 @@
       "description": "Your performance reshapes the tide of battle.",
       "treeScope": "character",
       "classTags": [],
-      "subclassTags": ["bard_maestro"],
+      "subclassTags": [
+        "bard_maestro"
+      ],
       "cost": 5,
-      "requires": ["rallying_song"],
+      "requires": [
+        "rallying_song"
+      ],
       "blocks": [],
       "grants": [],
-      "position": { "x": 8.0, "y": 2.0 },
-      "tier": 4
+      "position": {
+        "x": 10.579999999999998,
+        "y": 2.6449999999999996
+      },
+      "tier": 4,
+      "nodeType": "special"
     },
     {
       "id": "prophecy",
@@ -1213,10 +1381,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -2.5,
-        "y": 3.5
+        "x": -3.30625,
+        "y": 4.628749999999999
       },
-      "tier": 2
+      "tier": 2,
+      "nodeType": "special"
     },
     {
       "id": "threads_of_fate",
@@ -1234,10 +1403,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -2.5,
-        "y": 3.5
+        "x": -3.30625,
+        "y": 4.628749999999999
       },
-      "tier": 3
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "fate_weaver_ascended",
@@ -1255,10 +1425,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -4.6,
-        "y": 6.4
+        "x": -6.083499999999998,
+        "y": 8.463999999999999
       },
-      "tier": 4
+      "tier": 4,
+      "nodeType": "special"
     },
     {
       "id": "banish",
@@ -1276,10 +1447,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -4.1,
-        "y": -1.3
+        "x": -5.422249999999998,
+        "y": -1.7192499999999997
       },
-      "tier": 2
+      "tier": 2,
+      "nodeType": "special"
     },
     {
       "id": "spirit_chain",
@@ -1297,10 +1469,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -4.1,
-        "y": -1.3
+        "x": -5.422249999999998,
+        "y": -1.7192499999999997
       },
-      "tier": 3
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "soul_binder_ascended",
@@ -1318,10 +1491,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -7.5,
-        "y": -2.4
+        "x": -9.91875,
+        "y": -3.1739999999999995
       },
-      "tier": 4
+      "tier": 4,
+      "nodeType": "special"
     },
     {
       "id": "snipers_focus",
@@ -1340,9 +1514,10 @@
       "grants": [],
       "position": {
         "x": 0,
-        "y": -4.3
+        "y": -5.686749999999999
       },
-      "tier": 2
+      "tier": 2,
+      "nodeType": "special"
     },
     {
       "id": "piercing_shot",
@@ -1361,9 +1536,10 @@
       "grants": [],
       "position": {
         "x": 0,
-        "y": -4.3
+        "y": -5.686749999999999
       },
-      "tier": 3
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "deadeye_ascended",
@@ -1382,9 +1558,10 @@
       "grants": [],
       "position": {
         "x": 0,
-        "y": -7.9
+        "y": -10.447749999999997
       },
-      "tier": 4
+      "tier": 4,
+      "nodeType": "special"
     },
     {
       "id": "pack_hunt",
@@ -1402,10 +1579,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 4.1,
-        "y": -1.3
+        "x": 5.422249999999998,
+        "y": -1.7192499999999997
       },
-      "tier": 2
+      "tier": 2,
+      "nodeType": "special"
     },
     {
       "id": "primal_bond",
@@ -1423,10 +1601,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 4.1,
-        "y": -1.3
+        "x": 5.422249999999998,
+        "y": -1.7192499999999997
       },
-      "tier": 3
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "alpha_prime_ascended",
@@ -1444,10 +1623,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 7.5,
-        "y": -2.4
+        "x": 9.91875,
+        "y": -3.1739999999999995
       },
-      "tier": 4
+      "tier": 4,
+      "nodeType": "special"
     },
     {
       "id": "trail_ward",
@@ -1465,10 +1645,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 2.5,
-        "y": 3.5
+        "x": 3.30625,
+        "y": 4.628749999999999
       },
-      "tier": 2
+      "tier": 2,
+      "nodeType": "special"
     },
     {
       "id": "storm_arrow",
@@ -1486,10 +1667,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 2.5,
-        "y": 3.5
+        "x": 3.30625,
+        "y": 4.628749999999999
       },
-      "tier": 3
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "storm_ranger_ascended",
@@ -1507,10 +1689,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 4.6,
-        "y": 6.4
+        "x": 6.083499999999998,
+        "y": 8.463999999999999
       },
-      "tier": 4
+      "tier": 4,
+      "nodeType": "special"
     },
     {
       "id": "camouflage",
@@ -1528,10 +1711,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -2.5,
-        "y": 3.5
+        "x": -3.30625,
+        "y": 4.628749999999999
       },
-      "tier": 2
+      "tier": 2,
+      "nodeType": "special"
     },
     {
       "id": "heartseeker",
@@ -1549,10 +1733,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -2.5,
-        "y": 3.5
+        "x": -3.30625,
+        "y": 4.628749999999999
       },
-      "tier": 3
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "silent_death_ascended",
@@ -1570,10 +1755,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -4.6,
-        "y": 6.4
+        "x": -6.083499999999998,
+        "y": 8.463999999999999
       },
-      "tier": 4
+      "tier": 4,
+      "nodeType": "special"
     },
     {
       "id": "foragers_gift",
@@ -1591,10 +1777,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -4.1,
-        "y": -1.3
+        "x": -5.422249999999998,
+        "y": -1.7192499999999997
       },
-      "tier": 2
+      "tier": 2,
+      "nodeType": "special"
     },
     {
       "id": "natures_wrath",
@@ -1612,10 +1799,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -4.1,
-        "y": -1.3
+        "x": -5.422249999999998,
+        "y": -1.7192499999999997
       },
-      "tier": 3
+      "tier": 3,
+      "nodeType": "special"
     },
     {
       "id": "wild_avatar_ascended",
@@ -1633,10 +1821,11 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -7.5,
-        "y": -2.4
+        "x": -9.91875,
+        "y": -3.1739999999999995
       },
-      "tier": 4
+      "tier": 4,
+      "nodeType": "special"
     }
   ]
 }

@@ -69,6 +69,30 @@ export const MERCHANT_REROLL_MS = 8 * 60 * 60 * 1000;
 
 export const STAT_POINTS_PER_LEVEL = 3;
 
+export const SKILL_POINTS_PER_LEVEL = 3;
+
+export const getCharacterSkillPointsPool = (level: number): number =>
+  level * SKILL_POINTS_PER_LEVEL;
+
+export const CLASS_ACCENT_COLORS: Record<string, string> = {
+  warrior: "#ef4444",
+  rogue: "#22c55e",
+  mage: "#3b82f6",
+  priest: "#a855f7",
+  ranger: "#eab308",
+};
+
+export const SKILL_GRID_SIZE = 72;
+
+export const NODE_RADIUS_BY_TYPE: Record<string, number> = {
+  minor: 24,
+  passive: 32,
+  active: 40,
+  special: 48,
+};
+
+export const DEFAULT_NODE_RADIUS = 36;
+
 export const MAX_ITEM_LEVEL = 100;
 
 export const MISSION_COOLDOWN_MS = 10 * 60 * 1000;

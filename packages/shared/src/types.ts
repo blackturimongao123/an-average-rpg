@@ -266,6 +266,13 @@ export interface SkillNode {
   tier?: number;
   jobRequirement?: { jobId: string; level: number };
   specialRequirement?: string;
+  /** Visual / gameplay category for constellation map. */
+  nodeType?: "minor" | "passive" | "active" | "special";
+  /** Silhouette on map until reveal gate passes. */
+  isHidden?: boolean;
+  hiddenStyle?: "silhouette" | "crystal" | "shadow_orb";
+  /** Skill IDs that become visible when this hidden node is revealed. */
+  revealsPaths?: string[];
 }
 
 export interface SubclassData {

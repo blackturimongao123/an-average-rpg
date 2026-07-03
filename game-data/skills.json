@@ -15,7 +15,8 @@
       },
       "tier": 0,
       "treeScope": "character",
-      "subclassTags": []
+      "subclassTags": [],
+      "nodeType": "special"
     },
     {
       "id": "shield_wall",
@@ -47,12 +48,13 @@
         }
       ],
       "position": {
-        "x": -2,
-        "y": 1
+        "x": 1.4,
+        "y": -2.2
       },
       "tier": 1,
       "treeScope": "character",
-      "subclassTags": []
+      "subclassTags": [],
+      "nodeType": "passive"
     },
     {
       "id": "dual_wield",
@@ -84,12 +86,13 @@
         }
       ],
       "position": {
-        "x": 2,
-        "y": 1
+        "x": 1.1,
+        "y": 2.5
       },
       "tier": 1,
       "treeScope": "character",
-      "subclassTags": []
+      "subclassTags": [],
+      "nodeType": "passive"
     },
     {
       "id": "power_strike",
@@ -105,12 +108,13 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": 0,
-        "y": 2
+        "x": 1.5,
+        "y": -2.1
       },
       "tier": 1,
       "treeScope": "character",
-      "subclassTags": []
+      "subclassTags": [],
+      "nodeType": "active"
     },
     {
       "id": "backstab",
@@ -139,12 +143,13 @@
         }
       ],
       "position": {
-        "x": 3,
-        "y": 2
+        "x": 1,
+        "y": 2.5
       },
       "tier": 1,
       "treeScope": "character",
-      "subclassTags": []
+      "subclassTags": [],
+      "nodeType": "passive"
     },
     {
       "id": "hunters_mark",
@@ -173,12 +178,13 @@
         }
       ],
       "position": {
-        "x": 4,
-        "y": 2
+        "x": -2.7,
+        "y": -0.5
       },
       "tier": 1,
       "treeScope": "character",
-      "subclassTags": []
+      "subclassTags": [],
+      "nodeType": "passive"
     },
     {
       "id": "arcane_bolt",
@@ -194,12 +200,13 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -3,
-        "y": 2
+        "x": 1.2,
+        "y": 2.4
       },
       "tier": 1,
       "treeScope": "character",
-      "subclassTags": []
+      "subclassTags": [],
+      "nodeType": "active"
     },
     {
       "id": "divine_light",
@@ -228,12 +235,13 @@
         }
       ],
       "position": {
-        "x": -4,
-        "y": 3
+        "x": 1.2,
+        "y": 2.4
       },
       "tier": 1,
       "treeScope": "character",
-      "subclassTags": []
+      "subclassTags": [],
+      "nodeType": "passive"
     },
     {
       "id": "iron_stomach",
@@ -260,12 +268,13 @@
         }
       ],
       "position": {
-        "x": 1,
-        "y": 3
+        "x": 2.6,
+        "y": 0
       },
       "tier": 1,
       "treeScope": "character",
-      "subclassTags": []
+      "subclassTags": [],
+      "nodeType": "passive"
     },
     {
       "id": "ancient_knowledge",
@@ -290,8 +299,8 @@
         }
       ],
       "position": {
-        "x": -5,
-        "y": 4
+        "x": -1.8,
+        "y": -3.4
       },
       "tier": 2,
       "jobRequirement": {
@@ -299,7 +308,8 @@
         "level": 3
       },
       "treeScope": "character",
-      "subclassTags": []
+      "subclassTags": [],
+      "nodeType": "passive"
     },
     {
       "id": "death_sense",
@@ -324,8 +334,8 @@
         }
       ],
       "position": {
-        "x": 5,
-        "y": 4
+        "x": 2.1,
+        "y": -3.4
       },
       "tier": 2,
       "jobRequirement": {
@@ -333,7 +343,8 @@
         "level": 3
       },
       "treeScope": "character",
-      "subclassTags": []
+      "subclassTags": [],
+      "nodeType": "passive"
     },
     {
       "id": "keen_eye",
@@ -358,8 +369,8 @@
         }
       ],
       "position": {
-        "x": 6,
-        "y": 4
+        "x": -3.8,
+        "y": 0.1
       },
       "tier": 2,
       "jobRequirement": {
@@ -367,7 +378,8 @@
         "level": 3
       },
       "treeScope": "character",
-      "subclassTags": []
+      "subclassTags": [],
+      "nodeType": "passive"
     },
     {
       "id": "wilderness_survival",
@@ -392,8 +404,8 @@
         }
       ],
       "position": {
-        "x": 7,
-        "y": 4
+        "x": 2.1,
+        "y": -3.4
       },
       "tier": 2,
       "jobRequirement": {
@@ -401,7 +413,8 @@
         "level": 3
       },
       "treeScope": "character",
-      "subclassTags": []
+      "subclassTags": [],
+      "nodeType": "passive"
     },
     {
       "id": "berserker_rage",
@@ -437,12 +450,13 @@
         }
       ],
       "position": {
-        "x": 0,
-        "y": 4
+        "x": 4,
+        "y": 0
       },
       "tier": 2,
       "treeScope": "character",
-      "subclassTags": []
+      "subclassTags": [],
+      "nodeType": "passive"
     },
     {
       "id": "tactical_mind",
@@ -479,12 +493,13 @@
         }
       ],
       "position": {
-        "x": 2,
-        "y": 4
+        "x": 1.8,
+        "y": 3.4
       },
       "tier": 2,
       "treeScope": "character",
-      "subclassTags": []
+      "subclassTags": [],
+      "nodeType": "passive"
     },
     {
       "id": "shadow_dance",
@@ -514,12 +529,13 @@
         }
       ],
       "position": {
-        "x": 4,
+        "x": 1.7,
         "y": 5
       },
       "tier": 3,
       "treeScope": "character",
-      "subclassTags": []
+      "subclassTags": [],
+      "nodeType": "passive"
     },
     {
       "id": "fireball",
@@ -537,12 +553,13 @@
       ],
       "grants": [],
       "position": {
-        "x": -3,
-        "y": 5
+        "x": 3.9,
+        "y": 0.3
       },
       "tier": 2,
       "treeScope": "character",
-      "subclassTags": []
+      "subclassTags": [],
+      "nodeType": "active"
     },
     {
       "id": "frost_mastery",
@@ -573,12 +590,13 @@
         }
       ],
       "position": {
-        "x": -4,
-        "y": 5
+        "x": -3.9,
+        "y": -0.3
       },
       "tier": 2,
       "treeScope": "character",
-      "subclassTags": []
+      "subclassTags": [],
+      "nodeType": "passive"
     },
     {
       "id": "holy_smite",
@@ -594,12 +612,13 @@
       "blocks": [],
       "grants": [],
       "position": {
-        "x": -5,
-        "y": 6
+        "x": -1.8,
+        "y": -3.7
       },
       "tier": 2,
       "treeScope": "character",
-      "subclassTags": []
+      "subclassTags": [],
+      "nodeType": "active"
     },
     {
       "id": "blessed_guardian",
@@ -635,12 +654,13 @@
         }
       ],
       "position": {
-        "x": -3,
-        "y": 7
+        "x": 5.4,
+        "y": 0.5
       },
       "tier": 3,
       "treeScope": "character",
-      "subclassTags": []
+      "subclassTags": [],
+      "nodeType": "passive"
     },
     {
       "id": "royal_favor",
@@ -667,13 +687,16 @@
         }
       ],
       "position": {
-        "x": -1,
-        "y": 8
+        "x": 5.4,
+        "y": 0
       },
       "tier": 3,
       "specialRequirement": "royal_event_completed",
       "treeScope": "character",
-      "subclassTags": []
+      "subclassTags": [],
+      "nodeType": "passive",
+      "isHidden": true,
+      "hiddenStyle": "shadow_orb"
     },
     {
       "id": "thieves_pact",
@@ -705,13 +728,401 @@
         }
       ],
       "position": {
-        "x": 1,
-        "y": 8
+        "x": 5.5,
+        "y": 0.1
       },
       "tier": 3,
       "specialRequirement": "thieves_guild_joined",
       "treeScope": "character",
-      "subclassTags": []
+      "subclassTags": [],
+      "nodeType": "passive",
+      "isHidden": true,
+      "hiddenStyle": "silhouette"
+    },
+    {
+      "id": "minor_warrior_shield_wall_dex",
+      "name": "+1 Dexterity",
+      "description": "+1 Dexterity — a small step on the constellation path.",
+      "classTags": [
+        "warrior"
+      ],
+      "cost": 1,
+      "requires": [
+        "basic_combat"
+      ],
+      "blocks": [],
+      "grants": [
+        {
+          "id": "minor_warrior_shield_wall_dex_effect",
+          "name": "+1 Dexterity",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "dexterity",
+              "type": "flat",
+              "value": 1
+            }
+          ]
+        }
+      ],
+      "position": {
+        "x": 0.77,
+        "y": -1.2100000000000002
+      },
+      "tier": 1,
+      "treeScope": "character",
+      "subclassTags": [],
+      "nodeType": "minor"
+    },
+    {
+      "id": "minor_priest_shield_wall_dex",
+      "name": "+1 Dexterity",
+      "description": "+1 Dexterity — a small step on the constellation path.",
+      "classTags": [
+        "priest"
+      ],
+      "cost": 1,
+      "requires": [
+        "basic_combat"
+      ],
+      "blocks": [],
+      "grants": [
+        {
+          "id": "minor_priest_shield_wall_dex_effect",
+          "name": "+1 Dexterity",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "dexterity",
+              "type": "flat",
+              "value": 1
+            }
+          ]
+        }
+      ],
+      "position": {
+        "x": 0.77,
+        "y": -1.2100000000000002
+      },
+      "tier": 1,
+      "treeScope": "character",
+      "subclassTags": [],
+      "nodeType": "minor"
+    },
+    {
+      "id": "minor_rogue_dual_wield_dex",
+      "name": "+1 Dexterity",
+      "description": "+1 Dexterity — a small step on the constellation path.",
+      "classTags": [
+        "rogue"
+      ],
+      "cost": 1,
+      "requires": [
+        "basic_combat"
+      ],
+      "blocks": [],
+      "grants": [
+        {
+          "id": "minor_rogue_dual_wield_dex_effect",
+          "name": "+1 Dexterity",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "dexterity",
+              "type": "flat",
+              "value": 1
+            }
+          ]
+        }
+      ],
+      "position": {
+        "x": 0.6050000000000001,
+        "y": 1.375
+      },
+      "tier": 1,
+      "treeScope": "character",
+      "subclassTags": [],
+      "nodeType": "minor"
+    },
+    {
+      "id": "minor_warrior_dual_wield_int",
+      "name": "+1 Intelligence",
+      "description": "+1 Intelligence — a small step on the constellation path.",
+      "classTags": [
+        "warrior"
+      ],
+      "cost": 1,
+      "requires": [
+        "basic_combat"
+      ],
+      "blocks": [],
+      "grants": [
+        {
+          "id": "minor_warrior_dual_wield_int_effect",
+          "name": "+1 Intelligence",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "intelligence",
+              "type": "flat",
+              "value": 1
+            }
+          ]
+        }
+      ],
+      "position": {
+        "x": 0.6050000000000001,
+        "y": 1.375
+      },
+      "tier": 1,
+      "treeScope": "character",
+      "subclassTags": [],
+      "nodeType": "minor"
+    },
+    {
+      "id": "minor_warrior_power_strike_int",
+      "name": "+1 Intelligence",
+      "description": "+1 Intelligence — a small step on the constellation path.",
+      "classTags": [
+        "warrior"
+      ],
+      "cost": 1,
+      "requires": [
+        "basic_combat"
+      ],
+      "blocks": [],
+      "grants": [
+        {
+          "id": "minor_warrior_power_strike_int_effect",
+          "name": "+1 Intelligence",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "intelligence",
+              "type": "flat",
+              "value": 1
+            }
+          ]
+        }
+      ],
+      "position": {
+        "x": 0.8250000000000001,
+        "y": -1.1550000000000002
+      },
+      "tier": 1,
+      "treeScope": "character",
+      "subclassTags": [],
+      "nodeType": "minor"
+    },
+    {
+      "id": "minor_rogue_backstab_int",
+      "name": "+1 Intelligence",
+      "description": "+1 Intelligence — a small step on the constellation path.",
+      "classTags": [
+        "rogue"
+      ],
+      "cost": 1,
+      "requires": [
+        "basic_combat"
+      ],
+      "blocks": [],
+      "grants": [
+        {
+          "id": "minor_rogue_backstab_int_effect",
+          "name": "+1 Intelligence",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "intelligence",
+              "type": "flat",
+              "value": 1
+            }
+          ]
+        }
+      ],
+      "position": {
+        "x": 0.55,
+        "y": 1.375
+      },
+      "tier": 1,
+      "treeScope": "character",
+      "subclassTags": [],
+      "nodeType": "minor"
+    },
+    {
+      "id": "minor_ranger_hunters_mark_str",
+      "name": "+1 Strength",
+      "description": "+1 Strength — a small step on the constellation path.",
+      "classTags": [
+        "ranger"
+      ],
+      "cost": 1,
+      "requires": [
+        "basic_combat"
+      ],
+      "blocks": [],
+      "grants": [
+        {
+          "id": "minor_ranger_hunters_mark_str_effect",
+          "name": "+1 Strength",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "strength",
+              "type": "flat",
+              "value": 1
+            }
+          ]
+        }
+      ],
+      "position": {
+        "x": -1.4850000000000003,
+        "y": -0.275
+      },
+      "tier": 1,
+      "treeScope": "character",
+      "subclassTags": [],
+      "nodeType": "minor"
+    },
+    {
+      "id": "minor_mage_arcane_bolt_con",
+      "name": "+1 Constitution",
+      "description": "+1 Constitution — a small step on the constellation path.",
+      "classTags": [
+        "mage"
+      ],
+      "cost": 1,
+      "requires": [
+        "basic_combat"
+      ],
+      "blocks": [],
+      "grants": [
+        {
+          "id": "minor_mage_arcane_bolt_con_effect",
+          "name": "+1 Constitution",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "constitution",
+              "type": "flat",
+              "value": 1
+            }
+          ]
+        }
+      ],
+      "position": {
+        "x": 0.66,
+        "y": 1.32
+      },
+      "tier": 1,
+      "treeScope": "character",
+      "subclassTags": [],
+      "nodeType": "minor"
+    },
+    {
+      "id": "minor_priest_divine_light_dex",
+      "name": "+1 Dexterity",
+      "description": "+1 Dexterity — a small step on the constellation path.",
+      "classTags": [
+        "priest"
+      ],
+      "cost": 1,
+      "requires": [
+        "basic_combat"
+      ],
+      "blocks": [],
+      "grants": [
+        {
+          "id": "minor_priest_divine_light_dex_effect",
+          "name": "+1 Dexterity",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "dexterity",
+              "type": "flat",
+              "value": 1
+            }
+          ]
+        }
+      ],
+      "position": {
+        "x": 0.66,
+        "y": 1.32
+      },
+      "tier": 1,
+      "treeScope": "character",
+      "subclassTags": [],
+      "nodeType": "minor"
+    },
+    {
+      "id": "minor_warrior_tactical_mind_int",
+      "name": "+1 Intelligence",
+      "description": "+1 Intelligence — a small step on the constellation path.",
+      "classTags": [
+        "warrior"
+      ],
+      "cost": 1,
+      "requires": [
+        "basic_combat"
+      ],
+      "blocks": [],
+      "grants": [
+        {
+          "id": "minor_warrior_tactical_mind_int_effect",
+          "name": "+1 Intelligence",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "intelligence",
+              "type": "flat",
+              "value": 1
+            }
+          ]
+        }
+      ],
+      "position": {
+        "x": 0.9900000000000001,
+        "y": 1.87
+      },
+      "tier": 1,
+      "treeScope": "character",
+      "subclassTags": [],
+      "nodeType": "minor"
+    },
+    {
+      "id": "minor_rogue_tactical_mind_con",
+      "name": "+1 Constitution",
+      "description": "+1 Constitution — a small step on the constellation path.",
+      "classTags": [
+        "rogue"
+      ],
+      "cost": 1,
+      "requires": [
+        "basic_combat"
+      ],
+      "blocks": [],
+      "grants": [
+        {
+          "id": "minor_rogue_tactical_mind_con_effect",
+          "name": "+1 Constitution",
+          "effectType": "passive",
+          "modifiers": [
+            {
+              "stat": "constitution",
+              "type": "flat",
+              "value": 1
+            }
+          ]
+        }
+      ],
+      "position": {
+        "x": 0.9900000000000001,
+        "y": 1.87
+      },
+      "tier": 1,
+      "treeScope": "character",
+      "subclassTags": [],
+      "nodeType": "minor"
     }
   ],
   "uniqueSkills": [

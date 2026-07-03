@@ -25,6 +25,10 @@
     "./equipment": {
       "import": "./src/equipment.ts",
       "types": "./src/equipment.ts"
+    },
+    "./skills": {
+      "import": "./src/skills/index.ts",
+      "types": "./src/skills/index.ts"
     }
   },
   "scripts": {

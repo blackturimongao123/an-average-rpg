@@ -1,5 +1,6 @@
 import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { FieldValue } from "firebase-admin/firestore";
+import { getCharacterSkillPointsPool } from "@bloodline/shared/constants";
 import { db } from "../index.js";
 import type { Heir, Lineage } from "../utils/types.js";
 import {
@@ -82,7 +83,9 @@ export const claimSkill = onCall<ClaimSkillRequest>(
     }
 
     const pointsPool =
-      treeScope === "bloodline" ? getBloodlineSkillPoints(lineage) : heir.level;
+      treeScope === "bloodline"
+        ? getBloodlineSkillPoints(lineage)
+        : getCharacterSkillPointsPool(heir.level);
     const pointsUsed = getUsedPoints(ownedSkillIds) + skill.cost;
 
     if (pointsUsed > pointsPool) {
