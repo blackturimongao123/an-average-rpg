@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { collection, query, where, onSnapshot, doc } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { useAuthStore } from "@/stores/authStore";
@@ -18,6 +18,8 @@ interface GameShellProps {
 
 export function GameShell({ children }: GameShellProps) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isImmersive = location.pathname === "/skills";
   const { user } = useAuthStore();
   const { setLineage, setHeir, setLoading } = useGameStore();
 
@@ -124,6 +126,14 @@ export function GameShell({ children }: GameShellProps) {
 
     return () => unsubscribeLineage();
   }, [user, setLineage, setHeir, setLoading, navigate]);
+
+  if (isImmersive) {
+    return (
+      <div className="h-screen w-screen overflow-hidden bg-background">
+        {children}
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background flex">

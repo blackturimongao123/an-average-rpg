@@ -1,22 +1,25 @@
-import { useState } from "react";
-import * as Tabs from "@radix-ui/react-tabs";
+import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import { ArrowLeft, Crown, Skull } from "lucide-react";
 import { useAuthStore } from "@/stores/authStore";
 import { useGameStore } from "@/stores/gameStore";
-import { ConstellationMap } from "@/components/skills/ConstellationMap";
 import { claimPlayerSkill } from "@/firebase/skills";
 import { getFirebaseErrorMessage } from "@/lib/firebaseErrors";
 import {
   canClaimSkill,
-  filterBloodlineSkills,
-  getCharacterWebSkills,
   getBloodlinePointsRemaining,
   getBloodlineSkillPoints,
   getCharacterSkillPoints,
-  getClassAccentColor,
-  getSkillRevealState,
+  getSkillById,
 } from "@/lib/skills";
-import type { SkillNode } from "@bloodline/shared/types";
-import { AlertCircle, Check, Crown, Scroll, Skull, Sparkles, X } from "lucide-react";
+import { SkillTreeCanvas } from "@/features/skill-tree/SkillTreeCanvas";
+import { getBloodlineSkillTree, getClassSkillTree } from "@/features/skill-tree/data";
+import {
+  buildPlayerSkillState,
+  isNodeInGameData,
+  resolveClaimableSkillId,
+} from "@/features/skill-tree/skillTreeBridge";
+import type { ResolvedSkillNode } from "@/features/skill-tree/skillTreeTypes";
 
 export function SkillsPage() {
   const { user } = useAuthStore();
@@ -29,9 +32,20 @@ export function SkillsPage() {
   } = useGameStore();
 
   const [activeTab, setActiveTab] = useState<"character" | "bloodline">("character");
-  const [selectedSkill, setSelectedSkill] = useState<SkillNode | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
+  const ownedForTab = useMemo(() => {
+    if (!heir || !lineage) return [];
+    return activeTab === "bloodline" ? (lineage.bloodlineSkillIds ?? []) : heir.skillIds;
+  }, [heir, lineage, activeTab]);
+
+  const playerState = useMemo(() => {
+    if (!heir || !lineage) {
+      return { unlockedNodeIds: [], discoveredHiddenNodeIds: [] };
+    }
+    return buildPlayerSkillState(heir, lineage, ownedForTab, activeTab);
+  }, [heir, lineage, ownedForTab, activeTab]);
 
   if (!heir || !lineage) {
     return (
@@ -41,50 +55,63 @@ export function SkillsPage() {
     );
   }
 
-  const characterSkills = getCharacterWebSkills(heir, lineage);
-  const bloodlineSkills = filterBloodlineSkills();
-  const bloodlineOwned = lineage.bloodlineSkillIds ?? [];
-  const characterPoints = getCharacterSkillPoints(heir);
-  const bloodlinePoints = getBloodlinePointsRemaining(lineage);
-  const classAccent = getClassAccentColor(heir.classId);
+  const treeData =
+    activeTab === "bloodline"
+      ? getBloodlineSkillTree()
+      : getClassSkillTree(heir.classId);
 
-  const ownedForTab =
-    activeTab === "bloodline" ? bloodlineOwned : heir.skillIds;
+  const skillPoints =
+    activeTab === "bloodline"
+      ? getBloodlinePointsRemaining(lineage)
+      : getCharacterSkillPoints(heir);
 
-  const validateClaim = (skill: SkillNode) =>
-    canClaimSkill(skill, {
+  const getClaimStatus = (node: ResolvedSkillNode) => {
+    const skillId = resolveClaimableSkillId(node);
+    if (!skillId) {
+      return { canClaim: false, reason: "Not claimable" };
+    }
+
+    const skill = getSkillById(skillId);
+    if (!skill) {
+      return { canClaim: false, reason: "Skill not in game data yet" };
+    }
+
+    return canClaimSkill(skill, {
       heir,
       lineage,
       ownedSkillIds: ownedForTab,
       treeScope: activeTab,
     });
+  };
 
-  const selectedRevealState = selectedSkill
-    ? getSkillRevealState(selectedSkill, heir, lineage)
-    : "revealed";
-  const isHiddenUnrevealed =
-    selectedSkill?.isHidden && selectedRevealState === "hidden";
+  const handleUnlockRequest = async (node: ResolvedSkillNode) => {
+    if (!user) return;
 
-  const handleClaimSkill = async () => {
-    if (!user || !selectedSkill) return;
+    const skillId = resolveClaimableSkillId(node);
+    if (!skillId || !isNodeInGameData(skillId)) return;
+
+    const skill = getSkillById(skillId);
+    if (!skill) return;
+
+    const { canClaim } = getClaimStatus(node);
+    if (!canClaim) return;
 
     setLoading(true);
     setMessage(null);
 
     try {
-      const result = await claimPlayerSkill(user.uid, lineage.id, heir.id, selectedSkill.id);
+      const result = await claimPlayerSkill(user.uid, lineage.id, heir.id, skillId);
 
       if (activeTab === "bloodline") {
-        addBloodlineSkill(selectedSkill.id);
+        addBloodlineSkill(skillId);
       } else {
-        addSkillToHeir(selectedSkill.id);
+        addSkillToHeir(skillId);
         if ("subclassId" in result && result.subclassId && result.subclassTier) {
           setHeirSubclass(result.subclassId, result.subclassTier);
         }
       }
 
-      setMessage({ type: "success", text: `Learned ${selectedSkill.name}!` });
-      setSelectedSkill(null);
+      setMessage({ type: "success", text: `Learned ${skill.name}!` });
     } catch (error: unknown) {
       setMessage({ type: "error", text: getFirebaseErrorMessage(error) });
     } finally {
@@ -92,203 +119,83 @@ export function SkillsPage() {
     }
   };
 
-  return (
-    <div className="flex flex-col h-[calc(100vh-4.5rem)] w-full max-w-none -m-6 p-6">
-      <div className="flex flex-wrap items-start justify-between gap-4 mb-4 shrink-0">
-        <div className="flex items-center gap-3">
-          <Scroll className="w-8 h-8 text-gold" />
-          <div>
-            <h1 className="font-display text-2xl font-bold">Constellation Atlas</h1>
-            <p className="text-muted-foreground text-sm">
-              Chart your heir&apos;s path through the stars. Bloodline legacy endures forever.
-            </p>
-          </div>
-        </div>
-
-        <div className="flex gap-3">
-          <div className="card px-4 py-2 text-center min-w-[110px]">
-            <p className="text-xs text-muted-foreground">Character</p>
-            <p className="text-xl font-bold" style={{ color: classAccent }}>
-              {characterPoints}
-            </p>
-          </div>
-          <div className="card px-4 py-2 text-center min-w-[110px]">
-            <p className="text-xs text-muted-foreground">Bloodline</p>
-            <p className="text-xl font-bold text-gold">{bloodlinePoints}</p>
-          </div>
-        </div>
-      </div>
-
-      {message && (
-        <div
-          className={`p-3 rounded-md mb-3 shrink-0 ${
-            message.type === "success"
-              ? "bg-green-900/20 text-green-400"
-              : "bg-destructive/20 text-destructive"
-          }`}
+  const headerExtra = (
+    <div className="skill-tree-immersive-chrome">
+      <Link to="/character" className="skill-tree-back-link">
+        <ArrowLeft className="w-4 h-4" />
+        Back
+      </Link>
+      <div className="skill-tree-tab-switch">
+        <button
+          type="button"
+          className={activeTab === "character" ? "is-active" : ""}
+          onClick={() => {
+            setActiveTab("character");
+            setMessage(null);
+          }}
         >
-          {message.text}
-        </div>
-      )}
+          Class
+        </button>
+        <button
+          type="button"
+          className={activeTab === "bloodline" ? "is-active" : ""}
+          onClick={() => {
+            setActiveTab("bloodline");
+            setMessage(null);
+          }}
+        >
+          Bloodline
+        </button>
+      </div>
+      <div className="skill-tree-point-pills">
+        <span title="Character skill points">
+          <Skull className="w-3 h-3 inline mr-1" />
+          {getCharacterSkillPoints(heir)}
+        </span>
+        <span title="Bloodline skill points">
+          <Crown className="w-3 h-3 inline mr-1" />
+          {getBloodlinePointsRemaining(lineage)}
+        </span>
+      </div>
+    </div>
+  );
 
-      <Tabs.Root
-        value={activeTab}
-        onValueChange={(value) => {
-          setActiveTab(value as "character" | "bloodline");
-          setSelectedSkill(null);
-        }}
-        className="flex flex-col flex-1 min-h-0"
-      >
-        <Tabs.List className="flex gap-2 mb-3 shrink-0">
-          <Tabs.Trigger
-            value="character"
-            className="px-4 py-2 rounded-md text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground bg-secondary/50"
-          >
-            Class Constellation
-          </Tabs.Trigger>
-          <Tabs.Trigger
-            value="bloodline"
-            className="px-4 py-2 rounded-md text-sm data-[state=active]:bg-gold data-[state=active]:text-black bg-secondary/50"
-          >
-            Bloodline Legacy
-          </Tabs.Trigger>
-        </Tabs.List>
+  const messageBanner = message ? (
+    <div
+      className={`skill-tree-message skill-tree-message--${message.type}`}
+      role="status"
+    >
+      {message.text}
+    </div>
+  ) : null;
 
-        <div className="relative flex-1 min-h-0">
-          <Tabs.Content value="character" className="h-full outline-none">
-            <ConstellationMap
-              className="h-full"
-              skills={characterSkills}
-              ownedSkillIds={heir.skillIds}
-              selectedSkillId={selectedSkill?.id ?? null}
-              canClaimSkill={validateClaim}
-              onSelectSkill={setSelectedSkill}
-              accentColor={classAccent}
-              variant="character"
-              heir={heir}
-              lineage={lineage}
-              showCoreNode
-            />
-          </Tabs.Content>
-
-          <Tabs.Content value="bloodline" className="h-full outline-none">
-            <ConstellationMap
-              className="h-full"
-              skills={bloodlineSkills}
-              ownedSkillIds={bloodlineOwned}
-              selectedSkillId={selectedSkill?.id ?? null}
-              canClaimSkill={validateClaim}
-              onSelectSkill={setSelectedSkill}
-              accentColor="#c9a227"
-              variant="bloodline"
-              heir={heir}
-              lineage={lineage}
-            />
-          </Tabs.Content>
-
-          <p className="absolute bottom-3 right-4 text-[10px] text-muted-foreground/80 pointer-events-none flex items-center gap-1 z-10">
-            {activeTab === "character" ? (
-              <>
-                <Skull className="w-3 h-3" />
-                Character skills are lost when your heir dies.
-              </>
-            ) : (
-              <>
-                <Crown className="w-3 h-3" />
-                Bloodline points: {getBloodlineSkillPoints(lineage)} total · {bloodlinePoints} remaining
-              </>
-            )}
-          </p>
-
-          {selectedSkill && (
-            <div className="absolute top-4 right-4 w-80 max-w-[calc(100%-2rem)] card p-4 shadow-xl border-border/80 z-10">
-              <div className="flex items-start justify-between gap-2 mb-2">
-                <h3 className="font-display text-lg font-semibold">
-                  {isHiddenUnrevealed ? "Hidden Node" : selectedSkill.name}
-                </h3>
-                <button
-                  type="button"
-                  onClick={() => setSelectedSkill(null)}
-                  className="p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary/60"
-                  aria-label="Close skill details"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-
-              {isHiddenUnrevealed ? (
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Sparkles className="w-4 h-4" />
-                    <p className="text-sm">
-                      Something is hidden here—a shadow on the constellation. Complete the required
-                      adventure milestone to awaken this node.
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  {selectedSkill.nodeType && (
-                    <p className="text-xs uppercase tracking-wide text-muted-foreground mb-2">
-                      {selectedSkill.nodeType} node
-                    </p>
-                  )}
-                  <p className="text-sm text-muted-foreground mb-4">{selectedSkill.description}</p>
-
-                  <div className="space-y-2 text-sm mb-4">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Cost</span>
-                      <span className="font-semibold">{selectedSkill.cost} points</span>
-                    </div>
-                    {selectedSkill.requires.length > 0 && (
-                      <div>
-                        <span className="text-muted-foreground">Requires</span>
-                        <div className="mt-1 flex flex-wrap gap-1">
-                          {selectedSkill.requires.map((reqId) => (
-                            <span key={reqId} className="text-xs px-2 py-0.5 rounded bg-secondary">
-                              {reqId.replace(/_/g, " ")}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {ownedForTab.includes(selectedSkill.id) ? (
-                    <div className="flex items-center gap-2 text-green-400 text-sm">
-                      <Check className="w-4 h-4" />
-                      Already mastered
-                    </div>
-                  ) : (
-                    <>
-                      {(() => {
-                        const { canClaim, reason } = validateClaim(selectedSkill);
-                        if (!canClaim) {
-                          return (
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-                              <AlertCircle className="w-4 h-4" />
-                              <span>{reason}</span>
-                            </div>
-                          );
-                        }
-                        return null;
-                      })()}
-
-                      <button
-                        onClick={handleClaimSkill}
-                        disabled={loading || !validateClaim(selectedSkill).canClaim}
-                        className="btn-primary w-full"
-                      >
-                        {loading ? "Learning..." : "Learn Skill"}
-                      </button>
-                    </>
-                  )}
-                </>
-              )}
-            </div>
-          )}
-        </div>
-      </Tabs.Root>
+  return (
+    <div className="h-full w-full relative">
+      <SkillTreeCanvas
+        key={`${activeTab}-${heir.classId}`}
+        branches={treeData.branches}
+        nodes={treeData.nodes}
+        edges={treeData.edges}
+        playerState={playerState}
+        skillPoints={skillPoints}
+        title={treeData.title}
+        subtitle={treeData.subtitle}
+        headerExtra={headerExtra}
+        message={messageBanner}
+        loading={loading}
+        getClaimStatus={getClaimStatus}
+        onUnlockRequest={handleUnlockRequest}
+      />
+      <p className="skill-tree-footer-hint">
+        {activeTab === "character" ? (
+          <>Character skills are lost when your heir dies.</>
+        ) : (
+          <>
+            Bloodline points: {getBloodlineSkillPoints(lineage)} total ·{" "}
+            {getBloodlinePointsRemaining(lineage)} remaining
+          </>
+        )}
+      </p>
     </div>
   );
 }

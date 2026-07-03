@@ -25,15 +25,13 @@
     {
       "id": "iron_body",
       "name": "Iron Body",
-      "description": "Harden your frame. Constitution rises through pain.",
+      "description": "Your body hardens through repeated punishment.",
       "treeScope": "character",
-      "classTags": [],
-      "subclassTags": [
-        "brawler"
-      ],
-      "cost": 3,
+      "classTags": ["warrior"],
+      "subclassTags": [],
+      "cost": 2,
       "requires": [
-        "brawler_fury"
+        "basic_combat"
       ],
       "blocks": [],
       "grants": [],
@@ -41,8 +39,8 @@
         "x": 0,
         "y": -7.520726874999998
       },
-      "tier": 3,
-      "nodeType": "special"
+      "tier": 2,
+      "nodeType": "passive"
     },
     {
       "id": "iron_fist_sage",
@@ -99,7 +97,7 @@
       ],
       "cost": 3,
       "requires": [
-        "guardian_stand"
+        "guardian_gate"
       ],
       "blocks": [],
       "grants": [],
@@ -121,9 +119,10 @@
       ],
       "cost": 5,
       "requires": [
+        "shield_wall",
         "aegis_pulse"
       ],
-      "blocks": [],
+      "blocks": ["pain_engine"],
       "grants": [],
       "position": {
         "x": 13.117546874999997,
@@ -135,15 +134,13 @@
     {
       "id": "weapon_flow",
       "name": "Weapon Flow",
-      "description": "Chain attacks between weapons seamlessly.",
+      "description": "Small improvement to weapon handling.",
       "treeScope": "character",
-      "classTags": [],
-      "subclassTags": [
-        "weaponmaster"
-      ],
-      "cost": 2,
+      "classTags": ["warrior"],
+      "subclassTags": [],
+      "cost": 1,
       "requires": [
-        "dual_wield"
+        "basic_combat"
       ],
       "blocks": [],
       "grants": [],
@@ -152,20 +149,18 @@
         "y": 6.121521874999998
       },
       "tier": 2,
-      "nodeType": "special"
+      "nodeType": "minor"
     },
     {
       "id": "parry_master",
       "name": "Parry Master",
-      "description": "Turn defense into counterattacks.",
+      "description": "Deflect enemy attacks with precise timing.",
       "treeScope": "character",
-      "classTags": [],
-      "subclassTags": [
-        "weaponmaster"
-      ],
-      "cost": 3,
+      "classTags": ["warrior"],
+      "subclassTags": ["weaponmaster"],
+      "cost": 2,
       "requires": [
-        "weapon_flow"
+        "weapon_master_gate"
       ],
       "blocks": [],
       "grants": [],
@@ -173,8 +168,8 @@
         "x": 4.372515624999999,
         "y": 6.121521874999998
       },
-      "tier": 3,
-      "nodeType": "special"
+      "tier": 4,
+      "nodeType": "passive"
     },
     {
       "id": "blade_dance_ascended",
@@ -303,7 +298,7 @@
       ],
       "cost": 3,
       "requires": [
-        "paladin_oath"
+        "paladin_gate"
       ],
       "blocks": [],
       "grants": [],
@@ -427,7 +422,7 @@
       ],
       "cost": 2,
       "requires": [
-        "paladin_oath"
+        "paladin_gate"
       ],
       "blocks": [],
       "grants": [],
