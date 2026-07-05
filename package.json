@@ -14,7 +14,8 @@
     "firebase:emulators": "firebase emulators:start",
     "firebase:deploy": "firebase deploy",
     "functions:build": "pnpm --filter functions build",
-    "functions:deploy": "firebase deploy --only functions"
+    "functions:deploy": "firebase deploy --only functions",
+    "icons:download-item": "node scripts/download-item-icons.mjs"
   },
   "keywords": [
     "game",
