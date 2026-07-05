@@ -1,9 +1,9 @@
 const ICON_FILES: Record<string, string> = {
-  warrior: "WarriorIcon.png",
-  rogue: "RogueIcon.png",
-  mage: "MageIcon.png",
+  warrior: "WarriorProfileIcon.png",
+  rogue: "RogueProfileIcon.png",
+  mage: "WizardProfileIcon.png",
   priest: "PriestIcon.png",
-  ranger: "RangerIcon.png",
+  ranger: "RangerProfileIcon.png",
   brawler: "BrawlerIcon.png",
   bard: "BardIcon.png",
 };
