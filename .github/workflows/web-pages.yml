@@ -94,10 +94,12 @@ jobs:
           test -d apps/web/dist/assets
           grep -q "app-version\" content=\"${{ steps.version.outputs.value }}\"" apps/web/dist/index.html
           touch apps/web/dist/.nojekyll
-          ls -la apps/web/dist
+          echo "Dist size:"
+          du -sh apps/web/dist
+          find apps/web/dist -type f | wc -l
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: apps/web/dist
 
@@ -109,9 +111,42 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages (attempt 1)
+        id: deploy1
+        uses: actions/deploy-pages@v4
+        continue-on-error: true
+
+      - name: Wait before retry 2
+        if: steps.deploy1.outcome == 'failure'
+        run: sleep 120
+
+      - name: Deploy to GitHub Pages (attempt 2)
+        id: deploy2
+        if: steps.deploy1.outcome == 'failure'
+        uses: actions/deploy-pages@v4
+        continue-on-error: true
+
+      - name: Wait before retry 3
+        if: steps.deploy1.outcome == 'failure' && steps.deploy2.outcome == 'failure'
+        run: sleep 300
+
+      - name: Deploy to GitHub Pages (attempt 3)
+        id: deploy3
+        if: steps.deploy1.outcome == 'failure' && steps.deploy2.outcome == 'failure'
+        uses: actions/deploy-pages@v4
+        continue-on-error: true
+
+      - name: Fail if all deploy attempts failed
+        if: steps.deploy1.outcome == 'failure' && (steps.deploy2.outcome == 'failure' || steps.deploy2.outcome == 'skipped') && (steps.deploy3.outcome == 'failure' || steps.deploy3.outcome == 'skipped')
+        run: |
+          echo "::error::GitHub Pages deploy failed after 3 attempts. Re-run this workflow from Actions — transient Pages API errors usually clear within minutes."
+          exit 1
+
+      - name: Report deployment URL
         id: deployment
-        uses: actions/deploy-pages@v5
+        if: steps.deploy1.outcome == 'success' || steps.deploy2.outcome == 'success' || steps.deploy3.outcome == 'success'
+        run: |
+          echo "page_url=https://blackturimongao123.github.io/an-average-rpg/" >> "$GITHUB_OUTPUT"
 
   deploy-retry:
     needs: [build, deploy]
@@ -122,12 +157,23 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Wait before retry
-        run: sleep 90
+      - name: Wait before fresh artifact redeploy
+        run: sleep 300
 
-      - name: Retry deploy to GitHub Pages
+      - name: Download Pages artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: github-pages
+          path: dist
+
+      - name: Re-upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
+      - name: Deploy to GitHub Pages (fresh artifact)
         id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@v4
 
   verify:
     needs: [build, deploy, deploy-retry]

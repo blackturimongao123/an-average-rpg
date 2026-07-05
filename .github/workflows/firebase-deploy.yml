@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'functions/**'
+      - 'packages/shared/**'
       - 'firestore.rules'
       - 'storage.rules'
       - 'firestore.indexes.json'

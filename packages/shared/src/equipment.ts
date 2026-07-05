@@ -1,4 +1,4 @@
-import type { Equipment } from "./types";
+import type { Equipment } from "./types.js";
 
 /** Normalize legacy single-weapon equipment docs to dual-slot shape. */
 export function migrateEquipment(raw: Record<string, unknown> | Equipment | null | undefined): Equipment {
