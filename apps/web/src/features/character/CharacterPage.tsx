@@ -2,6 +2,7 @@ import { useGameStore } from "@/stores/gameStore";
 import { migrateEquipment } from "@bloodline/shared/equipment";
 import { ClassIcon } from "@/lib/classIcons";
 import { EquipmentPanel } from "@/components/game/EquipmentPanel";
+import { CombatProfilePanel } from "@/components/game/CombatProfilePanel";
 import { ItemChip } from "@/components/game/ItemChip";
 import {
   calculateMaxHp,
@@ -200,6 +201,10 @@ export function CharacterPage() {
           <h2 className="font-display text-lg font-semibold mb-4">Equipment</h2>
           <EquipmentPanel heir={heir} />
         </div>
+      </div>
+
+      <div className="mb-6">
+        <CombatProfilePanel heir={heir} />
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">

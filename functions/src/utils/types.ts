@@ -135,11 +135,17 @@ export interface BattleRound {
   round: number;
   actor: string;
   action: string;
+  abilityId?: string;
+  abilityName?: string;
   damage: number;
+  healing?: number;
   actorHpAfter: number;
   targetHpAfter: number;
+  actorGaugeAfter?: number;
   isCrit: boolean;
   isMiss: boolean;
+  isDodge?: boolean;
+  hitCount?: number;
 }
 
 export interface BattleResult {
@@ -189,6 +195,7 @@ export interface Monster {
   goldRewardMin: number;
   goldRewardMax: number;
   lootTable: LootEntry[];
+  traits?: string[];
 }
 
 export interface LootEntry {

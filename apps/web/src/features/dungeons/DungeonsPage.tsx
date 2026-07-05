@@ -2,23 +2,12 @@ import { useState } from "react";
 import { useGameStore } from "@/stores/gameStore";
 import { BusyActivityBlock, useIsHeirBusyOnJob } from "@/components/game/BusyActivityBlock";
 import { resolveDungeon } from "@/firebase/functions";
-import { Castle, Skull, Swords, Coins, Star, ChevronRight, Heart } from "lucide-react";
-import type { DungeonData } from "@bloodline/shared/types";
+import { Castle, Skull, Swords, Coins, Star, ChevronRight } from "lucide-react";
+import type { BattleRound, DungeonData } from "@bloodline/shared/types";
 
 import dungeonsData from "@game-data/dungeons.json";
 
 const dungeons = dungeonsData.dungeons as DungeonData[];
-
-interface BattleRound {
-  round: number;
-  actor: string;
-  action: string;
-  damage: number;
-  actorHpAfter: number;
-  targetHpAfter: number;
-  isCrit: boolean;
-  isMiss: boolean;
-}
 
 export function DungeonsPage() {
   const { lineage, heir, updateHeirGold, updateHeirXp, updateHeirLevel } = useGameStore();
@@ -93,13 +82,31 @@ export function DungeonsPage() {
     );
   }
 
+  function formatRoundLine(round: BattleRound, heirName: string, monsterName: string) {
+    const actorName = round.actor === heir!.id ? heirName : monsterName;
+    const abilityLabel = round.abilityName ?? round.action;
+
+    if (round.isDodge) {
+      return `${actorName} attacks — ${heirName} dodges!`;
+    }
+    if (round.isMiss) {
+      return `${actorName} uses ${abilityLabel} — miss!`;
+    }
+    if (round.healing && round.healing > 0) {
+      return `${actorName} uses ${abilityLabel} — heals ${round.healing}${round.damage > 0 ? `, deals ${round.damage} damage` : ""}`;
+    }
+    const crit = round.isCrit ? " CRIT!" : "";
+    const hits = round.hitCount && round.hitCount > 1 ? ` (${round.hitCount} hits)` : "";
+    return `${actorName} uses ${abilityLabel}${hits} — ${round.damage} damage${crit}`;
+  }
+
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex items-center gap-3 mb-6">
         <Castle className="w-8 h-8 text-gold" />
         <div>
           <h1 className="font-display text-2xl font-bold">Dungeons</h1>
-          <p className="text-muted-foreground">Brave the depths for glory and gold</p>
+          <p className="text-muted-foreground">Automatic speed-gauge combat — build your heir, then watch the fight</p>
         </div>
       </div>
 
@@ -115,23 +122,18 @@ export function DungeonsPage() {
             You faced: <span className="text-foreground font-semibold">{battleResult.monsterFaced}</span>
           </p>
 
-          <div className="bg-secondary/30 rounded-md p-4 mb-4 max-h-48 overflow-y-auto scrollbar-thin">
+          <div className="bg-secondary/30 rounded-md p-4 mb-4 max-h-64 overflow-y-auto scrollbar-thin">
             <h3 className="text-sm font-semibold mb-2">Battle Log</h3>
-            <div className="space-y-1 text-sm">
-              {battleResult.battleRounds.slice(-10).map((round, idx) => (
-                <div key={idx} className="flex items-center gap-2">
-                  <span className="text-muted-foreground">R{round.round}:</span>
+            <div className="space-y-1.5 text-sm font-mono">
+              {battleResult.battleRounds.slice(-16).map((round, idx) => (
+                <div key={idx} className="flex flex-wrap items-baseline gap-x-2">
+                  <span className="text-muted-foreground shrink-0">T{round.round}</span>
                   <span className={round.actor === heir.id ? "text-blue-400" : "text-red-400"}>
-                    {round.actor === heir.id ? heir.name : battleResult.monsterFaced}
+                    {formatRoundLine(round, heir.name, battleResult.monsterFaced)}
                   </span>
-                  <span>
-                    {round.isMiss ? "missed!" : (
-                      <>
-                        {round.isCrit && <span className="text-gold">CRIT! </span>}
-                        dealt {round.damage} damage
-                      </>
-                    )}
-                  </span>
+                  {round.actorGaugeAfter !== undefined && round.actor === heir.id && (
+                    <span className="text-xs text-muted-foreground">gauge {round.actorGaugeAfter}%</span>
+                  )}
                 </div>
               ))}
             </div>

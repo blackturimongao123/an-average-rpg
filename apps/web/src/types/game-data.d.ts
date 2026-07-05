@@ -54,6 +54,17 @@ declare module "@game-data/subclass-skills.json" {
   export default data;
 }
 
+declare module "@game-data/combat.json" {
+  import type { CombatData } from "@bloodline/shared/combat";
+  const data: CombatData;
+  export default data;
+}
+
+declare module "@game-data/items.json" {
+  const data: { items: Array<Record<string, unknown>> };
+  export default data;
+}
+
 declare module "@game-data/subclasses.json" {
   const data: { subclasses: SubclassData[] };
   export default data;

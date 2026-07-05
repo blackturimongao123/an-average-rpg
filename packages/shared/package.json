@@ -29,6 +29,10 @@
     "./skills": {
       "import": "./src/skills/index.ts",
       "types": "./src/skills/index.ts"
+    },
+    "./combat": {
+      "import": "./src/combat/index.ts",
+      "types": "./src/combat/index.ts"
     }
   },
   "scripts": {

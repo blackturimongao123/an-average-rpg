@@ -1,0 +1,251 @@
+{
+  "gaugeThreshold": 100,
+  "mainAbilities": {
+    "warrior": {
+      "id": "sword_strike",
+      "name": "Sword Strike",
+      "description": "Deal physical damage with your weapon.",
+      "damagePercent": 120,
+      "damageType": "physical",
+      "scalingStat": "strength"
+    },
+    "rogue": {
+      "id": "dagger_slash",
+      "name": "Dagger Slash",
+      "description": "A swift strike from the shadows.",
+      "damagePercent": 100,
+      "damageType": "physical",
+      "scalingStat": "dexterity"
+    },
+    "mage": {
+      "id": "magic_bolt",
+      "name": "Magic Bolt",
+      "description": "Hurl a bolt of arcane energy.",
+      "damagePercent": 130,
+      "damageType": "magical",
+      "scalingStat": "intelligence"
+    },
+    "priest": {
+      "id": "holy_smite",
+      "name": "Holy Smite",
+      "description": "Channel divine wrath against your foe.",
+      "damagePercent": 110,
+      "damageType": "holy",
+      "scalingStat": "faith"
+    },
+    "ranger": {
+      "id": "arrow_shot",
+      "name": "Arrow Shot",
+      "description": "Loose a precise arrow at the target.",
+      "damagePercent": 115,
+      "damageType": "physical",
+      "scalingStat": "dexterity"
+    }
+  },
+  "mainAbilityModifiers": [
+    {
+      "skillId": "battle_instinct",
+      "displayLines": ["+5% Critical Chance."]
+    },
+    {
+      "skillId": "blood_heat",
+      "displayLines": ["Damage increases as HP falls."]
+    },
+    {
+      "skillId": "pain_engine",
+      "displayLines": ["+15% Action Speed.", "−10% damage taken while below 50% HP."]
+    },
+    {
+      "skillId": "holy_strike",
+      "displayLines": ["Sword Strike deals Holy Damage."]
+    },
+    {
+      "skillId": "weapon_flow",
+      "displayLines": ["+10% Critical Chance."]
+    },
+    {
+      "skillId": "iron_body",
+      "displayLines": ["+5% damage reduction from armor."]
+    },
+    {
+      "skillId": "thousand_cuts",
+      "displayLines": ["Causes Bleed for 2 turns.", "+10% Critical Chance."]
+    },
+    {
+      "skillId": "arcane_bolt",
+      "displayLines": ["Magic Bolt gains +15% damage."]
+    },
+    {
+      "skillId": "hunters_mark",
+      "displayLines": ["+10% damage against marked prey."]
+    }
+  ],
+  "activeAbilities": [
+    {
+      "id": "power_strike",
+      "skillId": "power_strike",
+      "name": "Power Strike",
+      "description": "A devastating heavy blow.",
+      "triggerText": "Every 2 turns, replaces Sword Strike.",
+      "trigger": { "type": "every_n_turns", "n": 2 },
+      "replacesMain": true,
+      "damagePercent": 180,
+      "classIds": ["warrior"]
+    },
+    {
+      "id": "shield_bash",
+      "skillId": "shield_wall",
+      "name": "Shield Bash",
+      "description": "Bash with your shield, stunning the foe.",
+      "triggerText": "When HP falls below 50%, replaces the next main attack.",
+      "trigger": { "type": "hp_below_percent", "percent": 50 },
+      "replacesMain": true,
+      "damagePercent": 90,
+      "classIds": ["warrior"]
+    },
+    {
+      "id": "execute",
+      "skillId": "power_strike",
+      "name": "Execute",
+      "description": "Finish wounded enemies.",
+      "triggerText": "When the target has less than 20% HP, replaces the main attack.",
+      "trigger": { "type": "target_hp_below_percent", "percent": 20 },
+      "replacesMain": true,
+      "damagePercent": 250,
+      "classIds": ["warrior"]
+    },
+    {
+      "id": "rallying_cry",
+      "skillId": "rallying_cry",
+      "name": "Rallying Cry",
+      "description": "Shout to steel your nerves at the start of battle.",
+      "triggerText": "Automatically at the beginning of combat.",
+      "trigger": { "type": "combat_start" },
+      "replacesMain": false,
+      "buffDamagePercent": 15,
+      "buffDurationTurns": 3,
+      "classIds": ["warrior"]
+    },
+    {
+      "id": "blade_dance",
+      "skillId": "blade_dance",
+      "name": "Blade Dance",
+      "description": "A flurry of precise strikes.",
+      "triggerText": "Every 3 turns, attack twice instead of using Sword Strike.",
+      "trigger": { "type": "every_n_turns", "n": 3 },
+      "replacesMain": true,
+      "damagePercent": 100,
+      "hitCount": 2,
+      "classIds": ["warrior"]
+    },
+    {
+      "id": "second_wind",
+      "classAbilityId": "second_wind",
+      "name": "Second Wind",
+      "description": "Recover a portion of your vitality when near death.",
+      "triggerText": "Once per battle when HP falls below 30%.",
+      "trigger": { "type": "hp_below_percent", "percent": 30, "once": true },
+      "replacesMain": false,
+      "healPercentMaxHp": 20,
+      "classIds": ["warrior"]
+    },
+    {
+      "id": "backstab_active",
+      "skillId": "backstab",
+      "name": "Backstab",
+      "description": "Strike from the shadows for massive damage.",
+      "triggerText": "Every 3 turns, replaces Dagger Slash.",
+      "trigger": { "type": "every_n_turns", "n": 3 },
+      "replacesMain": true,
+      "damagePercent": 200,
+      "bonusCritChance": 25,
+      "classIds": ["rogue"]
+    },
+    {
+      "id": "shadow_step",
+      "classAbilityId": "shadow_step",
+      "name": "Shadow Step",
+      "description": "Slip through shadows to avoid harm.",
+      "triggerText": "25% chance to dodge each incoming attack.",
+      "trigger": { "type": "passive_dodge", "chance": 25 },
+      "replacesMain": false,
+      "classIds": ["rogue"]
+    },
+    {
+      "id": "arcane_bolt_active",
+      "skillId": "arcane_bolt",
+      "name": "Arcane Bolt",
+      "description": "A concentrated burst of arcane power.",
+      "triggerText": "Every 2 turns, replaces Magic Bolt.",
+      "trigger": { "type": "every_n_turns", "n": 2 },
+      "replacesMain": true,
+      "damagePercent": 160,
+      "classIds": ["mage"]
+    },
+    {
+      "id": "arcane_surge",
+      "classAbilityId": "arcane_surge",
+      "name": "Arcane Surge",
+      "description": "Surging arcane power amplifies your magic.",
+      "triggerText": "Every 3rd main attack deals +50% magical damage.",
+      "trigger": { "type": "every_n_turns", "n": 3 },
+      "replacesMain": true,
+      "damagePercent": 195,
+      "classIds": ["mage"]
+    },
+    {
+      "id": "divine_light_active",
+      "skillId": "divine_light",
+      "name": "Divine Light",
+      "description": "Smite with holy radiance and mend wounds.",
+      "triggerText": "When HP falls below 40%, heal and smite.",
+      "trigger": { "type": "hp_below_percent", "percent": 40 },
+      "replacesMain": true,
+      "damagePercent": 120,
+      "healPercentMaxHp": 10,
+      "classIds": ["priest"]
+    },
+    {
+      "id": "divine_protection",
+      "classAbilityId": "divine_protection",
+      "name": "Divine Protection",
+      "description": "Holy wards soften blows from dark foes.",
+      "triggerText": "Take 25% less damage from undead and cursed enemies.",
+      "trigger": { "type": "passive_damage_reduction", "percent": 25, "tags": ["undead", "cursed"] },
+      "replacesMain": false,
+      "classIds": ["priest"]
+    },
+    {
+      "id": "hunters_volley",
+      "skillId": "hunters_mark",
+      "name": "Hunter's Volley",
+      "description": "Loose two arrows in quick succession.",
+      "triggerText": "Every 2 turns, fire twice instead of Arrow Shot.",
+      "trigger": { "type": "every_n_turns", "n": 2 },
+      "replacesMain": true,
+      "damagePercent": 90,
+      "hitCount": 2,
+      "classIds": ["ranger"]
+    },
+    {
+      "id": "keen_sight",
+      "classAbilityId": "keen_sight",
+      "name": "Keen Sight",
+      "description": "Spot weak points on wounded prey.",
+      "triggerText": "+15% Critical Chance against enemies below half HP.",
+      "trigger": { "type": "passive_crit_vs_low_hp", "percent": 15, "targetHpPercent": 50 },
+      "replacesMain": false,
+      "classIds": ["ranger"]
+    },
+    {
+      "id": "deathless_rage",
+      "skillId": "deathless_rage",
+      "name": "Deathless Rage",
+      "description": "Refuse to fall while rage burns.",
+      "triggerText": "Once per combat, survive a lethal hit with 1 HP.",
+      "trigger": { "type": "lethal_save", "once": true },
+      "replacesMain": false,
+      "classIds": ["warrior"]
+    }
+  ]
+}
