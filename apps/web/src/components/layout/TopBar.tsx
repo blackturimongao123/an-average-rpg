@@ -2,12 +2,11 @@ import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebase/config";
 import { useGameStore } from "@/stores/gameStore";
-import { useAuthStore } from "@/stores/authStore";
-import { Coins, Heart, Star, LogOut, User, Skull } from "lucide-react";
+import { ClassIcon } from "@/lib/classIcons";
+import { Coins, Heart, Star, LogOut, Skull } from "lucide-react";
 
 export function TopBar() {
   const navigate = useNavigate();
-  const { user } = useAuthStore();
   const { lineage, heir, loading } = useGameStore();
 
   const handleLogout = async () => {
@@ -26,10 +25,13 @@ export function TopBar() {
           <div className="text-muted-foreground">Loading...</div>
         ) : heir ? (
           <>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-                <User className="w-5 h-5 text-primary" />
-              </div>
+            <button
+              type="button"
+              onClick={() => navigate("/profile")}
+              className="flex items-center gap-3 rounded-md px-1 py-0.5 -mx-1 hover:bg-accent/10 transition-colors text-left"
+              title="Open profile"
+            >
+              <ClassIcon classId={heir.classId} subclassId={heir.subclassId} size={40} />
               <div>
                 <h2 className="font-display text-sm font-semibold text-foreground">
                   {heir.name}
@@ -38,7 +40,7 @@ export function TopBar() {
                   Level {heir.level} {heir.classId}
                 </p>
               </div>
-            </div>
+            </button>
 
             <div className="h-8 w-px bg-border" />
 
@@ -67,7 +69,12 @@ export function TopBar() {
             </div>
           </>
         ) : lineage ? (
-          <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => navigate("/profile")}
+            className="flex items-center gap-3 rounded-md px-1 py-0.5 -mx-1 hover:bg-accent/10 transition-colors text-left"
+            title="Open profile"
+          >
             <div className="w-10 h-10 rounded-full bg-blood/20 flex items-center justify-center">
               <Skull className="w-5 h-5 text-blood" />
             </div>
@@ -79,7 +86,7 @@ export function TopBar() {
                 Generation {lineage.generation} - No living heir
               </p>
             </div>
-          </div>
+          </button>
         ) : (
           <div className="text-muted-foreground">Create your bloodline</div>
         )}
@@ -97,8 +104,8 @@ export function TopBar() {
         <div className="h-8 w-px bg-border" />
 
         <div className="flex items-center gap-3">
-          <span className="text-sm text-muted-foreground">
-            {user?.email}
+          <span className="text-sm font-medium text-foreground">
+            {heir?.name ?? (lineage ? `House ${lineage.familyName}` : "—")}
           </span>
           <button
             onClick={handleLogout}

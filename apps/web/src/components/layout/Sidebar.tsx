@@ -13,7 +13,6 @@ import {
   ChevronRight,
   User,
   Store,
-  UserCircle,
 } from "lucide-react";
 
 const navItems = [
@@ -25,7 +24,6 @@ const navItems = [
   { to: "/bank", icon: PiggyBank, label: "Bank" },
   { to: "/merchant", icon: Store, label: "Merchant" },
   { to: "/bloodline", icon: GitBranch, label: "Bloodline" },
-  { to: "/profile", icon: UserCircle, label: "Profile" },
 ];
 
 export function Sidebar() {
@@ -60,7 +58,7 @@ export function Sidebar() {
 
       <nav className="flex-1 p-2 space-y-1">
         {navItems.map(({ to, icon: Icon, label }) => {
-          const disabled = onMission && to !== "/profile";
+          const disabled = onMission;
           return (
             <NavLink
               key={to}

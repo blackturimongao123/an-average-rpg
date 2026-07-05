@@ -142,6 +142,11 @@ export const createHeir = onCall<CreateHeirRequest>(
       "publicSummary.currentClass": classId,
     });
 
+    batch.update(db.collection("users").doc(uid), {
+      displayName: name.trim(),
+      updatedAt: FieldValue.serverTimestamp(),
+    });
+
     await batch.commit();
 
     return {

@@ -38,7 +38,6 @@ export function ProfilePage() {
   const [tab, setTab] = useState<"account" | "party">("account");
   const [profile, setProfile] = useState<{
     username: string;
-    displayName: string;
     settings: { reducedMotion: boolean; theme: string };
   } | null>(null);
   const [party, setParty] = useState<Party | null>(null);
@@ -59,7 +58,6 @@ export function ProfilePage() {
       const data = snap.data();
       setProfile({
         username: (data.username as string) ?? "",
-        displayName: (data.displayName as string) ?? "",
         settings: (data.settings as { reducedMotion: boolean; theme: string }) ?? {
           reducedMotion: false,
           theme: "dark",
@@ -260,7 +258,7 @@ export function ProfilePage() {
       <div className="flex items-center gap-3 mb-6">
         <User className="w-8 h-8 text-primary" />
         <div>
-          <h1 className="font-display text-2xl font-bold">Profile</h1>
+          <h1 className="font-display text-2xl font-bold">{heir.name}</h1>
           <p className="text-muted-foreground">Account settings and party</p>
         </div>
       </div>
@@ -332,12 +330,15 @@ export function ProfilePage() {
               <span>{user?.email ?? "—"}</span>
             </div>
             <div className="flex justify-between p-3 rounded-md bg-secondary/50">
-              <span className="text-muted-foreground">Username</span>
-              <span>{profile?.username ?? "—"}</span>
+              <span className="text-muted-foreground">Character name</span>
+              <span>{heir.name}</span>
             </div>
+            <p className="text-xs text-muted-foreground px-1">
+              Other players always see your character name, not your account username.
+            </p>
             <div className="flex justify-between p-3 rounded-md bg-secondary/50">
-              <span className="text-muted-foreground">Display name</span>
-              <span>{profile?.displayName ?? "—"}</span>
+              <span className="text-muted-foreground">Account username</span>
+              <span>{profile?.username ?? "—"}</span>
             </div>
             <div className="flex justify-between p-3 rounded-md bg-secondary/50">
               <span className="text-muted-foreground">Bloodline</span>
