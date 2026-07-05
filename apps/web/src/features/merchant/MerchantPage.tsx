@@ -5,6 +5,7 @@ import { BusyActivityBlock, useIsHeirBusyOnJob } from "@/components/game/BusyAct
 import { getPlayerMerchantBoard, purchasePlayerMerchantItem } from "@/firebase/merchantBoard";
 import { getFirebaseErrorMessage } from "@/lib/firebaseErrors";
 import { getItemById } from "@/lib/items";
+import { ItemIcon } from "@/components/game/ItemIcon";
 import {
   formatMerchantCountdown,
   getMerchantRerollCountdownMs,
@@ -140,19 +141,22 @@ export function MerchantPage() {
 
             return (
               <div key={slot.slotIndex} className="card p-5 flex flex-col gap-3">
-                <div>
-                  <p className={`font-semibold ${getRarityColor(item?.rarity ?? "common")}`}>
-                    {item?.name ?? slot.itemId}
-                  </p>
-                  <p className="text-xs text-muted-foreground capitalize mt-1">
-                    {item?.rarity ?? "unknown"} • {item?.itemType ?? "item"}
-                  </p>
-                  {item?.description && (
-                    <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
-                      {item.description}
+                <div className="flex items-start gap-3">
+                  <div className="p-2 rounded-md bg-secondary/60 border border-border">
+                    <ItemIcon itemId={slot.itemId} item={item} size={32} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className={`font-semibold ${getRarityColor(item?.rarity ?? "common")}`}>
+                      {item?.name ?? slot.itemId}
                     </p>
-                  )}
+                    <p className="text-xs text-muted-foreground capitalize mt-1">
+                      {item?.rarity ?? "unknown"} • {item?.itemType ?? "item"}
+                    </p>
+                  </div>
                 </div>
+                {item?.description && (
+                  <p className="text-sm text-muted-foreground line-clamp-2">{item.description}</p>
+                )}
                 <div className="mt-auto flex items-center justify-between">
                   <span className="gold-text font-medium">{slot.price} gold</span>
                   <button

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Shield, Sword, Sparkles, Link2 } from "lucide-react";
+import { Link2 } from "lucide-react";
 import { migrateEquipment } from "@bloodline/shared/equipment";
 import type { Equipment, Heir } from "@bloodline/shared/types";
 import { useGameStore } from "@/stores/gameStore";
@@ -7,6 +7,7 @@ import { equipItem, unequipItem } from "@/firebase/functions";
 import { getItemName, isTwoHandedItem } from "@/lib/items";
 import { getRarityColor } from "@/lib/utils";
 import { getItemById } from "@/lib/items";
+import { EquipSlotIcon, ItemIcon } from "@/components/game/ItemIcon";
 import { ItemChip } from "./ItemChip";
 
 type SlotKey = "main" | "secondary" | "armor" | "accessory";
@@ -110,13 +111,11 @@ export function EquipmentPanel({ heir }: { heir: Heir }) {
         }}
         className={`p-3 rounded-md border border-border bg-secondary/40 text-left transition-colors hover:bg-secondary/70 disabled:opacity-60 ${className}`}
       >
-        <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
-          {slot === "main" || slot === "secondary" ? (
-            <Sword className="w-3 h-3" />
-          ) : slot === "armor" ? (
-            <Shield className="w-3 h-3" />
+        <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1.5">
+          {item ? (
+            <ItemIcon item={item} size={14} className="text-muted-foreground" />
           ) : (
-            <Sparkles className="w-3 h-3" />
+            <EquipSlotIcon slot={slot} size={14} />
           )}
           {slotLabel(slot)}
           {lockedSecondary && <Link2 className="w-3 h-3 text-gold" aria-label="Two-handed" />}

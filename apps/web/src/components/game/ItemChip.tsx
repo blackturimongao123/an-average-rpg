@@ -1,5 +1,6 @@
 import { getRarityColor } from "@/lib/utils";
 import { getItemById } from "@/lib/items";
+import { ItemIcon } from "@/components/game/ItemIcon";
 
 export function ItemChip({
   itemId,
@@ -18,10 +19,11 @@ export function ItemChip({
       type="button"
       onClick={onClick}
       disabled={!onClick}
-      className={`px-3 py-1.5 rounded-md text-sm border transition-colors ${
+      className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-sm border transition-colors ${
         selected ? "border-primary bg-primary/10" : "border-border bg-secondary/50 hover:bg-secondary"
       } ${onClick ? "cursor-pointer" : "cursor-default"}`}
     >
+      <ItemIcon itemId={itemId} item={item} size={18} className="text-foreground/80" />
       <span className={getRarityColor(rarity)}>{item?.name ?? itemId}</span>
     </button>
   );
