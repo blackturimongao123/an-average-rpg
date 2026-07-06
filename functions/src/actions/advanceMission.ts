@@ -165,7 +165,7 @@ export const advanceMission = onCall<AdvanceMissionRequest>(
         throw new HttpsError("internal", "Combat encounter not configured");
       }
 
-      const battleResult = simulateBattle(heir as FunctionsHeir, monster, seed);
+      const battleResult = simulateBattle(heir as unknown as FunctionsHeir, monster, seed);
       const heirMaxHp = calculateMaxHp(heir.stats.constitution, heir.level);
 
       battleReplay = buildBattleReplayPayload({
