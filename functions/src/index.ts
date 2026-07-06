@@ -3,7 +3,16 @@ import { getFirestore } from "firebase-admin/firestore";
 import { setGlobalOptions } from "firebase-functions/v2";
 import { FIREBASE_FUNCTIONS_REGION } from "@bloodline/shared/constants";
 
-setGlobalOptions({ region: FIREBASE_FUNCTIONS_REGION });
+// Low CPU footprint: ~24 v2 functions = ~24 Cloud Run services; default CPU per service
+// exhausts regional quota on new Blaze projects (europe-west1).
+setGlobalOptions({
+  region: FIREBASE_FUNCTIONS_REGION,
+  memory: "128MiB",
+  cpu: "gcf_gen1",
+  maxInstances: 2,
+  concurrency: 80,
+  minInstances: 0,
+});
 
 initializeApp();
 
