@@ -9,8 +9,7 @@ setGlobalOptions({
   region: FIREBASE_FUNCTIONS_REGION,
   memory: "128MiB",
   cpu: "gcf_gen1",
-  maxInstances: 2,
-  concurrency: 80,
+  maxInstances: 1,
   minInstances: 0,
 });
 
