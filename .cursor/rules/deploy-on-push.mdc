@@ -9,8 +9,24 @@ Live site deploys are **not** manual uploads of `apps/web/dist` into `main`. The
 
 1. **Trigger**: Push to `main` (or manual `workflow_dispatch`) runs `.github/workflows/web-pages.yml`.
 2. **Build**: CI runs `pnpm --filter web build` and validates `apps/web/dist` (`index.html`, `assets/`, app version meta tag).
-3. **Publish**: `actions/upload-pages-artifact` + `actions/deploy-pages` deploy to GitHub Pages (no `gh-pages` branch).
+3. **Firebase**: In the same run, `deploy-firebase` deploys Firestore rules/indexes, Storage rules (if enabled), and Cloud Functions. Pages deploy waits for this job to succeed.
+4. **Publish**: `actions/upload-pages-artifact` + `actions/deploy-pages` deploy to GitHub Pages (no `gh-pages` branch).
 4. **Do not commit `dist/` to `main`** — `dist/` is gitignored and produced in the workflow. Never add build output to source commits.
+
+## Firebase + Pages must deploy together (policy)
+
+**Target:** Firebase (Functions, Firestore rules, Storage rules, indexes) must run in the **same GitHub Actions workflow run** as the GitHub Pages deploy — not as a separate workflow that may succeed or fail independently.
+
+Why:
+
+- Players always get a **frontend + backend pair** from one push; no live site on a new UI version while Cloud Functions are stale or missing.
+- One Actions run = one deploy verdict (green = both shipped, red = fix before players see a broken combo).
+
+**Until workflows are merged:** treat `web-pages.yml` + `firebase-deploy.yml` as temporary. When changing deploy CI, consolidate into a single workflow (e.g. extend `web-pages.yml` with a `deploy-firebase` job after `build`, same `on: push: branches: [main]`). Do **not** add new standalone Firebase-only deploy workflows.
+
+**Current setup:** `.github/workflows/web-pages.yml` runs `build` + `deploy-firebase` (rules, indexes, functions) in parallel, then `deploy` (Pages) only if both succeed. `firebase-deploy.yml` was removed.
+
+Required secrets in that unified run: all `VITE_FIREBASE_*` (web build) + `FIREBASE_TOKEN` (Firebase CLI).
 
 When the user asks to push or deploy:
 

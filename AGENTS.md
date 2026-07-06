@@ -42,7 +42,7 @@ Read `.cursor/rules/game-core-concepts.mdc` for full design rules.
 | `packages/shared/` | Shared types & schemas (`@bloodline/shared`) |
 | `game-data/` | Static JSON (classes, skills, dungeons, events, …) |
 | `crates/` | Rust simulation + WASM bindings |
-| `.github/workflows/` | `web-pages.yml` (frontend), `firebase-deploy.yml` (backend) |
+| `.github/workflows/` | `web-pages.yml` (web build + Firebase + GitHub Pages) |
 
 Full layout: `.cursor/rules/project-structure.mdc`.
 
@@ -88,8 +88,7 @@ Increment patch semver in `apps/web/src/constants/version.ts`. Mention new versi
 Never print, commit, or paste real keys. `.env*` is gitignored; CI uses GitHub Secrets. See `.cursor/rules/protect-secrets.mdc`.
 
 ### 4. Deploy happens on push to `main`
-- **Web:** CI builds `apps/web/dist` → `peaceiris/actions-gh-pages` → `gh-pages` branch. Do **not** commit `dist/`.
-- **Firebase:** changes under `functions/`, rules, or indexes → `firebase-deploy.yml`.
+- **Web + Firebase:** one push to `main` → `web-pages.yml` builds the app, deploys Firebase backend, then publishes Pages.
 
 See `.cursor/rules/deploy-on-push.mdc`.
 
@@ -146,4 +145,4 @@ See `.cursor/rules/deploy-on-push.mdc`.
 | `git-ship-on-change.mdc` | Commit & push after every change |
 | `bump-app-version.mdc` | Version bump on user-facing ship |
 | `protect-secrets.mdc` | Secrets & `.gitignore` |
-| `deploy-on-push.mdc` | GitHub Pages + peaceiris deploy |
+| `deploy-on-push.mdc` | GitHub Pages deploy; Firebase must run in same workflow run |

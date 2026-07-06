@@ -1,5 +1,6 @@
 name: Deploy An Average RPG to GitHub Pages
 
+# Unified deploy: GitHub Pages (web) + Firebase (rules, indexes, functions) in one run.
 # Repo Pages setting (one-time):
 #   Settings → Pages → Build and deployment → Source: "GitHub Actions"
 #
@@ -10,6 +11,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
+env:
+  FIREBASE_PROJECT: an-average-rpg
+
 permissions:
   contents: read
   pages: write
@@ -17,7 +21,7 @@ permissions:
   actions: read
 
 concurrency:
-  group: pages
+  group: deploy
   cancel-in-progress: false
 
 jobs:
@@ -103,8 +107,60 @@ jobs:
         with:
           path: apps/web/dist
 
+  deploy-firebase:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Verify FIREBASE_TOKEN is set
+        run: |
+          if [ -z "${{ secrets.FIREBASE_TOKEN }}" ]; then
+            echo "::error title=Missing GitHub secret::FIREBASE_TOKEN is empty or not configured."
+            echo "Run: firebase login:ci"
+            echo "Add the token under Settings → Secrets and variables → Actions → Repository secrets."
+            exit 1
+          fi
+          echo "FIREBASE_TOKEN is set"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build functions
+        run: pnpm --filter functions build
+
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
+      - name: Deploy Firestore Rules
+        run: firebase deploy --only firestore:rules --project ${{ env.FIREBASE_PROJECT }} --token "${{ secrets.FIREBASE_TOKEN }}"
+
+      - name: Deploy Storage Rules
+        continue-on-error: true
+        run: |
+          firebase deploy --only storage:rules --project ${{ env.FIREBASE_PROJECT }} --token "${{ secrets.FIREBASE_TOKEN }}" \
+            || echo "::warning::Storage rules not deployed. Enable Storage once at https://console.firebase.google.com/project/an-average-rpg/storage (Get Started), then re-run this workflow."
+
+      - name: Deploy Firestore Indexes
+        run: firebase deploy --only firestore:indexes --project ${{ env.FIREBASE_PROJECT }} --token "${{ secrets.FIREBASE_TOKEN }}"
+
+      - name: Deploy Functions
+        run: firebase deploy --only functions --project ${{ env.FIREBASE_PROJECT }} --token "${{ secrets.FIREBASE_TOKEN }}"
+
   deploy:
-    needs: build
+    needs: [build, deploy-firebase]
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -149,7 +205,7 @@ jobs:
           echo "page_url=https://blackturimongao123.github.io/an-average-rpg/" >> "$GITHUB_OUTPUT"
 
   deploy-retry:
-    needs: [build, deploy]
+    needs: [build, deploy-firebase, deploy]
     if: failure() && needs.deploy.result == 'failure'
     runs-on: ubuntu-latest
     environment:
@@ -176,8 +232,8 @@ jobs:
         uses: actions/deploy-pages@v4
 
   verify:
-    needs: [build, deploy, deploy-retry]
-    if: always() && (needs.deploy.result == 'success' || needs.deploy-retry.result == 'success')
+    needs: [build, deploy-firebase, deploy, deploy-retry]
+    if: always() && needs.deploy-firebase.result == 'success' && (needs.deploy.result == 'success' || needs.deploy-retry.result == 'success')
     runs-on: ubuntu-latest
 
     steps:
@@ -189,6 +245,7 @@ jobs:
             HTML=$(curl -fsSL "$URL?deploy=$attempt" || true)
             if echo "$HTML" | grep -q "app-version\" content=\"$EXPECTED\""; then
               echo "Live site is serving MVP v$EXPECTED"
+              echo "Firebase deploy completed in the same workflow run."
               exit 0
             fi
             echo "Live site not on v$EXPECTED yet (attempt $attempt/18)"

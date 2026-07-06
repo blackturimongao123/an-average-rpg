@@ -15,7 +15,7 @@ alwaysApply: true
 ├── packages/shared/   # Shared TypeScript types, Zod schemas, constants
 ├── game-data/         # Static JSON content (classes, skills, dungeons, etc.)
 ├── crates/            # Rust game simulation (game-core) + WASM bindings (game-wasm)
-├── .github/workflows/ # CI: web-pages.yml (GitHub Pages), firebase-deploy.yml
+├── .github/workflows/ # CI: web-pages.yml (web build + Firebase + GitHub Pages)
 ├── firebase.json      # Firestore, Storage, Functions, emulator config
 ├── firestore.rules    # Security rules
 └── storage.rules
@@ -58,7 +58,7 @@ GitHub Pages (static)     Firebase
 - `src/index.ts` — exports all callable functions.
 - `src/actions/` — one file per game action (`createHeir`, `resolveDungeon`, `claimSkill`, …).
 - `src/utils/` — shared server helpers and types.
-- Builds to `functions/lib/` (gitignored). Deployed via `firebase-deploy.yml` using `FIREBASE_TOKEN`.
+- Builds to `functions/lib/` (gitignored). Deployed via `web-pages.yml` (`deploy-firebase` job) using `FIREBASE_TOKEN`.
 
 ## `packages/shared/` (`@bloodline/shared`)
 
@@ -90,5 +90,4 @@ Build WASM: `pnpm build:wasm` → output under `apps/web/src/wasm`. Most gamepla
 ## Deploy & env
 
 - **Local dev:** `pnpm dev` (web), `firebase emulators:start`, `apps/web/.env.local` (see `.env.example`).
-- **Production web:** push to `main` → builds `apps/web/dist` → peaceiris → `gh-pages` branch.
-- **Firebase backend:** push changes under `functions/`, rules, or indexes → `firebase-deploy.yml`.
+- **Production web + Firebase:** push to `main` → `web-pages.yml` (build, `deploy-firebase`, then Pages).
