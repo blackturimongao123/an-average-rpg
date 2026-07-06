@@ -42,7 +42,7 @@ Read `.cursor/rules/game-core-concepts.mdc` for full design rules.
 | `packages/shared/` | Shared types & schemas (`@bloodline/shared`) |
 | `game-data/` | Static JSON (classes, skills, dungeons, events, …) |
 | `crates/` | Rust simulation + WASM bindings |
-| `.github/workflows/` | `web-pages.yml` (web build + Firebase + GitHub Pages) |
+| `.github/workflows/` | `web-pages.yml` (frontend), `firebase-deploy.yml` (backend, path-filtered) |
 
 Full layout: `.cursor/rules/project-structure.mdc`.
 
@@ -88,7 +88,8 @@ Increment patch semver in `apps/web/src/constants/version.ts`. Mention new versi
 Never print, commit, or paste real keys. `.env*` is gitignored; CI uses GitHub Secrets. See `.cursor/rules/protect-secrets.mdc`.
 
 ### 4. Deploy happens on push to `main`
-- **Web + Firebase:** one push to `main` → `web-pages.yml` builds the app, deploys Firebase backend, then publishes Pages.
+- **Web:** `web-pages.yml` — every push to `main` builds and publishes GitHub Pages.
+- **Firebase:** `firebase-deploy.yml` — only when server-side paths change (functions, rules, shared, game-data, etc.) or via manual **workflow_dispatch**.
 
 See `.cursor/rules/deploy-on-push.mdc`.
 

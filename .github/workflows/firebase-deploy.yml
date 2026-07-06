@@ -1,0 +1,116 @@
+name: Deploy Firebase backend
+
+# Server-side only: rules, indexes, Cloud Functions.
+# Triggers on backend path changes or manual workflow_dispatch.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "functions/**"
+      - "packages/shared/**"
+      - "game-data/**"
+      - "firestore.rules"
+      - "firestore.indexes.json"
+      - "storage.rules"
+      - "firebase.json"
+      - "scripts/prepare-functions-deploy.mjs"
+      - ".github/workflows/firebase-deploy.yml"
+  workflow_dispatch:
+
+env:
+  FIREBASE_PROJECT: an-average-rpg
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: firebase-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy-firebase:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Authenticate to Google Cloud (Workload Identity)
+        if: vars.FIREBASE_DEPLOY_AUTH != 'token'
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Configure Firebase CLI auth
+        run: |
+          if [ "${{ vars.FIREBASE_DEPLOY_AUTH }}" = "token" ]; then
+            if [ -z "${{ secrets.FIREBASE_TOKEN }}" ]; then
+              echo "::error::Set repository variable FIREBASE_DEPLOY_AUTH=token and secret FIREBASE_TOKEN."
+              exit 1
+            fi
+            echo "Firebase deploy auth: FIREBASE_TOKEN (firebase login:ci)"
+            echo "FIREBASE_DEPLOY_TOKEN=${{ secrets.FIREBASE_TOKEN }}" >> "$GITHUB_ENV"
+            exit 0
+          fi
+          if [ -n "${GOOGLE_APPLICATION_CREDENTIALS:-}" ]; then
+            echo "Firebase deploy auth: Workload Identity (no service account keys)"
+            exit 0
+          fi
+          echo "::error title=Workload Identity auth failed::Check secrets GCP_WORKLOAD_IDENTITY_PROVIDER and GCP_SERVICE_ACCOUNT (see AGENTS.md)."
+          echo "To use FIREBASE_TOKEN instead, set repository variable FIREBASE_DEPLOY_AUTH=token."
+          exit 1
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build shared package
+        run: pnpm --filter @bloodline/shared build
+
+      - name: Build functions
+        run: pnpm --filter functions build
+
+      - name: Prepare functions deploy bundle
+        run: node scripts/prepare-functions-deploy.mjs
+
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
+      - name: Deploy Firestore Rules
+        run: |
+          TOKEN_ARG=""
+          if [ -n "${FIREBASE_DEPLOY_TOKEN:-}" ]; then TOKEN_ARG="--token $FIREBASE_DEPLOY_TOKEN"; fi
+          firebase deploy --only firestore:rules --project ${{ env.FIREBASE_PROJECT }} $TOKEN_ARG
+
+      - name: Deploy Storage Rules
+        continue-on-error: true
+        run: |
+          TOKEN_ARG=""
+          if [ -n "${FIREBASE_DEPLOY_TOKEN:-}" ]; then TOKEN_ARG="--token $FIREBASE_DEPLOY_TOKEN"; fi
+          firebase deploy --only storage:rules --project ${{ env.FIREBASE_PROJECT }} $TOKEN_ARG \
+            || echo "::warning::Storage rules not deployed. Enable Storage once at https://console.firebase.google.com/project/an-average-rpg/storage (Get Started), then re-run this workflow."
+
+      - name: Deploy Firestore Indexes
+        run: |
+          TOKEN_ARG=""
+          if [ -n "${FIREBASE_DEPLOY_TOKEN:-}" ]; then TOKEN_ARG="--token $FIREBASE_DEPLOY_TOKEN"; fi
+          firebase deploy --only firestore:indexes --project ${{ env.FIREBASE_PROJECT }} $TOKEN_ARG
+
+      - name: Deploy Functions
+        run: |
+          TOKEN_ARG=""
+          if [ -n "${FIREBASE_DEPLOY_TOKEN:-}" ]; then TOKEN_ARG="--token $FIREBASE_DEPLOY_TOKEN"; fi
+          firebase deploy --only functions --force --project ${{ env.FIREBASE_PROJECT }} $TOKEN_ARG
