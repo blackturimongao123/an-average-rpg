@@ -1,5 +1,9 @@
 import { initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
+import { setGlobalOptions } from "firebase-functions/v2";
+import { FIREBASE_FUNCTIONS_REGION } from "@bloodline/shared/constants";
+
+setGlobalOptions({ region: FIREBASE_FUNCTIONS_REGION });
 
 initializeApp();
 

@@ -216,3 +216,6 @@ export const applyAdventurerRankXp = (
 
   return { rank: nextRank, rankXp: nextXp, rankedUp };
 };
+
+/** Cloud Functions + Scheduler region — must match web `getFunctions(app, region)`. */
+export const FIREBASE_FUNCTIONS_REGION = "europe-west1";
