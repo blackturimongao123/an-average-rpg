@@ -1,0 +1,110 @@
+---
+description: Unified adventure language for missions, dungeons, and field encounters
+alwaysApply: true
+---
+
+# Adventure campaigns (missions, dungeons, field events)
+
+All player-facing exploration content shares one **event step** model (`AdventureEventStep` / `MissionCampaignStep` in `@bloodline/shared`).
+
+## Three content layers
+
+| Layer | File | Runtime | Player loop |
+|-------|------|---------|-------------|
+| **Guild missions** | `game-data/missions.json` (+ `mission-interludes.json`) | Tavern mission board → `CampaignView` → `advanceMission` | **10 fixed steps** per contract; global random/unique/secret interludes filtered by setting |
+| **Dungeons** | `game-data/dungeons.json` | `DungeonsPage` (placeholder — **not live yet**) | Future: dungeon keys / special quests |
+| **Field encounters** | `game-data/events.json` | Tavern Field Encounters tab | Single weighted events (separate from mission board) |
+
+**Scale:** Canonical content lives in `docs/an_average_rpg_event_mission_bible.md` (108 contracts, 200 interludes). **Shipped through rank C (48 contracts):** `node scripts/import-mission-bible.mjs --ranks=F,E,D,C`. Use `--all-ranks` for full 108. Board rolls from eligible templates by rank/level/hidden prerequisites (`apps/web/src/lib/missions.ts`).
+
+## Guild missions — fixed + global interludes
+
+### Fixed plot (`campaign.steps`)
+
+- **Exactly 10 fixed steps** per mission — the contract story spine (briefing → … → payout).
+- Each step: `title`, `text`, `eventType`, `sceneImage`, optional `choices` on step 1.
+- `steps.length` = `totalSteps`; final fixed step pays `rewards`.
+- Re-import from bible: `node scripts/import-mission-bible.mjs`.
+
+### Campaign wrapper
+
+```json
+"campaign": {
+  "regionName": "Misty on the Mill-Roof",
+  "setting": "town",
+  "tone": "mild",
+  "defaultSceneImage": "/an-average-rpg/scenes/town-shady-mage.png",
+  "maxStages": 14,
+  "startingSupplies": 23,
+  "randomEventChance": 0.38,
+  "steps": [ "... 10 fixed steps ..." ]
+}
+```
+
+| Field | Purpose |
+|-------|---------|
+| `setting` | `town` \| `forest` \| `cave` \| `mountain` \| `dungeon` \| `coast` \| `swamp` \| `road` \| `ruins` \| `crypt` |
+| `tone` | `mild` \| `moderate` \| `dangerous` \| `lethal` — **mild** = no combat in interludes |
+| `arc` | `rescue`, `hunt`, `exorcise`, `delve`, … (metadata on template) |
+| `steps` | **10 fixed beats** — always in order |
+| `boardRequirements.hiddenUntil` | Secret contracts stay **off the board** until prerequisites pass |
+| `randomPool` / `secretEvents` | Optional **per-mission** overrides (most use global pool) |
+| `randomEventChance` | Default **~0.38** when global pool has eligible entries |
+
+### Global interludes (`game-data/mission-interludes.json`)
+
+Shared **random**, **unique**, and **secret** events — **not all appear on every mission**. Filtered at runtime by:
+
+| Gate | Field / condition |
+|------|-------------------|
+| Background | `settings: ["town"]` — must match mission `campaign.setting` |
+| Tone | `tones: ["mild"]` — must match mission `campaign.tone` |
+| Heir level | `minHeirLevel` on event + `{ type: "minHeirLevel", value: N }` in secrets |
+| Adventurer rank | `minAdventurerRank` + `{ type: "minAdventurerRank", rank: "C" }` |
+| Completed contract | `requiresMissionCompleted: ["misty-on-the-mill-roof"]` + `{ type: "missionCompleted", missionId }` |
+| Class / stat OR | `requiredClassIds`, `requiredStats`, `classOrStatGate` |
+| Infamy | `minInfamy` / `maxInfamy` |
+| Lineage | `generationAtLeast`, `deadHeirsAtLeast` |
+| Run state | `choiceMade`, `randomEventSeen`, `fixedStepCompleted`, morale/supplies/stats |
+
+Import: `node scripts/import-mission-bible.mjs` (200 interludes: ~130 random, ~30 unique, ~40 secret).
+
+**Flow after each non-final fixed step:**
+
+```
+Fixed step N → check eligible secrets → else unique → else roll eligible random → else advance to fixed N+1
+```
+
+Runtime: `filterEligibleRandomEvents` / `filterEligibleUniqueEvents` / `filterEligibleSecretEvents` in `@bloodline/shared/campaign`; pools loaded in `apps/web/src/lib/missionInterludePools.ts`.
+
+**Heir progress:** `heir.completedMissionIds[]` — appended on contract completion (unlocks chain secrets and hidden board contracts).
+
+### Settings → scenes
+
+| Setting | Typical tone | Scene |
+|---------|--------------|-------|
+| `town` | mild | `town-shady-mage.png` |
+| `forest` | moderate | `forest.png` |
+| `cave` | moderate | `goblin-cave-inside.png` |
+| `mountain` | dangerous | `mountain.png` |
+| `dungeon` | dangerous | `dungeon-inside.png` |
+| `coast` | moderate | `forest.png` (placeholder) |
+| `swamp` | moderate | `forest-shrine.png` |
+| `road` | mild/moderate | `forest-shrine.png` |
+| `ruins` | dangerous | `goblin-king-room.png` |
+| `crypt` | dangerous | `dungeon-inside.png` |
+
+## Dungeons — not player-facing yet
+
+`/dungeons` shows “Will come later”. Gated by keys/quests when shipped.
+
+## Field encounters (`events.json`)
+
+Standalone tavern tab — **not** mission board contracts.
+
+## When editing
+
+- User-facing → bump `APP_VERSION`.
+- New mission/interlude content → edit bible, run `node scripts/import-mission-bible.mjs`.
+- Keep stable `id` values (mission slugs without `mis_` prefix; interludes keep `evt_*` ids).
+- Combat monsters: IDs from `game-data/dungeons.json` → `monsters[]`.

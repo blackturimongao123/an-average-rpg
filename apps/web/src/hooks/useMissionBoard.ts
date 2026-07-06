@@ -20,7 +20,7 @@ export function useMissionBoard() {
 
     setLoading(true);
     try {
-      const response = await getPlayerMissionBoard(user.uid, lineage.id, heir.level);
+      const response = await getPlayerMissionBoard(user.uid, lineage.id, heir);
       setMissionBoard(response.board);
       updateAdventurerRank(response.adventurerRank, response.adventurerRankXp);
     } finally {

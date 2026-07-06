@@ -62,6 +62,8 @@ export interface Heir {
   unspentStatPoints?: number;
   itemInstances?: Record<string, ItemInstance>;
   missionCooldowns?: Record<string, number>;
+  /** Mission template IDs this heir has completed at least once. */
+  completedMissionIds?: string[];
   seed: string;
   createdAt?: Date;
   diedAt?: Date | null;
@@ -128,16 +130,167 @@ export interface MissionCampaignStep {
   sceneGradient?: string;
   sceneImage?: string;
   combatEncounter?: MissionCombatEncounter;
+  /** Plot beat — always plays in order. Omitted = fixed. */
+  kind?: "fixed";
 }
 
 /** Event step for missions, dungeon floor approach, and shared adventure UI. */
 export type AdventureEventStep = MissionCampaignStep;
 
+export type MissionSetting =
+  | "town"
+  | "forest"
+  | "wilderness"
+  | "cave"
+  | "mountain"
+  | "dungeon"
+  | "coast"
+  | "swamp"
+  | "road"
+  | "ruins"
+  | "crypt";
+export type MissionTone = "mild" | "moderate" | "dangerous" | "lethal";
+
+export type MissionArc =
+  | "rescue"
+  | "retrieve"
+  | "hunt"
+  | "investigate"
+  | "escort"
+  | "exorcise"
+  | "defend"
+  | "delve"
+  | "seal"
+  | "negotiate"
+  | "sabotage"
+  | "pilgrimage";
+
+export type InterludeKind = "random" | "unique" | "secret";
+
+export interface MissionInterludeRequirements {
+  /** Empty or omitted = any setting. Otherwise mission setting must match. */
+  settings?: MissionSetting[];
+  /** Empty or omitted = any tone. */
+  tones?: MissionTone[];
+  minHeirLevel?: number;
+  minAdventurerRank?: AdventurerRank;
+  /** All listed mission IDs must be completed on this heir before eligible. */
+  requiresMissionCompleted?: string[];
+  /** Lineage generation gate (interludes / board secrets). */
+  generationAtLeast?: number;
+  /** Heir must be one of these classes, or meet requiredStats when classOrStatGate is set. */
+  requiredClassIds?: string[];
+  /** Minimum stat values; with classOrStatGate, any listed class OR all stats suffices. */
+  requiredStats?: Partial<Record<keyof Stats, number>>;
+  classOrStatGate?: boolean;
+  minInfamy?: number;
+  maxInfamy?: number;
+  /** Lineage chronicle dead heir count from publicSummary.deadHeirs. */
+  deadHeirsAtLeast?: number;
+  interludeKind?: InterludeKind;
+}
+
+export interface MissionBoardHiddenUntil {
+  requiresMissionCompleted?: string[];
+  anyMissionCompleted?: string[];
+  minAdventurerRank?: AdventurerRank;
+  minHeirLevel?: number;
+  generationAtLeast?: number;
+  deadHeirsAtLeast?: number;
+  minInfamy?: number;
+  maxInfamy?: number;
+  requiredClassIds?: string[];
+  requiredStats?: Partial<Record<keyof Stats, number>>;
+  classOrStatGate?: boolean;
+}
+
+export interface MissionBoardRequirements {
+  /** Mission stays off the board until all conditions pass. */
+  hiddenUntil?: MissionBoardHiddenUntil;
+}
+
+export interface MissionRandomEvent extends MissionInterludeRequirements {
+  id: string;
+  weight: number;
+  maxPerRun?: number;
+  title: string;
+  text: string;
+  eventType?: MissionEventType;
+  timeCost?: MissionTimeCost;
+  sceneImage?: string;
+  choices?: MissionCampaignChoice[];
+  combatEncounter?: MissionCombatEncounter;
+}
+
+/** One-time-per-heir interludes from the mission bible. */
+export interface MissionUniqueEvent extends MissionInterludeRequirements {
+  id: string;
+  weight: number;
+  maxPerRun?: number;
+  title: string;
+  text: string;
+  eventType?: MissionEventType;
+  timeCost?: MissionTimeCost;
+  sceneImage?: string;
+  choices?: MissionCampaignChoice[];
+  combatEncounter?: MissionCombatEncounter;
+}
+
+export type MissionSecretCondition =
+  | { type: "choiceMade"; choiceId: string }
+  | { type: "moraleAtMost"; value: number }
+  | { type: "moraleAtLeast"; value: number }
+  | { type: "suppliesAtMost"; value: number }
+  | { type: "heirStatAtLeast"; stat: keyof Stats; value: number }
+  | { type: "heirStatAtMost"; stat: keyof Stats; value: number }
+  | { type: "generationAtLeast"; value: number }
+  | { type: "randomEventSeen"; eventId: string }
+  | { type: "fixedStepCompleted"; stepIndex: number }
+  | { type: "minHeirLevel"; value: number }
+  | { type: "minAdventurerRank"; rank: AdventurerRank }
+  | { type: "missionCompleted"; missionId: string }
+  | { type: "anyMissionCompleted"; missionIds: string[] }
+  | { type: "infamyAtLeast"; value: number }
+  | { type: "infamyAtMost"; value: number }
+  | { type: "deadHeirsAtLeast"; value: number }
+  | { type: "classId"; classId: string };
+
+export interface MissionSecretEvent extends MissionInterludeRequirements {
+  id: string;
+  conditions: MissionSecretCondition[];
+  title: string;
+  text: string;
+  eventType?: MissionEventType;
+  timeCost?: MissionTimeCost;
+  sceneImage?: string;
+  choices?: MissionCampaignChoice[];
+  combatEncounter?: MissionCombatEncounter;
+  maxPerRun?: number;
+}
+
+export interface MissionCampaignInterlude {
+  kind: "random" | "secret" | "unique";
+  eventId: string;
+  step: MissionCampaignStep;
+}
+
 export interface MissionCampaign {
   regionName?: string;
+  /** Drives default scene and random pool flavor (town, forest, …). */
+  setting?: MissionSetting;
+  /** Caps combat in random interludes — mild missions stay non-violent. */
+  tone?: MissionTone;
+  defaultSceneImage?: string;
   maxStages?: number;
   startingSupplies?: number;
+  /** Ordered plot beats — always play in sequence. */
   steps: MissionCampaignStep[];
+  /** Weighted detours between fixed steps. */
+  randomPool?: MissionRandomEvent[];
+  /** Hidden beats gated by run state (checked before random rolls). */
+  secretEvents?: MissionSecretEvent[];
+  /** 0–1 chance to roll randomPool after each non-final fixed step. Default 0.35 when pool exists. */
+  randomEventChance?: number;
 }
 
 export interface CampaignRunState {
@@ -152,6 +305,11 @@ export interface CampaignRunState {
   runItems: string[];
   hpPercent: number;
   regionName?: string;
+  seenRandomEventIds?: string[];
+  seenSecretEventIds?: string[];
+  seenUniqueInterludeIds?: string[];
+  choiceHistory?: string[];
+  interlude?: MissionCampaignInterlude;
 }
 
 export interface MissionTemplate {
@@ -163,7 +321,9 @@ export interface MissionTemplate {
   minHeirLevel?: number;
   weight: number;
   type: MissionType;
+  arc?: MissionArc;
   rewards: MissionRewards;
+  boardRequirements?: MissionBoardRequirements;
   campaign: MissionCampaign;
 }
 

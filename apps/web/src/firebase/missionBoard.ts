@@ -9,9 +9,9 @@ import type { Heir, Lineage } from "@bloodline/shared/types";
 export async function getPlayerMissionBoard(
   userId: string,
   lineageId: string,
-  heirLevel: number
+  heir: Pick<Heir, "level" | "stats" | "classId" | "completedMissionIds">
 ) {
-  return bootstrapGetMissionBoard(userId, lineageId, heirLevel);
+  return bootstrapGetMissionBoard(userId, lineageId, heir);
 }
 
 export async function acceptPlayerMission(

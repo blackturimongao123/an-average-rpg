@@ -1,0 +1,4200 @@
+{
+  "randomEvents": [
+    {
+      "id": "evt_town_01_widows-flour-sack-trail",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Widow's Flour-Sack Trail",
+      "text": "A ripped flour sack leaves pale prints through the alley behind the mill.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/town-shady-mage.png",
+      "settings": [
+        "town"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "minHeirLevel": 1,
+      "minAdventurerRank": "F"
+    },
+    {
+      "id": "evt_town_02_beggar-with-a-noble-ring",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Beggar With a Noble Ring",
+      "text": "A beggar offers a signet ring in exchange for one night of silence.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/town-shady-mage.png",
+      "settings": [
+        "town"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiredClassIds": [
+        "rogue"
+      ],
+      "requiredStats": {
+        "luck": 12
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_town_03_cat-in-the-bell-rope",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Cat in the Bell Rope",
+      "text": "A frightened cat climbs into the chapel bell rope before curfew.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/town-shady-mage.png",
+      "settings": [
+        "town"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiredStats": {
+        "charisma": 11
+      }
+    },
+    {
+      "id": "evt_town_06_knife-game-behind-the-tavern",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Knife Game Behind the Tavern",
+      "text": "Local toughs play for fingers, secrets, and small debts.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/town-shady-mage.png",
+      "settings": [
+        "town"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiredClassIds": [
+        "priest"
+      ],
+      "requiredStats": {
+        "faith": 10
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_town_07_rain-on-a-single-door",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Rain on a Single Door",
+      "text": "One townhouse is soaked by rain falling from a cloudless sky.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/town-shady-mage.png",
+      "settings": [
+        "town"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredStats": {
+        "intelligence": 12
+      }
+    },
+    {
+      "id": "evt_town_08_the-laughing-stocks",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Laughing Stocks",
+      "text": "The punishment stocks laugh using the voices of people locked there last year.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/town-shady-mage.png",
+      "settings": [
+        "town"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredStats": {
+        "infamy": 5
+      },
+      "minInfamy": 5
+    },
+    {
+      "id": "evt_town_11_child-counting-chimneys",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Child Counting Chimneys",
+      "text": "A child counts chimneys and insists one more appears each dusk.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/town-shady-mage.png",
+      "settings": [
+        "town"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "minHeirLevel": 7,
+      "minAdventurerRank": "E"
+    },
+    {
+      "id": "evt_town_12_the-butchers-honest-scale",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Butcher's Honest Scale",
+      "text": "The butcher's scale weighs guilt instead of meat.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/town-shady-mage.png",
+      "settings": [
+        "town"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredClassIds": [
+        "rogue"
+      ],
+      "requiredStats": {
+        "luck": 12
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_town_13_lost-heirloom-button",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Lost Heirloom Button",
+      "text": "A silver button with the family mark appears in a gutter.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/town-shady-mage.png",
+      "settings": [
+        "town"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredStats": {
+        "charisma": 11
+      }
+    },
+    {
+      "id": "evt_town_16_ale-that-shows-tomorrow",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Ale That Shows Tomorrow",
+      "text": "One tavern barrel shows tomorrow's face in its foam.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/town-shady-mage.png",
+      "settings": [
+        "town"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiredClassIds": [
+        "priest"
+      ],
+      "requiredStats": {
+        "faith": 10
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_town_17_the-mayors-locked-smile",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Mayor's Locked Smile",
+      "text": "The mayor smiles through a curse and begs with his eyes.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/town-shady-mage.png",
+      "settings": [
+        "town"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiredStats": {
+        "intelligence": 12
+      }
+    },
+    {
+      "id": "evt_town_18_mourning-clothes-on-festival",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Mourning Clothes on Festival Day",
+      "text": "A tailor sells mourning clothes to people who are not dead yet.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/town-shady-mage.png",
+      "settings": [
+        "town"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiredStats": {
+        "infamy": 5
+      },
+      "minInfamy": 5
+    },
+    {
+      "id": "evt_town_20_the-clock-that-skips-your-ho",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Clock That Skips Your Hour",
+      "text": "The town clock skips the heir's birth hour and the crowd notices.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/town-shady-mage.png",
+      "settings": [
+        "town"
+      ],
+      "tones": [
+        "dangerous"
+      ]
+    },
+    {
+      "id": "evt_forest_01_lanterns-in-the-briars",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Lanterns in the Briars",
+      "text": "Small lanterns glow inside brambles where no hand can reach.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "forest"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiredClassIds": [
+        "rogue"
+      ],
+      "requiredStats": {
+        "luck": 12
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_forest_02_oak-with-a-door-knocker",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Oak With a Door-Knocker",
+      "text": "An oak tree bears a brass knocker warm to the touch.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "forest"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiredStats": {
+        "charisma": 11
+      }
+    },
+    {
+      "id": "evt_forest_03_deer-wearing-wedding-lace",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Deer Wearing Wedding Lace",
+      "text": "A deer runs past in a torn veil and refuses to bleed.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "forest"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiresMissionCompleted": [
+        "pale-antlers-at-thornmere"
+      ]
+    },
+    {
+      "id": "evt_forest_06_the-silent-woodcutters",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Silent Woodcutters",
+      "text": "Woodcutters swing axes in perfect silence and never strike bark.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "forest"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiredStats": {
+        "intelligence": 12
+      }
+    },
+    {
+      "id": "evt_forest_07_crow-funeral",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Crow Funeral",
+      "text": "Crows bury a tiny crown under wet leaves.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "forest"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredStats": {
+        "infamy": 5
+      },
+      "minInfamy": 5
+    },
+    {
+      "id": "evt_forest_08_bark-mask-on-the-path",
+      "weight": 12,
+      "maxPerRun": 1,
+      "title": "Bark Mask on the Path",
+      "text": "A bark mask lies face up and whispers the heir's surname.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "forest"
+      ],
+      "tones": [
+        "moderate"
+      ]
+    },
+    {
+      "id": "evt_forest_11_hunters-arrow-returns",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Hunter's Arrow Returns",
+      "text": "An arrow lands at the heir's feet with their name carved into it.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "forest"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredClassIds": [
+        "rogue"
+      ],
+      "requiredStats": {
+        "luck": 12
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_forest_12_grandmother-root",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Grandmother Root",
+      "text": "A root shaped like a hand grips a child's doll.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "forest"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredStats": {
+        "charisma": 11
+      }
+    },
+    {
+      "id": "evt_forest_13_the-orchard-counts-back",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Orchard Counts Back",
+      "text": "Every apple tree is numbered, but the numbers count down to one.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "forest"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiresMissionCompleted": [
+        "pale-antlers-at-thornmere"
+      ]
+    },
+    {
+      "id": "evt_forest_16_birdsong-in-a-dead-tongue",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Birdsong in a Dead Tongue",
+      "text": "Birdsong forms clear words if the heir knows old prayers.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "forest"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiredStats": {
+        "intelligence": 12
+      }
+    },
+    {
+      "id": "evt_forest_17_the-green-tax-collector",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Green Tax Collector",
+      "text": "A moss-cloaked figure presents a bill for every branch broken.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "forest"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiredStats": {
+        "infamy": 5
+      },
+      "minInfamy": 5
+    },
+    {
+      "id": "evt_forest_18_sleeping-bear-with-human-dre",
+      "weight": 12,
+      "maxPerRun": 1,
+      "title": "Sleeping Bear with Human Dreams",
+      "text": "A bear mutters legal testimony while sleeping.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "forest"
+      ],
+      "tones": [
+        "dangerous"
+      ]
+    },
+    {
+      "id": "evt_forest_20_the-tree-that-asks-permissio",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Tree That Asks Permission",
+      "text": "A fallen tree asks politely before crushing the road behind the heir.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "forest"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "minHeirLevel": 17,
+      "minAdventurerRank": "D"
+    },
+    {
+      "id": "evt_cave_01_dripping-stone-names",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Dripping Stone Names",
+      "text": "Water drops spell names on the cave floor before vanishing.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/goblin-cave-entrance.png",
+      "settings": [
+        "cave"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiredStats": {
+        "charisma": 11
+      }
+    },
+    {
+      "id": "evt_cave_02_miners-candle-refuses-death",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Miner's Candle Refuses Death",
+      "text": "A candle burns underwater and points deeper into the mine.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/goblin-cave-entrance.png",
+      "settings": [
+        "cave"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiresMissionCompleted": [
+        "blackwater-ferry-bell"
+      ]
+    },
+    {
+      "id": "evt_cave_03_glass-bat-swarm",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Glass Bat Swarm",
+      "text": "Transparent bats flash stolen memories through their wings.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/goblin-cave-entrance.png",
+      "settings": [
+        "cave"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "generationAtLeast": 3
+    },
+    {
+      "id": "evt_cave_06_blind-fish-in-a-puddle",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Blind Fish in a Puddle",
+      "text": "Blind fish swim in a boot-deep puddle and carry gold flakes.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/goblin-cave-entrance.png",
+      "settings": [
+        "cave"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiredStats": {
+        "infamy": 5
+      },
+      "minInfamy": 5
+    },
+    {
+      "id": "evt_cave_07_old-pickaxe-in-fresh-stone",
+      "weight": 12,
+      "maxPerRun": 1,
+      "title": "Old Pickaxe in Fresh Stone",
+      "text": "A rusted pickaxe is embedded in stone formed this morning.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/goblin-cave-entrance.png",
+      "settings": [
+        "cave"
+      ],
+      "tones": [
+        "moderate"
+      ]
+    },
+    {
+      "id": "evt_cave_08_mine-gas-hymn",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Mine-Gas Hymn",
+      "text": "Gas vents hum the local funeral hymn on the wrong notes.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/goblin-cave-entrance.png",
+      "settings": [
+        "cave"
+      ],
+      "tones": [
+        "moderate"
+      ]
+    },
+    {
+      "id": "evt_cave_11_cave-pearl-in-a-skull",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Cave Pearl in a Skull",
+      "text": "A pearl grows inside a skull wearing miner's teeth.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/goblin-cave-entrance.png",
+      "settings": [
+        "cave"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredStats": {
+        "charisma": 11
+      }
+    },
+    {
+      "id": "evt_cave_12_the-second-footfall",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Second Footfall",
+      "text": "Every step echoes twice, then three times, then follows.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/goblin-cave-entrance.png",
+      "settings": [
+        "cave"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiresMissionCompleted": [
+        "blackwater-ferry-bell"
+      ]
+    },
+    {
+      "id": "evt_cave_13_iron-door-without-hinges",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Iron Door Without Hinges",
+      "text": "A door of iron has no hinges and breathes warm air.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/goblin-cave-entrance.png",
+      "settings": [
+        "cave"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "generationAtLeast": 7
+    },
+    {
+      "id": "evt_cave_16_the-kindly-collapse",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Kindly Collapse",
+      "text": "A collapse seals danger away but traps a crying stranger.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/goblin-cave-entrance.png",
+      "settings": [
+        "cave"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiredStats": {
+        "infamy": 5
+      },
+      "minInfamy": 5
+    },
+    {
+      "id": "evt_cave_17_old-dwarf-lottery",
+      "weight": 12,
+      "maxPerRun": 1,
+      "title": "Old Dwarf Lottery",
+      "text": "Carved stones invite the heir to gamble blood for ore.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/goblin-cave-entrance.png",
+      "settings": [
+        "cave"
+      ],
+      "tones": [
+        "dangerous"
+      ]
+    },
+    {
+      "id": "evt_cave_18_waterfall-falling-up",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Waterfall Falling Up",
+      "text": "An underground waterfall runs upward into a black crack.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/goblin-cave-entrance.png",
+      "settings": [
+        "cave"
+      ],
+      "tones": [
+        "dangerous"
+      ]
+    },
+    {
+      "id": "evt_cave_20_tunnel-drawn-on-skin",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Tunnel Drawn on Skin",
+      "text": "Dust reveals a tunnel diagram on the heir's arm.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/goblin-cave-entrance.png",
+      "settings": [
+        "cave"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiredClassIds": [
+        "rogue"
+      ],
+      "requiredStats": {
+        "luck": 12
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_mountain_01_goat-with-a-crown-of-ice",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Goat with a Crown of Ice",
+      "text": "A mountain goat wears a crown of ice and kneels to no one.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/mountain.png",
+      "settings": [
+        "mountain"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiresMissionCompleted": [
+        "lost-goat-at-briar-ford"
+      ]
+    },
+    {
+      "id": "evt_mountain_02_avalanche-bell",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Avalanche Bell",
+      "text": "A buried bell rings once before the slope decides to fall.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/mountain.png",
+      "settings": [
+        "mountain"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "generationAtLeast": 4
+    },
+    {
+      "id": "evt_mountain_03_pilgrim-frozen-praying",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Pilgrim Frozen Praying",
+      "text": "A frozen pilgrim opens one eye and asks the date.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/mountain.png",
+      "settings": [
+        "mountain"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiredClassIds": [
+        "priest"
+      ],
+      "requiredStats": {
+        "faith": 10
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_mountain_06_thin-air-confession",
+      "weight": 12,
+      "maxPerRun": 1,
+      "title": "Thin-Air Confession",
+      "text": "At altitude, the heir speaks a secret they never meant to reveal.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/mountain.png",
+      "settings": [
+        "mountain"
+      ],
+      "tones": [
+        "mild"
+      ]
+    },
+    {
+      "id": "evt_mountain_07_snow-footprints-going-upward",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Snow Footprints Going Upward",
+      "text": "Footprints climb vertically up a cliff face.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/mountain.png",
+      "settings": [
+        "mountain"
+      ],
+      "tones": [
+        "moderate"
+      ]
+    },
+    {
+      "id": "evt_mountain_08_hermit-selling-thunder",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Hermit Selling Thunder",
+      "text": "A hermit sells bottled thunder and refuses gold.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/mountain.png",
+      "settings": [
+        "mountain"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "minHeirLevel": 10,
+      "minAdventurerRank": "E"
+    },
+    {
+      "id": "evt_mountain_11_stone-ram-challenges-passage",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Stone Ram Challenges Passage",
+      "text": "A stone ram blocks the path until beaten or praised.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/mountain.png",
+      "settings": [
+        "mountain"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiresMissionCompleted": [
+        "lost-goat-at-briar-ford"
+      ]
+    },
+    {
+      "id": "evt_mountain_12_ice-mirror-overhang",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Ice Mirror Overhang",
+      "text": "An overhang reflects events from a future fall.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/mountain.png",
+      "settings": [
+        "mountain"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "generationAtLeast": 2
+    },
+    {
+      "id": "evt_mountain_13_prayer-flags-strangle-wind",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Prayer Flags Strangle Wind",
+      "text": "Prayer flags snap around the wind and choke it still.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/mountain.png",
+      "settings": [
+        "mountain"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredClassIds": [
+        "priest"
+      ],
+      "requiredStats": {
+        "faith": 10
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_mountain_16_cliffside-court",
+      "weight": 12,
+      "maxPerRun": 1,
+      "title": "Cliffside Court",
+      "text": "Tiny judges carved into the cliff demand a trial.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/mountain.png",
+      "settings": [
+        "mountain"
+      ],
+      "tones": [
+        "dangerous"
+      ]
+    },
+    {
+      "id": "evt_mountain_17_frostbitten-letter",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Frostbitten Letter",
+      "text": "A letter frozen to stone addresses the heir by generation number.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/mountain.png",
+      "settings": [
+        "mountain"
+      ],
+      "tones": [
+        "dangerous"
+      ]
+    },
+    {
+      "id": "evt_mountain_18_the-sleeping-avalanche",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Sleeping Avalanche",
+      "text": "A snowfield snores and must not be woken.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/mountain.png",
+      "settings": [
+        "mountain"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "minHeirLevel": 16,
+      "minAdventurerRank": "D"
+    },
+    {
+      "id": "evt_mountain_20_the-saints-last-breath",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Saint's Last Breath",
+      "text": "A cave exhales warm air once per year; today is the day.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/mountain.png",
+      "settings": [
+        "mountain"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiredStats": {
+        "charisma": 11
+      }
+    },
+    {
+      "id": "evt_dungeon_01_cell-door-open-inward",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Cell Door Open Inward",
+      "text": "A cell door opens inward though the lock is outside.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "dungeon"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "generationAtLeast": 5
+    },
+    {
+      "id": "evt_dungeon_02_chains-learning-names",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Chains Learning Names",
+      "text": "Chains scrape the floor and practice the heir's name.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "dungeon"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiredClassIds": [
+        "priest"
+      ],
+      "requiredStats": {
+        "faith": 10
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_dungeon_03_gaolers-lunch-still-warm",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Gaoler's Lunch Still Warm",
+      "text": "A gaoler's lunch sits warm beside bones centuries old.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "dungeon"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiredStats": {
+        "intelligence": 12
+      }
+    },
+    {
+      "id": "evt_dungeon_06_the-friendly-rack",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Friendly Rack",
+      "text": "A torture rack politely offers advice about posture.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "dungeon"
+      ],
+      "tones": [
+        "mild"
+      ]
+    },
+    {
+      "id": "evt_dungeon_07_black-key-in-white-ash",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Black Key in White Ash",
+      "text": "A black key lies in a pile of white ash shaped like a hand.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "dungeon"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "minHeirLevel": 8,
+      "minAdventurerRank": "E"
+    },
+    {
+      "id": "evt_dungeon_08_the-courtroom-cell",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Courtroom Cell",
+      "text": "A cell contains a judge's bench and one guilty chair.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "dungeon"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredClassIds": [
+        "rogue"
+      ],
+      "requiredStats": {
+        "luck": 12
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_dungeon_11_the-map-that-punishes-lies",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Map That Punishes Lies",
+      "text": "A dungeon map burns every false statement spoken over it.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "dungeon"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "generationAtLeast": 3
+    },
+    {
+      "id": "evt_dungeon_12_prayer-etched-upside-down",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Prayer Etched Upside Down",
+      "text": "A prayer is etched upside down on the ceiling above a pit.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "dungeon"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredClassIds": [
+        "priest"
+      ],
+      "requiredStats": {
+        "faith": 10
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_dungeon_13_the-false-exit",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The False Exit",
+      "text": "An exit door opens onto yesterday's corridor.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "dungeon"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredStats": {
+        "intelligence": 12
+      }
+    },
+    {
+      "id": "evt_dungeon_16_dice-made-of-knuckles",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Dice Made of Knuckles",
+      "text": "Bone dice roll themselves and demand a wager.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "dungeon"
+      ],
+      "tones": [
+        "dangerous"
+      ]
+    },
+    {
+      "id": "evt_dungeon_17_the-clean-cell",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Clean Cell",
+      "text": "One immaculate cell has flowers and a fresh noose.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "dungeon"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "minHeirLevel": 17,
+      "minAdventurerRank": "D"
+    },
+    {
+      "id": "evt_dungeon_18_chalk-mark-from-tomorrow",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Chalk Mark from Tomorrow",
+      "text": "A chalk arrow appears where the heir will flee later.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "dungeon"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiredClassIds": [
+        "rogue"
+      ],
+      "requiredStats": {
+        "luck": 12
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_dungeon_20_pardon-written-in-blood",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Pardon Written in Blood",
+      "text": "A pardon signed in blood waits for an unnamed prisoner.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "dungeon"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiresMissionCompleted": [
+        "misty-on-the-mill-roof"
+      ]
+    },
+    {
+      "id": "evt_coast_01_bottle-with-a-still-beating-",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Bottle with a Still-Beating Heart",
+      "text": "A bottle washes ashore with a tiny heart beating inside.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "coast"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiredClassIds": [
+        "priest"
+      ],
+      "requiredStats": {
+        "faith": 10
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_coast_02_net-full-of-teeth",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Net Full of Teeth",
+      "text": "A fishing net comes up full of human teeth, sorted by size.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "coast"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiredStats": {
+        "intelligence": 12
+      }
+    },
+    {
+      "id": "evt_coast_03_lighthouse-blinks-twice",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Lighthouse Blinks Twice",
+      "text": "The lighthouse blinks like an eye when the heir approaches.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "coast"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiredStats": {
+        "infamy": 5
+      },
+      "minInfamy": 5
+    },
+    {
+      "id": "evt_coast_06_pearls-in-a-dead-gull",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Pearls in a Dead Gull",
+      "text": "A dead gull's crop is full of black pearls.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "coast"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "minHeirLevel": 9,
+      "minAdventurerRank": "E"
+    },
+    {
+      "id": "evt_coast_07_harbor-bell-underwater",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Harbor Bell Underwater",
+      "text": "The harbor bell rings from below the pier.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "coast"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredClassIds": [
+        "rogue"
+      ],
+      "requiredStats": {
+        "luck": 12
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_coast_08_crab-wearing-a-wedding-ring",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Crab Wearing a Wedding Ring",
+      "text": "A crab brandishes a wedding ring and refuses to let go.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "coast"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredStats": {
+        "charisma": 11
+      }
+    },
+    {
+      "id": "evt_coast_11_ship-without-a-wake",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Ship Without a Wake",
+      "text": "A ship crosses the bay without leaving a wake or shadow.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "coast"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredClassIds": [
+        "priest"
+      ],
+      "requiredStats": {
+        "faith": 10
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_coast_12_anchor-in-the-market-square",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Anchor in the Market Square",
+      "text": "An anchor appears in the square dripping seaweed.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "coast"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredStats": {
+        "intelligence": 12
+      }
+    },
+    {
+      "id": "evt_coast_13_the-mermaids-tax-notice",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Mermaid's Tax Notice",
+      "text": "A tax notice from a mermaid court is nailed to the dock.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "coast"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredStats": {
+        "infamy": 5
+      },
+      "minInfamy": 5
+    },
+    {
+      "id": "evt_coast_16_sea-glass-eye",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Sea Glass Eye",
+      "text": "A sea-glass eye shows reefs that are not on any chart.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "coast"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "minHeirLevel": 18,
+      "minAdventurerRank": "D"
+    },
+    {
+      "id": "evt_coast_17_the-widows-dry-boat",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Widow's Dry Boat",
+      "text": "A widow's boat returns dry after sinking last year.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "coast"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiredClassIds": [
+        "rogue"
+      ],
+      "requiredStats": {
+        "luck": 12
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_coast_18_kelp-around-the-bedpost",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Kelp Around the Bedpost",
+      "text": "Kelp wraps a sailor's bedpost three streets from shore.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "coast"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiredStats": {
+        "charisma": 11
+      }
+    },
+    {
+      "id": "evt_coast_20_the-last-fish-in-the-barrel",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Last Fish in the Barrel",
+      "text": "The last fish in a barrel begs not to be eaten.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "coast"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "generationAtLeast": 2
+    },
+    {
+      "id": "evt_swamp_01_lantern-in-black-reeds",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Lantern in Black Reeds",
+      "text": "A lantern drifts through black reeds without hand or boat.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "swamp"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiredStats": {
+        "intelligence": 12
+      }
+    },
+    {
+      "id": "evt_swamp_02_leech-with-a-gold-tooth",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Leech with a Gold Tooth",
+      "text": "A leech smiles with a gold tooth and offers directions.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "swamp"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiredStats": {
+        "infamy": 5
+      },
+      "minInfamy": 5
+    },
+    {
+      "id": "evt_swamp_03_bog-body-opens-eyes",
+      "weight": 12,
+      "maxPerRun": 1,
+      "title": "Bog Body Opens Eyes",
+      "text": "A bog body opens its eyes when the heir lies.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "swamp"
+      ],
+      "tones": [
+        "mild"
+      ]
+    },
+    {
+      "id": "evt_swamp_06_the-reed-harp",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Reed Harp",
+      "text": "Wind through reeds plays a song that charms boots off feet.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "swamp"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiredClassIds": [
+        "rogue"
+      ],
+      "requiredStats": {
+        "luck": 12
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_swamp_07_mud-prints-ahead",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Mud Prints Ahead",
+      "text": "The heir's own footprints appear ahead in fresh mud.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "swamp"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredStats": {
+        "charisma": 11
+      }
+    },
+    {
+      "id": "evt_swamp_08_croaking-jury",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Croaking Jury",
+      "text": "Frogs gather in a circle and croak like judges.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "swamp"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiresMissionCompleted": [
+        "pale-antlers-at-thornmere"
+      ]
+    },
+    {
+      "id": "evt_swamp_11_blackwater-reflection-missin",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Blackwater Reflection Missing",
+      "text": "The heir's reflection is missing from still blackwater.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "swamp"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredStats": {
+        "intelligence": 12
+      }
+    },
+    {
+      "id": "evt_swamp_12_leechwifes-free-cure",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Leechwife's Free Cure",
+      "text": "A leechwife offers a cure but asks for a memory.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "swamp"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredStats": {
+        "infamy": 5
+      },
+      "minInfamy": 5
+    },
+    {
+      "id": "evt_swamp_13_drowned-road-marker",
+      "weight": 12,
+      "maxPerRun": 1,
+      "title": "Drowned Road Marker",
+      "text": "A road marker stands knee-deep in water, pointing down.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "swamp"
+      ],
+      "tones": [
+        "moderate"
+      ]
+    },
+    {
+      "id": "evt_swamp_16_serpent-wearing-prayer-beads",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Serpent Wearing Prayer Beads",
+      "text": "A black serpent coils with prayer beads around its neck.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "swamp"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiredClassIds": [
+        "rogue"
+      ],
+      "requiredStats": {
+        "luck": 12
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_swamp_17_mire-wedding-procession",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Mire Wedding Procession",
+      "text": "A wedding procession crosses the mire with no footprints.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "swamp"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiredStats": {
+        "charisma": 11
+      }
+    },
+    {
+      "id": "evt_swamp_18_reed-witchs-teacup",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Reed Witch's Teacup",
+      "text": "A teacup floats by with tea still steaming.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "swamp"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiresMissionCompleted": [
+        "pale-antlers-at-thornmere"
+      ]
+    },
+    {
+      "id": "evt_swamp_20_the-dry-island",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Dry Island",
+      "text": "A dry island appears only when someone gives up hope.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "swamp"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiredClassIds": [
+        "priest"
+      ],
+      "requiredStats": {
+        "faith": 10
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_road_01_milestone-with-fresh-blood",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Milestone with Fresh Blood",
+      "text": "A milestone bleeds from the carved distance number.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "road"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiredStats": {
+        "infamy": 5
+      },
+      "minInfamy": 5
+    },
+    {
+      "id": "evt_road_02_cart-wheel-turning-alone",
+      "weight": 12,
+      "maxPerRun": 1,
+      "title": "Cart Wheel Turning Alone",
+      "text": "A broken cart wheel turns beside the road without wind.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "road"
+      ],
+      "tones": [
+        "mild"
+      ]
+    },
+    {
+      "id": "evt_road_03_pilgrim-who-casts-two-shadow",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Pilgrim Who Casts Two Shadows",
+      "text": "A pilgrim casts one shadow forward and one back.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "road"
+      ],
+      "tones": [
+        "mild"
+      ]
+    },
+    {
+      "id": "evt_road_06_bridge-that-asks-names",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Bridge That Asks Names",
+      "text": "A bridge asks travelers for their names before bearing weight.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "road"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiredStats": {
+        "charisma": 11
+      }
+    },
+    {
+      "id": "evt_road_07_inn-sign-changed-overnight",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Inn Sign Changed Overnight",
+      "text": "An inn sign changes names while no one looks.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "road"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiresMissionCompleted": [
+        "blackwater-ferry-bell"
+      ]
+    },
+    {
+      "id": "evt_road_08_crow-on-the-waystone",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Crow on the Waystone",
+      "text": "A crow on a waystone repeats the heir's last thought.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "road"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "generationAtLeast": 6
+    },
+    {
+      "id": "evt_road_11_the-beggars-map-scar",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Beggar's Map Scar",
+      "text": "A beggar reveals a map scarred into his back.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "road"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredStats": {
+        "infamy": 5
+      },
+      "minInfamy": 5
+    },
+    {
+      "id": "evt_road_12_roadside-soup-for-the-dead",
+      "weight": 12,
+      "maxPerRun": 1,
+      "title": "Roadside Soup for the Dead",
+      "text": "A roadside pot serves soup only to ghosts.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "road"
+      ],
+      "tones": [
+        "moderate"
+      ]
+    },
+    {
+      "id": "evt_road_13_royal-couriers-empty-satchel",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Royal Courier's Empty Satchel",
+      "text": "A royal courier arrives with an empty satchel and a slit throat.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "road"
+      ],
+      "tones": [
+        "moderate"
+      ]
+    },
+    {
+      "id": "evt_road_16_the-milestone-counts-down",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Milestone Counts Down",
+      "text": "Every mile marker counts down toward the heir's family estate.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "road"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiredStats": {
+        "charisma": 11
+      }
+    },
+    {
+      "id": "evt_road_17_dust-devil-with-a-voice",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Dust Devil with a Voice",
+      "text": "A dust devil asks which heir died last.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "road"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiresMissionCompleted": [
+        "blackwater-ferry-bell"
+      ]
+    },
+    {
+      "id": "evt_road_18_three-roads-two-choices",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Three Roads, Two Choices",
+      "text": "The road forks into three paths, but only two have shadows.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "road"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "generationAtLeast": 4
+    },
+    {
+      "id": "evt_road_20_puddle-reflects-a-battlefiel",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Puddle Reflects a Battlefield",
+      "text": "A puddle reflects a battlefield instead of the sky.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "road"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiredStats": {
+        "intelligence": 12
+      }
+    },
+    {
+      "id": "evt_ruins_01_statue-missing-its-apology",
+      "weight": 12,
+      "maxPerRun": 1,
+      "title": "Statue Missing Its Apology",
+      "text": "A statue has its mouth chiseled away and still tries to apologize.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/goblin-king-room.png",
+      "settings": [
+        "ruins"
+      ],
+      "tones": [
+        "mild"
+      ]
+    },
+    {
+      "id": "evt_ruins_02_fountain-running-with-dust",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Fountain Running with Dust",
+      "text": "A fountain sprays dust in perfect arcs.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/goblin-king-room.png",
+      "settings": [
+        "ruins"
+      ],
+      "tones": [
+        "mild"
+      ]
+    },
+    {
+      "id": "evt_ruins_03_doorframe-without-wall",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Doorframe Without Wall",
+      "text": "A doorframe stands alone and opens into a furnished room.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/goblin-king-room.png",
+      "settings": [
+        "ruins"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "minHeirLevel": 9,
+      "minAdventurerRank": "E"
+    },
+    {
+      "id": "evt_ruins_06_crown-rust-in-a-cradle",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Crown Rust in a Cradle",
+      "text": "Rust shaped like a crown fills a stone cradle.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/goblin-king-room.png",
+      "settings": [
+        "ruins"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiresMissionCompleted": [
+        "lost-goat-at-briar-ford"
+      ]
+    },
+    {
+      "id": "evt_ruins_07_broken-sundial-at-midnight",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Broken Sundial at Midnight",
+      "text": "A broken sundial casts a shadow at midnight.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/goblin-king-room.png",
+      "settings": [
+        "ruins"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "generationAtLeast": 7
+    },
+    {
+      "id": "evt_ruins_08_the-librarians-ashes",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Librarian's Ashes",
+      "text": "Ashes in a jar correct the heir's pronunciation.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/goblin-king-room.png",
+      "settings": [
+        "ruins"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredClassIds": [
+        "priest"
+      ],
+      "requiredStats": {
+        "faith": 10
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_ruins_11_painted-door-bleeding-paint",
+      "weight": 12,
+      "maxPerRun": 1,
+      "title": "Painted Door Bleeding Paint",
+      "text": "A painted door leaks wet paint like blood.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/goblin-king-room.png",
+      "settings": [
+        "ruins"
+      ],
+      "tones": [
+        "moderate"
+      ]
+    },
+    {
+      "id": "evt_ruins_12_the-architects-final-nail",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Architect's Final Nail",
+      "text": "A golden nail holds an entire wall upright.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/goblin-king-room.png",
+      "settings": [
+        "ruins"
+      ],
+      "tones": [
+        "moderate"
+      ]
+    },
+    {
+      "id": "evt_ruins_13_mourner-in-a-window",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Mourner in a Window",
+      "text": "A mourner appears in every intact window, always facing away.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/goblin-king-room.png",
+      "settings": [
+        "ruins"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "minHeirLevel": 18,
+      "minAdventurerRank": "D"
+    },
+    {
+      "id": "evt_ruins_16_royal-cradle-song",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Royal Cradle Song",
+      "text": "A cradle song hums from the collapsed nursery.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/goblin-king-room.png",
+      "settings": [
+        "ruins"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiresMissionCompleted": [
+        "lost-goat-at-briar-ford"
+      ]
+    },
+    {
+      "id": "evt_ruins_17_guard-statue-asks-password",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Guard Statue Asks Password",
+      "text": "A guard statue asks for a password outlawed generations ago.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/goblin-king-room.png",
+      "settings": [
+        "ruins"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "generationAtLeast": 5
+    },
+    {
+      "id": "evt_ruins_18_the-map-room-flooded-with-st",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Map Room Flooded with Stars",
+      "text": "A map room is flooded with reflected stars though roofless at noon.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/goblin-king-room.png",
+      "settings": [
+        "ruins"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiredClassIds": [
+        "priest"
+      ],
+      "requiredStats": {
+        "faith": 10
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_ruins_20_bell-tower-below-ground",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Bell Tower Below Ground",
+      "text": "A buried bell tower rings whenever someone steps over it.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/goblin-king-room.png",
+      "settings": [
+        "ruins"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiredStats": {
+        "infamy": 5
+      },
+      "minInfamy": 5
+    },
+    {
+      "id": "evt_crypt_01_grave-moth-halo",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Grave-Moth Halo",
+      "text": "Grave-moths form a halo over one unmarked grave.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "crypt"
+      ],
+      "tones": [
+        "mild"
+      ]
+    },
+    {
+      "id": "evt_crypt_02_bone-dice-in-the-offering-bo",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Bone Dice in the Offering Bowl",
+      "text": "Bone dice roll in the offering bowl and show a skull.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "crypt"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "minHeirLevel": 10,
+      "minAdventurerRank": "E"
+    },
+    {
+      "id": "evt_crypt_03_ancestor-coughs-in-the-wall",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Ancestor Coughs in the Wall",
+      "text": "An ancestor coughs politely from inside the wall.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "crypt"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiredClassIds": [
+        "rogue"
+      ],
+      "requiredStats": {
+        "luck": 12
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_crypt_06_ossuary-choir-tuning",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Ossuary Choir Tuning",
+      "text": "Skulls hum scales before anyone enters the ossuary.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "crypt"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "generationAtLeast": 2
+    },
+    {
+      "id": "evt_crypt_07_the-wrong-epitaph",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Wrong Epitaph",
+      "text": "A grave bears the heir's name with tomorrow's date.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "crypt"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredClassIds": [
+        "priest"
+      ],
+      "requiredStats": {
+        "faith": 10
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_crypt_08_bell-rope-made-of-hair",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Bell Rope Made of Hair",
+      "text": "The crypt bell rope is braided from hair matching the heir's family.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "crypt"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredStats": {
+        "intelligence": 12
+      }
+    },
+    {
+      "id": "evt_crypt_11_the-coffin-that-apologizes",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Coffin That Apologizes",
+      "text": "A coffin apologizes for what is inside.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "crypt"
+      ],
+      "tones": [
+        "moderate"
+      ]
+    },
+    {
+      "id": "evt_crypt_12_prayer-book-chews-pages",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Prayer Book Chews Pages",
+      "text": "A prayer book chews its own pages when opened.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "crypt"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "minHeirLevel": 19,
+      "minAdventurerRank": "D"
+    },
+    {
+      "id": "evt_crypt_13_black-candle-white-flame",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Black Candle, White Flame",
+      "text": "A black candle burns with a white flame and casts no light.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "crypt"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredClassIds": [
+        "rogue"
+      ],
+      "requiredStats": {
+        "luck": 12
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_crypt_16_sarcophagus-breathes-perfume",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Sarcophagus Breathes Perfume",
+      "text": "A sarcophagus breathes perfume and rot in alternating sighs.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "crypt"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "generationAtLeast": 6
+    },
+    {
+      "id": "evt_crypt_17_the-family-niche-opens",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "The Family Niche Opens",
+      "text": "A sealed family niche opens when the heir speaks their surname.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "crypt"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiredClassIds": [
+        "priest"
+      ],
+      "requiredStats": {
+        "faith": 10
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_crypt_18_marble-angel-drops-feather",
+      "weight": 12,
+      "maxPerRun": 2,
+      "title": "Marble Angel Drops Feather",
+      "text": "A marble angel drops a real feather into the dust.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "crypt"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiredStats": {
+        "intelligence": 12
+      }
+    },
+    {
+      "id": "evt_crypt_20_last-will-in-bone-script",
+      "weight": 12,
+      "maxPerRun": 1,
+      "title": "Last Will in Bone Script",
+      "text": "A last will is written in bone script across the ceiling.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "crypt"
+      ],
+      "tones": [
+        "dangerous"
+      ]
+    }
+  ],
+  "secretEvents": [
+    {
+      "id": "evt_town_04_well-water-tastes-of-iron",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Well Water Tastes of Iron",
+      "text": "The public well stains cups red, but only after strangers drink.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/town-shady-mage.png",
+      "settings": [
+        "town"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_town_09_blind-cobblers-warning",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Blind Cobbler's Warning",
+      "text": "A blind cobbler recognizes the heir by footstep and warns of a debt.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/town-shady-mage.png",
+      "settings": [
+        "town"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "minHeirLevel": 7,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 7
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_town_14_choir-practice-in-empty-chap",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Choir Practice in Empty Chapel",
+      "text": "The chapel choir sings perfectly though no one is inside.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/town-shady-mage.png",
+      "settings": [
+        "town"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_town_19_a-rat-wearing-a-medal",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "A Rat Wearing a Medal",
+      "text": "A rat drags a military medal through the street as if on parade.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/town-shady-mage.png",
+      "settings": [
+        "town"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "minHeirLevel": 13,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 13
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_forest_04_poachers-snare-map",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Poacher's Snare Map",
+      "text": "A dead poacher's skin is tattooed with a useful snare map.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "forest"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "generationAtLeast": 2,
+      "conditions": [
+        {
+          "type": "generationAtLeast",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "evt_forest_09_fox-demands-a-toll",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Fox Demands a Toll",
+      "text": "A fox blocks the trail and demands a joke, coin, or tooth.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "forest"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "minHeirLevel": 8,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 8
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_forest_14_wolf-tracks-around-camp",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Wolf Tracks Around Camp",
+      "text": "Wolf tracks circle the camp from the inside outward.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "forest"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "generationAtLeast": 6,
+      "conditions": [
+        {
+          "type": "generationAtLeast",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": "evt_forest_19_the-fiddle-in-the-hollow",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "The Fiddle in the Hollow",
+      "text": "A fiddle plays beneath a hollow log; dancers have no shadows.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "forest"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "minHeirLevel": 14,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 14
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_cave_04_echo-counts-your-bones",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Echo Counts Your Bones",
+      "text": "An echo answers with a number higher than the heir's bones.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/goblin-cave-entrance.png",
+      "settings": [
+        "cave"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "minHeirLevel": 6,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 6
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_cave_09_map-scratched-by-fingernails",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Map Scratched by Fingernails",
+      "text": "A wall map is scratched by fingernails from the other side.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/goblin-cave-entrance.png",
+      "settings": [
+        "cave"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "minHeirLevel": 9,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 9
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_cave_14_the-lost-canary-speaks",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "The Lost Canary Speaks",
+      "text": "A dead canary gives one warning in a miner's voice.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/goblin-cave-entrance.png",
+      "settings": [
+        "cave"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "minHeirLevel": 12,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 12
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_cave_19_the-lode-that-bleeds",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "The Lode That Bleeds",
+      "text": "A silver lode bleeds when struck with steel.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/goblin-cave-entrance.png",
+      "settings": [
+        "cave"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "minHeirLevel": 15,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 15
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_mountain_04_eagle-drops-a-key",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Eagle Drops a Key",
+      "text": "A great eagle drops a warm key into the snow.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/mountain.png",
+      "settings": [
+        "mountain"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "minHeirLevel": 7,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 7
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_mountain_09_the-blue-lipped-shrine",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "The Blue-Lipped Shrine",
+      "text": "A shrine answers prayers by stealing heat from the petitioner.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/mountain.png",
+      "settings": [
+        "mountain"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "minHeirLevel": 10,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 10
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_mountain_14_summit-soup-pot",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Summit Soup Pot",
+      "text": "A soup pot simmers unattended on a peak no cook could reach.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/mountain.png",
+      "settings": [
+        "mountain"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "minHeirLevel": 13,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 13
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_mountain_19_peak-shadow-at-noon",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Peak Shadow at Noon",
+      "text": "A peak casts a shadow at noon toward the wrong kingdom.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/mountain.png",
+      "settings": [
+        "mountain"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "minHeirLevel": 16,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 16
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_dungeon_04_rune-that-counts-wounds",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Rune That Counts Wounds",
+      "text": "A rune glows brighter for every scar the heir carries.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "dungeon"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "minHeirLevel": 8,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 8
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_dungeon_09_iron-maiden-humming",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Iron Maiden Humming",
+      "text": "An iron maiden hums a lullaby to a hidden child.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "dungeon"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "minHeirLevel": 11,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 11
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_dungeon_14_jailers-shadow-still-patrols",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Jailer's Shadow Still Patrols",
+      "text": "A shadow patrols with keys that unlock memories.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "dungeon"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "minHeirLevel": 14,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 14
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_dungeon_19_the-hungry-portcullis",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "The Hungry Portcullis",
+      "text": "A portcullis drops only when someone lies underneath.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "dungeon"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "minHeirLevel": 17,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 17
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_coast_04_drowned-sailor-buys-ale",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Drowned Sailor Buys Ale",
+      "text": "A drowned sailor pays with wet coins and asks for directions home.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "coast"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "minHeirLevel": 9,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 9
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_coast_09_song-from-the-fogbank",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Song from the Fogbank",
+      "text": "A fogbank sings the heir's childhood lullaby.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "coast"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_coast_14_fishmarket-prophet",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Fishmarket Prophet",
+      "text": "A fishmonger predicts death by arranging cod heads.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "coast"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "minHeirLevel": 15,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 15
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_coast_19_moon-tide-duel",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Moon-Tide Duel",
+      "text": "Two tide pools duel by throwing reflections at one another.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "coast"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_swamp_04_fever-flies-spell-help",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Fever-Flies Spell Help",
+      "text": "Fever-flies swarm into letters spelling help over the water.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "swamp"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "minHeirLevel": 10,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 10
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_swamp_09_heron-carrying-a-knife",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Heron Carrying a Knife",
+      "text": "A white heron flies overhead carrying a butcher knife.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "swamp"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "generationAtLeast": 5,
+      "conditions": [
+        {
+          "type": "generationAtLeast",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": "evt_swamp_14_bog-oak-baby-rattle",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Bog Oak Baby Rattle",
+      "text": "A baby rattle made of bog oak rattles by itself.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "swamp"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "minHeirLevel": 16,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 16
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_swamp_19_mosquitoes-avoid-one-corpse",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Mosquitoes Avoid One Corpse",
+      "text": "Mosquitoes avoid one corpse floating face-down.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "swamp"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "generationAtLeast": 3,
+      "conditions": [
+        {
+          "type": "generationAtLeast",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "evt_road_04_bandits-polite-toll",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Bandit's Polite Toll",
+      "text": "A bandit politely asks for a story instead of coin.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "road"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "minHeirLevel": 11,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 11
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_road_09_funeral-cart-going-fast",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Funeral Cart Going Fast",
+      "text": "A funeral cart races by with no driver and no horse.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "road"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "minHeirLevel": 14,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 14
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_road_14_the-same-tree-again",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "The Same Tree Again",
+      "text": "The same lightning-struck tree appears after every bend.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "road"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "minHeirLevel": 17,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 17
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_road_19_lantern-cart-at-dawn",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Lantern Cart at Dawn",
+      "text": "A lantern cart rolls by at dawn, though lantern carts run at night.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "road"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "minHeirLevel": 20,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 20
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_ruins_04_mosaic-eye-follows-heir",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Mosaic Eye Follows Heir",
+      "text": "One mosaic eye follows the heir between broken rooms.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/goblin-king-room.png",
+      "settings": [
+        "ruins"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "minHeirLevel": 12,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 12
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_ruins_09_steps-descending-upward",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Steps Descending Upward",
+      "text": "A stairway descends upward when viewed from the side.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/goblin-king-room.png",
+      "settings": [
+        "ruins"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "minHeirLevel": 15,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 15
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_ruins_14_coin-minted-tomorrow",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Coin Minted Tomorrow",
+      "text": "A coin minted next year lies under rubble.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/goblin-king-room.png",
+      "settings": [
+        "ruins"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "minHeirLevel": 18,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 18
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_ruins_19_throne-without-a-seat",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Throne Without a Seat",
+      "text": "A throne has arms, back, and crown, but no place to sit.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/goblin-king-room.png",
+      "settings": [
+        "ruins"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "minHeirLevel": 21,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 21
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_crypt_04_fresh-flowers-on-old-dust",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Fresh Flowers on Old Dust",
+      "text": "Fresh flowers lie on dust no living foot has disturbed.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "crypt"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "minHeirLevel": 13,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 13
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_crypt_09_mourner-without-a-face",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Mourner Without a Face",
+      "text": "A faceless mourner kneels where no burial is scheduled.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "crypt"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "minHeirLevel": 16,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 16
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_crypt_14_the-ossuary-keyhole",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "The Ossuary Keyhole",
+      "text": "A keyhole appears in a skull's forehead.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "crypt"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "minHeirLevel": 19,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 19
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    },
+    {
+      "id": "evt_crypt_19_mourning-veil-in-the-drain",
+      "weight": 8,
+      "maxPerRun": 2,
+      "title": "Mourning Veil in the Drain",
+      "text": "A black veil crawls from the drainage channel.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "crypt"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "minHeirLevel": 22,
+      "requiresMissionCompleted": [
+        "moonlit-charcoal-kiln"
+      ],
+      "conditions": [
+        {
+          "type": "minHeirLevel",
+          "value": 22
+        },
+        {
+          "type": "missionCompleted",
+          "missionId": "moonlit-charcoal-kiln"
+        }
+      ]
+    }
+  ],
+  "uniqueEvents": [
+    {
+      "id": "evt_town_05_the-tax-candle-burns-black",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "The Tax Candle Burns Black",
+      "text": "A tax office candle burns black whenever a false account is read.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/town-shady-mage.png",
+      "settings": [
+        "town"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "generationAtLeast": 7
+    },
+    {
+      "id": "evt_town_10_duel-at-market-noon",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "Duel at Market Noon",
+      "text": "Two apprentices demand the heir witness a duel over a forged love letter.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/town-shady-mage.png",
+      "settings": [
+        "town"
+      ],
+      "tones": [
+        "moderate"
+      ]
+    },
+    {
+      "id": "evt_town_15_the-scribe-who-forgot-his-na",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "The Scribe Who Forgot His Name",
+      "text": "A guild scribe forgets his name but remembers every unpaid contract.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/town-shady-mage.png",
+      "settings": [
+        "town"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "generationAtLeast": 5
+    },
+    {
+      "id": "evt_forest_05_mushrooms-in-a-perfect-spira",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "Mushrooms in a Perfect Spiral",
+      "text": "Mooncaps form a spiral that tightens when watched.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "forest"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiredClassIds": [
+        "priest"
+      ],
+      "requiredStats": {
+        "faith": 10
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_forest_10_sap-that-smells-of-wine",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "Sap That Smells of Wine",
+      "text": "Red sap drips from a wounded tree and makes animals drunk.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "forest"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "minHeirLevel": 8,
+      "minAdventurerRank": "E"
+    },
+    {
+      "id": "evt_forest_15_mirror-pool-under-ferns",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "Mirror Pool Under Ferns",
+      "text": "A hidden pool reflects the heir as an older generation.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "forest"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiredClassIds": [
+        "priest"
+      ],
+      "requiredStats": {
+        "faith": 10
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_cave_05_the-rope-pulled-downward",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "The Rope Pulled Downward",
+      "text": "A climbing rope tugs as if someone below is begging.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/goblin-cave-entrance.png",
+      "settings": [
+        "cave"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiredStats": {
+        "intelligence": 12
+      }
+    },
+    {
+      "id": "evt_cave_10_salt-vein-shaped-like-a-spin",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "Salt Vein Shaped Like a Spine",
+      "text": "A salt vein curves like a giant spine through the wall.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/goblin-cave-entrance.png",
+      "settings": [
+        "cave"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredClassIds": [
+        "rogue"
+      ],
+      "requiredStats": {
+        "luck": 12
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_cave_15_torchlight-goes-blue",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "Torchlight Goes Blue",
+      "text": "Torches turn blue near an invisible drop.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/goblin-cave-entrance.png",
+      "settings": [
+        "cave"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiredStats": {
+        "intelligence": 12
+      }
+    },
+    {
+      "id": "evt_mountain_05_bridge-of-three-ropes",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "Bridge of Three Ropes",
+      "text": "A rope bridge has three ropes; one is made of hair.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/mountain.png",
+      "settings": [
+        "mountain"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiredStats": {
+        "infamy": 5
+      },
+      "minInfamy": 5
+    },
+    {
+      "id": "evt_mountain_10_harpies-mimic-family-voices",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "Harpies Mimic Family Voices",
+      "text": "Harpies call from the clouds using dead relatives' voices.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/mountain.png",
+      "settings": [
+        "mountain"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredStats": {
+        "charisma": 11
+      }
+    },
+    {
+      "id": "evt_mountain_15_the-sled-with-no-driver",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "The Sled with No Driver",
+      "text": "A loaded sled races downhill with no driver and fresh blood.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/mountain.png",
+      "settings": [
+        "mountain"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiredStats": {
+        "infamy": 5
+      },
+      "minInfamy": 5
+    },
+    {
+      "id": "evt_dungeon_05_prisoner-behind-fresh-mortar",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "Prisoner Behind Fresh Mortar",
+      "text": "A voice speaks from behind mortar still wet.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "dungeon"
+      ],
+      "tones": [
+        "mild"
+      ]
+    },
+    {
+      "id": "evt_dungeon_10_bread-slot-with-teeth",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "Bread Slot with Teeth",
+      "text": "A bread slot snaps shut with wet teeth.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "dungeon"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiresMissionCompleted": [
+        "misty-on-the-mill-roof"
+      ]
+    },
+    {
+      "id": "evt_dungeon_15_well-of-confiscated-names",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "Well of Confiscated Names",
+      "text": "The prison well echoes names confiscated from inmates.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "dungeon"
+      ],
+      "tones": [
+        "dangerous"
+      ]
+    },
+    {
+      "id": "evt_coast_05_tide-leaves-a-door",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "Tide Leaves a Door",
+      "text": "Low tide reveals a barn door standing upright in the mud.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "coast"
+      ],
+      "tones": [
+        "mild"
+      ]
+    },
+    {
+      "id": "evt_coast_10_salt-that-crawls",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "Salt That Crawls",
+      "text": "A line of salt crawls inland like white ants.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "coast"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "generationAtLeast": 4
+    },
+    {
+      "id": "evt_coast_15_the-storm-buys-rope",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "The Storm Buys Rope",
+      "text": "A storm speaks through a sailmaker and buys rope.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest.png",
+      "settings": [
+        "coast"
+      ],
+      "tones": [
+        "dangerous"
+      ]
+    },
+    {
+      "id": "evt_swamp_05_moss-covered-cradle",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "Moss-Covered Cradle",
+      "text": "A cradle floats by, rocking though empty.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "swamp"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "minHeirLevel": 10,
+      "minAdventurerRank": "E"
+    },
+    {
+      "id": "evt_swamp_10_the-sinking-shrine",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "The Sinking Shrine",
+      "text": "A shrine sinks one inch whenever someone prays falsely.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "swamp"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredClassIds": [
+        "priest"
+      ],
+      "requiredStats": {
+        "faith": 10
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_swamp_15_the-fog-keeps-receipts",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "The Fog Keeps Receipts",
+      "text": "Fog forms paper receipts for old sins.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "swamp"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "minHeirLevel": 16,
+      "minAdventurerRank": "D"
+    },
+    {
+      "id": "evt_road_05_shoes-facing-west",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "Shoes Facing West",
+      "text": "A line of abandoned shoes faces west in perfect order.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "road"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiredClassIds": [
+        "rogue"
+      ],
+      "requiredStats": {
+        "luck": 12
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_road_10_tollkeeper-counting-fingers",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "Tollkeeper Counting Fingers",
+      "text": "A tollkeeper counts fingers, not coins.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "road"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredStats": {
+        "intelligence": 12
+      }
+    },
+    {
+      "id": "evt_road_15_horse-refuses-a-shadow",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "Horse Refuses a Shadow",
+      "text": "A horse refuses to step into one patch of road-shadow.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+      "settings": [
+        "road"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiredClassIds": [
+        "rogue"
+      ],
+      "requiredStats": {
+        "luck": 12
+      },
+      "classOrStatGate": true
+    },
+    {
+      "id": "evt_ruins_05_banner-that-remembers-wind",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "Banner That Remembers Wind",
+      "text": "A torn banner snaps in a wind that died centuries ago.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/goblin-king-room.png",
+      "settings": [
+        "ruins"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiredStats": {
+        "charisma": 11
+      }
+    },
+    {
+      "id": "evt_ruins_10_table-set-for-dead-kings",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "Table Set for Dead Kings",
+      "text": "A banquet table is set for kings whose names are scratched out.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/goblin-king-room.png",
+      "settings": [
+        "ruins"
+      ],
+      "tones": [
+        "moderate"
+      ],
+      "requiredStats": {
+        "infamy": 5
+      },
+      "minInfamy": 5
+    },
+    {
+      "id": "evt_ruins_15_the-law-that-bites",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "The Law That Bites",
+      "text": "A stone law-tablet bites anyone who reads it aloud.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/goblin-king-room.png",
+      "settings": [
+        "ruins"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiredStats": {
+        "charisma": 11
+      }
+    },
+    {
+      "id": "evt_crypt_05_coffin-nail-warm-to-touch",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "Coffin Nail Warm to Touch",
+      "text": "One coffin nail is warm and beats like a pulse.",
+      "eventType": "social",
+      "timeCost": "low",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "crypt"
+      ],
+      "tones": [
+        "mild"
+      ],
+      "requiresMissionCompleted": [
+        "misty-on-the-mill-roof"
+      ]
+    },
+    {
+      "id": "evt_crypt_10_wax-saint-weeping-gold",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "Wax Saint Weeping Gold",
+      "text": "A wax saint weeps gold that hardens into teeth.",
+      "eventType": "social",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "crypt"
+      ],
+      "tones": [
+        "moderate"
+      ]
+    },
+    {
+      "id": "evt_crypt_15_dead-childs-chalk-game",
+      "weight": 6,
+      "maxPerRun": 1,
+      "title": "Dead Child's Chalk Game",
+      "text": "A chalk game on the floor changes rules between turns.",
+      "eventType": "hazard",
+      "timeCost": "normal",
+      "sceneImage": "/an-average-rpg/scenes/dungeon-inside.png",
+      "settings": [
+        "crypt"
+      ],
+      "tones": [
+        "dangerous"
+      ],
+      "requiresMissionCompleted": [
+        "misty-on-the-mill-roof"
+      ]
+    }
+  ]
+}

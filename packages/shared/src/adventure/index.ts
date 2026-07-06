@@ -7,11 +7,17 @@ import type {
 } from "../types.js";
 import {
   defaultChoicesForEvent,
+  getChoicesForStep,
   getDefaultSceneGradient,
   getStepChoices,
   getStepTitle,
   inferEventType,
 } from "../campaign/adventureHelpers.js";
+import {
+  getActiveMissionStep,
+  getMissionProgressLabel,
+} from "../campaign/missionInterludes.js";
+import type { ActiveMission } from "../types.js";
 
 export type ChoiceCardTone = "explore" | "safe" | "social" | "rest" | "combat" | "default";
 
@@ -103,6 +109,31 @@ export function missionStepToAdventure(
     step,
     choices: getStepChoices(mission, stepIndex),
     title: getStepTitle(step, mission.name),
+  };
+}
+
+/** Resolve the step currently shown in an active mission (fixed beat or interlude). */
+export function activeMissionToAdventure(
+  mission: MissionTemplate,
+  activeMission: ActiveMission
+): {
+  step: AdventureEventStep;
+  choices: MissionCampaignChoice[];
+  title: string;
+  isInterlude: boolean;
+  progressLabel: string;
+} {
+  const { step, choices, title, isInterlude, fixedStepIndex } = getActiveMissionStep(
+    mission,
+    activeMission
+  );
+
+  return {
+    step,
+    choices,
+    title,
+    isInterlude,
+    progressLabel: getMissionProgressLabel(activeMission, isInterlude),
   };
 }
 

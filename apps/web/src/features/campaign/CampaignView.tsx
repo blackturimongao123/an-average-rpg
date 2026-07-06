@@ -1,5 +1,5 @@
 import type { ActiveMission, Heir, MissionCampaignChoice, MissionTemplate } from "@bloodline/shared/types";
-import { missionStepToAdventure } from "@bloodline/shared/adventure";
+import { activeMissionToAdventure } from "@bloodline/shared/adventure";
 import { AdventureEventView } from "@/features/adventure/AdventureEventView";
 
 interface CampaignViewProps {
@@ -19,8 +19,10 @@ export function CampaignView({
   onChoose,
   onAbandon,
 }: CampaignViewProps) {
-  const stepIndex = activeMission.currentStep;
-  const { step, choices, title } = missionStepToAdventure(mission, stepIndex);
+  const { step, choices, title, isInterlude, progressLabel } = activeMissionToAdventure(
+    mission,
+    activeMission
+  );
   const campaignState = activeMission.campaignState ?? {
     supplies: 30,
     maxSupplies: 30,
@@ -33,18 +35,22 @@ export function CampaignView({
     runItems: [],
     hpPercent: 100,
     regionName: mission.campaign.regionName,
+    seenRandomEventIds: [],
+    seenSecretEventIds: [],
+    choiceHistory: [],
   };
 
   const regionLabel =
     campaignState.regionName ?? mission.campaign.regionName ?? mission.name.toUpperCase();
-  const isFinalStep = stepIndex >= activeMission.totalSteps - 1;
+  const isFinalStep =
+    !isInterlude && activeMission.currentStep >= activeMission.totalSteps - 1;
 
   return (
     <AdventureEventView
       heir={heir}
       eventTitle={title}
       regionLabel={regionLabel}
-      progressLabel={`Stage ${stepIndex + 1} / ${activeMission.totalSteps}`}
+      progressLabel={progressLabel}
       step={step}
       choices={choices}
       loading={loading}
@@ -56,12 +62,16 @@ export function CampaignView({
       showRunResources
       eventLog={campaignState.eventLog}
       journeyNodes={mission.campaign.steps.map((s) => ({ eventType: s.eventType }))}
-      journeyCurrent={stepIndex}
+      journeyCurrent={activeMission.currentStep}
       possibleRewards={mission.rewards}
       eventTypeLabel={step.eventType ?? mission.type}
       difficultyLabel={`${mission.difficulty}-Rank`}
       footerHint={
-        isFinalStep ? "Final stage — choice completes contract" : "Choose an action to advance"
+        isInterlude
+          ? "Unexpected detour — resolve this before the contract continues"
+          : isFinalStep
+            ? "Final stage — choice completes contract"
+            : "Choose an action to advance"
       }
     />
   );

@@ -5,10 +5,10 @@ import {
   XP_PER_LEVEL,
 } from "@bloodline/shared/constants";
 import {
-  applyChoiceToCampaignState,
+  advanceMissionCampaign,
   createInitialCampaignState,
-  getStepChoices,
 } from "@bloodline/shared/campaign";
+import { activeMissionToAdventure } from "@bloodline/shared/adventure";
 import { buildBattleReplayPayload, calculateMaxHp } from "@bloodline/shared/combat";
 import type {
   ActiveMission,
@@ -16,12 +16,13 @@ import type {
   BattleReplayPayload,
   Heir,
   Lineage,
-  MissionTemplate,
+  MissionCampaignStep,
   Monster,
 } from "@bloodline/shared/types";
-import { generateSeed } from "@/lib/seededRandom";
+import { generateSeed, seededRandom } from "@/lib/seededRandom";
 import { getBattleReplaySpeeds, simulateBattle } from "@/lib/combatSim";
 import { getMissionTemplate } from "@/lib/missions";
+import { MISSION_INTERLUDE_POOLS } from "@/lib/missionInterludePools";
 import type { AdvanceMissionResult } from "./functions";
 import { db } from "./config";
 
@@ -36,19 +37,8 @@ function normalizeAdventurerRank(rank: unknown): AdventurerRank {
   return valid.includes(rank as AdventurerRank) ? (rank as AdventurerRank) : "F";
 }
 
-function isCombatStep(mission: MissionTemplate, stepIndex: number): boolean {
-  const step = mission.campaign.steps[stepIndex];
-  if (!step) return false;
-  if (step.combatEncounter?.monsterId) return true;
-  return step.eventType === "combat";
-}
-
-function resolveEncounterMonster(
-  mission: MissionTemplate,
-  stepIndex: number
-): Monster | null {
-  const step = mission.campaign.steps[stepIndex];
-  const encounter = step?.combatEncounter;
+function resolveEncounterMonsterFromStep(step: MissionCampaignStep): Monster | null {
+  const encounter = step.combatEncounter;
   if (!encounter?.monsterId) return null;
 
   const base = monstersMap.get(encounter.monsterId);
@@ -91,40 +81,34 @@ export function advanceMissionLocal(params: AdvanceMissionParams): AdvanceMissio
     throw new Error("Mission not found");
   }
 
-  const stepIndex = heir.activeMission.currentStep;
-  const step = mission.campaign.steps[stepIndex];
-  if (!step) {
-    throw new Error("Invalid mission step");
-  }
+  const interludeSeed = generateSeed(
+    lineage.id,
+    heir.id,
+    `mission-${mission.id}-interlude-${heir.activeMission.currentStep}`
+  );
+  const advanceResult = advanceMissionCampaign({
+    mission,
+    activeMission: heir.activeMission,
+    lineage,
+    heir,
+    adventurerRank: normalizeAdventurerRank(lineage.adventurerRank),
+    choiceId,
+    interludeChanceRoll: seededRandom(interludeSeed, 0),
+    interludePickRoll: seededRandom(interludeSeed, 1),
+    interludePools: MISSION_INTERLUDE_POOLS,
+  });
 
-  const choices = getStepChoices(mission, stepIndex);
-  const choice = choices.find((entry) => entry.id === choiceId) ?? choices[0] ?? null;
-
-  const baseState =
-    heir.activeMission.campaignState ?? createInitialCampaignState(mission);
-  const logText = choice
-    ? `${choice.label} — ${step.text.slice(0, 80)}${step.text.length > 80 ? "…" : ""}`
-    : step.text;
-
-  let nextCampaignState = choice
-    ? applyChoiceToCampaignState(baseState, choice, step, logText)
-    : {
-        ...baseState,
-        eventLog: [
-          ...baseState.eventLog,
-          { text: logText, timestampMs: Date.now() },
-        ],
-      };
-
+  let nextCampaignState = advanceResult.nextCampaignState;
   let battleReplay: BattleReplayPayload | undefined;
 
-  if (isCombatStep(mission, stepIndex)) {
+  if (advanceResult.combatRequired) {
+    const step = advanceResult.resolvedStep;
     const seed = generateSeed(
       lineage.id,
       heir.id,
-      `mission-${mission.id}-step${stepIndex}`
+      `mission-${mission.id}-combat-${advanceResult.resolvedFixedStepIndex}-${advanceResult.resolvedIsInterlude ? "interlude" : "fixed"}`
     );
-    const monster = resolveEncounterMonster(mission, stepIndex);
+    const monster = resolveEncounterMonsterFromStep(step);
     if (!monster) {
       throw new Error("Combat encounter not configured");
     }
@@ -188,61 +172,57 @@ export function advanceMissionLocal(params: AdvanceMissionParams): AdvanceMissio
     }
   }
 
-  const isFinalStep = stepIndex >= heir.activeMission.totalSteps - 1;
-
-  if (!isFinalStep) {
+  if (!advanceResult.completed && advanceResult.nextActiveMission) {
     const nextMission: ActiveMission = {
-      missionId: heir.activeMission.missionId,
-      missionName: heir.activeMission.missionName,
-      difficulty: normalizeAdventurerRank(heir.activeMission.difficulty),
-      slotIndex: heir.activeMission.slotIndex,
-      currentStep: stepIndex + 1,
-      totalSteps: heir.activeMission.totalSteps,
-      startedAtMs: heir.activeMission.startedAtMs,
+      ...advanceResult.nextActiveMission,
       campaignState: nextCampaignState,
     };
+    const nextDisplay = activeMissionToAdventure(mission, nextMission);
 
-    const nextStep = mission.campaign.steps[nextMission.currentStep];
     return {
       completed: false,
       activeMission: nextMission,
       battleReplay,
-      stepText: nextStep?.text ?? step.text,
+      stepText: nextDisplay.step.text,
       rewards: null,
       rankUp: null,
     };
   }
 
-  const rewards = mission.rewards;
-  const xpForNextLevel = XP_PER_LEVEL(heir.level);
-  const newGold = heir.gold + rewards.gold;
-  const newXp = heir.xp + rewards.xp;
-  const leveledUp = newXp >= xpForNextLevel;
-  const finalXp = leveledUp ? newXp - xpForNextLevel : newXp;
-  const finalLevel = leveledUp ? heir.level + 1 : heir.level;
+  if (advanceResult.completed) {
+    const rewards = mission.rewards;
+    const xpForNextLevel = XP_PER_LEVEL(heir.level);
+    const newGold = heir.gold + rewards.gold;
+    const newXp = heir.xp + rewards.xp;
+    const leveledUp = newXp >= xpForNextLevel;
+    const finalXp = leveledUp ? newXp - xpForNextLevel : newXp;
+    const finalLevel = leveledUp ? heir.level + 1 : heir.level;
 
-  const rankResult = applyAdventurerRankXp(
-    normalizeAdventurerRank(lineage.adventurerRank),
-    lineage.adventurerRankXp ?? 0,
-    rewards.rankXp
-  );
+    const rankResult = applyAdventurerRankXp(
+      normalizeAdventurerRank(lineage.adventurerRank),
+      lineage.adventurerRankXp ?? 0,
+      rewards.rankXp
+    );
 
-  return {
-    completed: true,
-    activeMission: null,
-    battleReplay,
-    stepText: mission.campaign.steps[mission.campaign.steps.length - 1].text,
-    rewards,
-    rankUp: rankResult.rankedUp
-      ? { rank: rankResult.rank, rankXp: rankResult.rankXp }
-      : null,
-    heirGoldAfter: newGold,
-    heirXpAfter: finalXp,
-    leveledUp,
-    heirLevelAfter: finalLevel,
-    adventurerRank: rankResult.rank,
-    adventurerRankXp: rankResult.rankXp,
-  };
+    return {
+      completed: true,
+      activeMission: null,
+      battleReplay,
+      stepText: mission.campaign.steps[mission.campaign.steps.length - 1].text,
+      rewards,
+      rankUp: rankResult.rankedUp
+        ? { rank: rankResult.rank, rankXp: rankResult.rankXp }
+        : null,
+      heirGoldAfter: newGold,
+      heirXpAfter: finalXp,
+      leveledUp,
+      heirLevelAfter: finalLevel,
+      adventurerRank: rankResult.rank,
+      adventurerRankXp: rankResult.rankXp,
+    };
+  }
+
+  throw new Error("Unexpected mission advance state");
 }
 
 export async function persistAdvanceMission(
@@ -288,6 +268,12 @@ export async function persistAdvanceMission(
       level: finalLevel,
       inventory: [...heir.inventory, ...result.rewards.items],
       activeMission: null,
+      completedMissionIds: [
+        ...new Set([
+          ...(heir.completedMissionIds ?? []),
+          heir.activeMission!.missionId,
+        ]),
+      ],
     });
 
     batch.update(lineageRef, {

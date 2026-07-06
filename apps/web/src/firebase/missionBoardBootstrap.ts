@@ -6,7 +6,7 @@ import {
   updateDoc,
   writeBatch,
 } from "firebase/firestore";
-import type { ActiveMission, AdventurerRank, Heir, MissionBoard } from "@bloodline/shared/types";
+import type { ActiveMission, AdventurerRank, Heir, Lineage, MissionBoard } from "@bloodline/shared/types";
 import { applyAdventurerRankXp, MISSION_COOLDOWN_MS, XP_PER_LEVEL } from "@bloodline/shared/constants";
 import {
   applyChoiceToCampaignState,
@@ -42,17 +42,41 @@ function parseBoard(data: Record<string, unknown>): MissionBoard {
   };
 }
 
+function boardContextFromHeir(
+  lineage: {
+    generation: number;
+    publicSummary: Lineage["publicSummary"];
+  },
+  heir: Pick<Heir, "level" | "stats" | "classId" | "completedMissionIds">,
+  adventurerRank: AdventurerRank
+) {
+  return {
+    lineage: {
+      generation: lineage.generation,
+      publicSummary: lineage.publicSummary,
+    },
+    heir: {
+      level: heir.level,
+      stats: heir.stats,
+      classId: heir.classId,
+      completedMissionIds: heir.completedMissionIds,
+    },
+    adventurerRank,
+  };
+}
+
 async function ensureMissionBoard(
   lineageId: string,
   adventurerRank: AdventurerRank,
-  heirLevel: number
+  heirLevel: number,
+  boardCtx?: ReturnType<typeof boardContextFromHeir>
 ): Promise<MissionBoard> {
   const ref = boardRef(lineageId);
   const snapshot = await getDoc(ref);
   const nowMs = Date.now();
 
   if (!snapshot.exists()) {
-    const board = createMissionBoard(lineageId, adventurerRank, heirLevel, nowMs);
+    const board = createMissionBoard(lineageId, adventurerRank, heirLevel, nowMs, boardCtx);
     await setDoc(ref, board);
     return board;
   }
@@ -62,7 +86,7 @@ async function ensureMissionBoard(
     return existing;
   }
 
-  const board = rerollMissionBoard(lineageId, existing, adventurerRank, heirLevel, nowMs);
+  const board = rerollMissionBoard(lineageId, existing, adventurerRank, heirLevel, nowMs, boardCtx);
   await setDoc(ref, board);
   return board;
 }
@@ -70,7 +94,7 @@ async function ensureMissionBoard(
 export async function bootstrapGetMissionBoard(
   userId: string,
   lineageId: string,
-  heirLevel: number
+  heir: Pick<Heir, "level" | "stats" | "classId" | "completedMissionIds">
 ) {
   const lineageRef = doc(db, "lineages", lineageId);
   const lineageDoc = await getDoc(lineageRef);
@@ -85,7 +109,19 @@ export async function bootstrapGetMissionBoard(
   }
 
   const adventurerRank = normalizeAdventurerRank(lineage.adventurerRank);
-  const board = await ensureMissionBoard(lineageId, adventurerRank, heirLevel);
+  const boardCtx = boardContextFromHeir(
+    {
+      generation: lineage.generation ?? 1,
+      publicSummary: lineage.publicSummary ?? {
+        highestGeneration: 1,
+        deadHeirs: 0,
+        currentClass: null,
+      },
+    },
+    heir,
+    adventurerRank
+  );
+  const board = await ensureMissionBoard(lineageId, adventurerRank, heir.level, boardCtx);
 
   return {
     board,
@@ -134,9 +170,21 @@ export async function bootstrapAcceptMission(
   }
 
   const adventurerRank = normalizeAdventurerRank(lineage.adventurerRank);
+  const boardCtx = boardContextFromHeir(
+    {
+      generation: lineage.generation ?? 1,
+      publicSummary: lineage.publicSummary ?? {
+        highestGeneration: 1,
+        deadHeirs: 0,
+        currentClass: null,
+      },
+    },
+    heir,
+    adventurerRank
+  );
   const board = boardDoc.exists()
     ? parseBoard(boardDoc.data())
-    : createMissionBoard(lineageId, adventurerRank, heir.level);
+    : createMissionBoard(lineageId, adventurerRank, heir.level, Date.now(), boardCtx);
 
   const slot = board.slots.find((entry) => entry.slotIndex === slotIndex);
   if (!slot || slot.status !== "available" || !slot.missionId) {

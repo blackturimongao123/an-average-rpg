@@ -39,6 +39,12 @@ declare module "@game-data/races.json" {
   export default data;
 }
 
+declare module "@game-data/mission-interludes.json" {
+  import type { MissionRandomEvent, MissionSecretEvent } from "@bloodline/shared/types";
+  const data: { randomEvents: MissionRandomEvent[]; secretEvents: MissionSecretEvent[] };
+  export default data;
+}
+
 declare module "@game-data/missions.json" {
   const data: { missions: MissionTemplate[] };
   export default data;

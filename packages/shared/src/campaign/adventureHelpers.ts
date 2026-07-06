@@ -165,11 +165,16 @@ export function getStepChoices(
 ): MissionCampaignChoice[] {
   const step = mission.campaign.steps[stepIndex];
   if (!step) return [];
+  return getChoicesForStep(mission, step);
+}
 
+export function getChoicesForStep(
+  mission: MissionTemplate,
+  step: MissionCampaignStep
+): MissionCampaignChoice[] {
   if (step.choices?.length) {
     return step.choices;
   }
-
   return defaultChoicesForEvent(inferEventType(step, mission.type));
 }
 

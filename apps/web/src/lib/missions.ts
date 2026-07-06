@@ -10,6 +10,10 @@ import {
   MISSION_BOARD_SIZE,
   rankIndex,
 } from "@bloodline/shared/constants";
+import {
+  isMissionBoardEligible,
+  type MissionBoardEligibilityContext,
+} from "@bloodline/shared/campaign";
 
 import missionsData from "@game-data/missions.json";
 
@@ -71,17 +75,10 @@ function weightedRandomChoice<T>(
 export function isMissionEligible(
   mission: MissionTemplate,
   adventurerRank: AdventurerRank,
-  heirLevel: number
+  heirLevel: number,
+  boardCtx?: MissionBoardEligibilityContext
 ): boolean {
-  if (mission.minAdventurerRank && rankIndex(adventurerRank) < rankIndex(mission.minAdventurerRank)) {
-    return false;
-  }
-
-  if (mission.minHeirLevel && heirLevel < mission.minHeirLevel) {
-    return false;
-  }
-
-  return true;
+  return isMissionBoardEligible(mission, adventurerRank, heirLevel, boardCtx);
 }
 
 function getMissionRollWeight(mission: MissionTemplate, adventurerRank: AdventurerRank): number {
@@ -110,11 +107,12 @@ function rollSingleSlot(
   slotIndex: number,
   adventurerRank: AdventurerRank,
   heirLevel: number,
-  excludeMissionIds: string[]
+  excludeMissionIds: string[],
+  boardCtx?: MissionBoardEligibilityContext
 ): MissionBoardSlot {
   const eligible = MISSION_TEMPLATES.filter(
     (mission) =>
-      isMissionEligible(mission, adventurerRank, heirLevel) &&
+      isMissionEligible(mission, adventurerRank, heirLevel, boardCtx) &&
       !excludeMissionIds.includes(mission.id)
   );
 
@@ -155,7 +153,8 @@ export function createMissionBoard(
   lineageId: string,
   adventurerRank: AdventurerRank,
   heirLevel: number,
-  nowMs: number = Date.now()
+  nowMs: number = Date.now(),
+  boardCtx?: MissionBoardEligibilityContext
 ): MissionBoard {
   const hourBucket = getHourBucket(nowMs);
   const slots: MissionBoardSlot[] = [];
@@ -168,7 +167,8 @@ export function createMissionBoard(
       slotIndex,
       adventurerRank,
       heirLevel,
-      usedMissionIds
+      usedMissionIds,
+      boardCtx
     );
     slots.push(slot);
     if (slot.missionId) {
@@ -189,7 +189,8 @@ export function rerollMissionBoard(
   existingBoard: MissionBoard,
   adventurerRank: AdventurerRank,
   heirLevel: number,
-  nowMs: number = Date.now()
+  nowMs: number = Date.now(),
+  boardCtx?: MissionBoardEligibilityContext
 ): MissionBoard {
   const hourBucket = getHourBucket(nowMs);
   const usedMissionIds: string[] = [];
@@ -204,7 +205,8 @@ export function rerollMissionBoard(
       slotIndex,
       adventurerRank,
       heirLevel,
-      usedMissionIds
+      usedMissionIds,
+      boardCtx
     );
 
     if (rolled.missionId) {
@@ -222,7 +224,8 @@ export function rerollMissionBoard(
       slotIndex,
       adventurerRank,
       heirLevel,
-      usedMissionIds
+      usedMissionIds,
+      boardCtx
     );
     slots.push(rolled);
     if (rolled.missionId) {
