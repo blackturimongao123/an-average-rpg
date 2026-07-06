@@ -4,11 +4,13 @@ import {
   getDoc,
   getDocs,
   serverTimestamp,
+  setDoc,
   updateDoc,
   writeBatch,
 } from "firebase/firestore";
 import type { ClassData, RaceData, Stats } from "@bloodline/shared/types";
 import { validateHeirName, NAME_VALIDATION_MESSAGE } from "@/lib/validation";
+import { registerHeirLookup } from "./heirLookup";
 import { db } from "./config";
 
 import classesData from "@game-data/classes.json";
@@ -154,6 +156,49 @@ export async function bootstrapHeir(
   });
 
   await batch.commit();
+
+  const lineageRecord = {
+    id: lineageId,
+    ownerUid: userId,
+    familyName: lineage.familyName,
+    generation: lineage.generation,
+    activeHeirId: heirId,
+    bankGold: lineage.bankGold ?? 0,
+    bankSlots: lineage.bankSlots ?? 10,
+    publicSummary: lineage.publicSummary ?? {
+      highestGeneration: lineage.generation,
+      deadHeirs: 0,
+      currentClass: classId,
+    },
+  } as import("@bloodline/shared/types").Lineage;
+
+  const heirRecord = {
+    id: heirId,
+    ownerUid: userId,
+    lineageId,
+    generation: lineage.generation,
+    name: trimmedName,
+    status: "alive" as const,
+    classId,
+    raceId,
+    level: 1,
+    xp: 0,
+    gold: 0,
+    stats,
+    skillIds: [...classData.startingSkills],
+    effectIds: inheritedEffectIds,
+    equipment: {
+      mainWeapon: classData.startingEquipment.weapon ?? null,
+      secondaryWeapon: null,
+      armor: classData.startingEquipment.armor,
+      accessory: classData.startingEquipment.accessory,
+    },
+    inventory: [],
+    jobRecords: {},
+    seed,
+  } as import("@bloodline/shared/types").Heir;
+
+  await registerHeirLookup(lineageRecord, heirRecord);
 
   return { heirId };
 }

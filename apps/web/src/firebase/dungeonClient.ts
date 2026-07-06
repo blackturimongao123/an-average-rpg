@@ -41,6 +41,7 @@ export interface ResolveDungeonParams {
   dungeon: DungeonData;
   floor: number;
   floorChoiceId?: string;
+  seedOverride?: string;
 }
 
 export function resolveDungeonLocal(params: ResolveDungeonParams): ResolveDungeonLocalResult {
@@ -65,11 +66,13 @@ export function resolveDungeonLocal(params: ResolveDungeonParams): ResolveDungeo
     typeof floorChoiceId === "string" ? floorChoiceId : undefined
   );
 
-  const seed = generateSeed(
-    lineage.id,
-    heir.id,
-    `dungeon-${dungeon.id}-${floor}-${floorChoiceId ?? "default"}-${Date.now()}`
-  );
+  const seed =
+    params.seedOverride ??
+    generateSeed(
+      lineage.id,
+      heir.id,
+      `dungeon-${dungeon.id}-${floor}-${floorChoiceId ?? "default"}-${Date.now()}`
+    );
 
   const monsterId =
     floorData.bossId || seededRandomChoice(seed, floorData.monsterPool, 0);
@@ -194,6 +197,77 @@ export async function persistDungeonResult(
       status: "dead",
       diedAt: serverTimestamp(),
       deathCause: `dungeon:${dungeon.id}:floor${floor}:${result.monsterId}`,
+    });
+
+    batch.update(lineageRef, {
+      activeHeirId: null,
+      generation: lineage.generation + 1,
+      updatedAt: serverTimestamp(),
+      "publicSummary.deadHeirs": (lineage.publicSummary?.deadHeirs ?? 0) + 1,
+      "publicSummary.highestGeneration": Math.max(
+        lineage.publicSummary?.highestGeneration ?? lineage.generation,
+        lineage.generation + 1
+      ),
+      "publicSummary.currentClass": null,
+    });
+  } else {
+    batch.update(lineageRef, {
+      updatedAt: serverTimestamp(),
+    });
+  }
+
+  await batch.commit();
+}
+
+export interface PredeterminedDungeonOutcome {
+  victory: boolean;
+  heirDied: boolean;
+  monsterId: string;
+  rewards: { gold: number; xp: number; items: string[] };
+}
+
+/** Apply a leader-rolled party outcome without re-simulating combat. */
+export async function persistPredeterminedDungeonResult(
+  params: ResolveDungeonParams,
+  outcome: PredeterminedDungeonOutcome
+): Promise<void> {
+  const { lineage, heir, dungeon, floor } = params;
+  const lineageRef = doc(db, "lineages", lineage.id);
+  const heirRef = doc(db, "lineages", lineage.id, "heirs", heir.id);
+  const batch = writeBatch(db);
+
+  if (outcome.victory) {
+    const newXp = heir.xp + outcome.rewards.xp;
+    const xpForNextLevel = heir.level * 100;
+    const leveledUp = newXp >= xpForNextLevel;
+
+    batch.update(heirRef, {
+      gold: heir.gold + outcome.rewards.gold,
+      xp: leveledUp ? newXp - xpForNextLevel : newXp,
+      level: leveledUp ? heir.level + 1 : heir.level,
+      inventory: [...heir.inventory, ...outcome.rewards.items],
+      ...(leveledUp
+        ? { unspentStatPoints: (heir.unspentStatPoints ?? 0) + STAT_POINTS_PER_LEVEL }
+        : {}),
+    });
+
+    const progressRef = doc(db, "lineages", lineage.id, "dungeonProgress", dungeon.id);
+    batch.set(
+      progressRef,
+      {
+        [`clearedFloors.${floor}`]: true,
+        highestFloor: floor,
+        updatedAt: serverTimestamp(),
+      },
+      { merge: true }
+    );
+  }
+
+  if (outcome.heirDied) {
+    batch.update(heirRef, {
+      status: "dead",
+      diedAt: serverTimestamp(),
+      deathCause: `dungeon:${dungeon.id}:floor${floor}:${outcome.monsterId}`,
     });
 
     batch.update(lineageRef, {

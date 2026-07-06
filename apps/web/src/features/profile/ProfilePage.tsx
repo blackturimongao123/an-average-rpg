@@ -14,6 +14,7 @@ import { ClassIcon } from "@/lib/classIcons";
 import {
   acceptPlayerPartyInvite,
   createPlayerParty,
+  declinePlayerPartyInvite,
   getPartyErrorMessage,
   invitePlayerToParty,
   leavePlayerParty,
@@ -43,7 +44,7 @@ export function ProfilePage() {
   const [party, setParty] = useState<Party | null>(null);
   const [members, setMembers] = useState<PartyMemberInfo[]>([]);
   const [invites, setInvites] = useState<PartyInvite[]>([]);
-  const [inviteUsername, setInviteUsername] = useState("");
+  const [inviteHeirName, setInviteHeirName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -149,13 +150,14 @@ export function ProfilePage() {
   const activeHeir = heir;
 
   async function handleCreateParty() {
+    if (!user) return;
     setLoading(true);
     setError(null);
     setMessage(null);
     try {
-      const result = await createPlayerParty(activeLineage.id);
+      const result = await createPlayerParty(activeLineage.id, activeLineage, user.uid);
       setLineage({ ...activeLineage, partyId: result.partyId });
-      setMessage("Party created.");
+      setMessage("Party created. You are the party leader.");
     } catch (err) {
       setError(getPartyErrorMessage(err));
     } finally {
@@ -164,14 +166,20 @@ export function ProfilePage() {
   }
 
   async function handleInvite() {
-    if (!inviteUsername.trim()) return;
+    if (!inviteHeirName.trim() || !user) return;
     setLoading(true);
     setError(null);
     setMessage(null);
     try {
-      await invitePlayerToParty(activeLineage.id, inviteUsername.trim());
-      setInviteUsername("");
-      setMessage(`Invite sent to ${inviteUsername.trim()}.`);
+      const result = await invitePlayerToParty(
+        activeLineage,
+        activeHeir,
+        user.uid,
+        inviteHeirName.trim()
+      );
+      setLineage({ ...activeLineage, partyId: result.partyId });
+      setInviteHeirName("");
+      setMessage(`Invite sent to ${inviteHeirName.trim()}.`);
     } catch (err) {
       setError(getPartyErrorMessage(err));
     } finally {
@@ -180,10 +188,11 @@ export function ProfilePage() {
   }
 
   async function handleAcceptInvite(inviteId: string) {
+    if (!user) return;
     setLoading(true);
     setError(null);
     try {
-      const result = await acceptPlayerPartyInvite(activeLineage.id, inviteId);
+      const result = await acceptPlayerPartyInvite(user.uid, activeLineage, inviteId);
       setLineage({ ...activeLineage, partyId: result.partyId });
       setMessage("Joined party.");
     } catch (err) {
@@ -193,11 +202,24 @@ export function ProfilePage() {
     }
   }
 
+  async function handleDeclineInvite(inviteId: string) {
+    if (!user) return;
+    setLoading(true);
+    try {
+      await declinePlayerPartyInvite(user.uid, inviteId);
+    } catch (err) {
+      setError(getPartyErrorMessage(err));
+    } finally {
+      setLoading(false);
+    }
+  }
+
   async function handleLeaveParty() {
+    if (!user) return;
     setLoading(true);
     setError(null);
     try {
-      await leavePlayerParty(activeLineage.id);
+      await leavePlayerParty(user.uid, activeLineage);
       setLineage({ ...activeLineage, partyId: null });
       setParty(null);
       setMembers([]);
@@ -363,15 +385,30 @@ export function ProfilePage() {
                     key={invite.id}
                     className="flex items-center justify-between p-3 rounded-md bg-secondary/50"
                   >
-                    <span className="text-sm">Party invite</span>
-                    <button
-                      type="button"
-                      disabled={loading}
-                      onClick={() => void handleAcceptInvite(invite.id)}
-                      className="btn-primary text-sm px-3 py-1"
-                    >
-                      Accept
-                    </button>
+                    <div className="text-sm">
+                      <p className="font-medium">{invite.fromHeirName}</p>
+                      <p className="text-muted-foreground text-xs">
+                        House {invite.fromFamilyName} · Party leader
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        disabled={loading}
+                        onClick={() => void handleDeclineInvite(invite.id)}
+                        className="btn-secondary text-sm px-3 py-1"
+                      >
+                        Decline
+                      </button>
+                      <button
+                        type="button"
+                        disabled={loading}
+                        onClick={() => void handleAcceptInvite(invite.id)}
+                        className="btn-primary text-sm px-3 py-1"
+                      >
+                        Accept
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -379,17 +416,43 @@ export function ProfilePage() {
           )}
 
           {!lineage.partyId ? (
-            <div className="card p-6 text-center">
-              <Users className="w-10 h-10 mx-auto mb-3 text-muted-foreground" />
-              <p className="text-muted-foreground mb-4">You are not in a party.</p>
-              <button
-                type="button"
-                disabled={loading}
-                onClick={() => void handleCreateParty()}
-                className="btn-primary"
-              >
-                Create Party
-              </button>
+            <div className="card p-6">
+              <div className="text-center mb-6">
+                <Users className="w-10 h-10 mx-auto mb-3 text-muted-foreground" />
+                <p className="text-muted-foreground mb-2">You are not in a party.</p>
+                <p className="text-xs text-muted-foreground">
+                  Invite a friend by their <strong>heir name</strong> — you become party leader.
+                </p>
+              </div>
+              <div className="flex gap-2 max-w-md mx-auto">
+                <input
+                  type="text"
+                  value={inviteHeirName}
+                  onChange={(e) => setInviteHeirName(e.target.value)}
+                  placeholder="Friend's heir name"
+                  className="flex-1 px-3 py-2 rounded-md bg-secondary border border-border text-sm"
+                />
+                <button
+                  type="button"
+                  disabled={loading || !inviteHeirName.trim()}
+                  onClick={() => void handleInvite()}
+                  className="btn-primary flex items-center gap-1 px-4"
+                >
+                  <UserPlus className="w-4 h-4" />
+                  Invite
+                </button>
+              </div>
+              <p className="text-center text-xs text-muted-foreground mt-4">or</p>
+              <div className="text-center mt-2">
+                <button
+                  type="button"
+                  disabled={loading}
+                  onClick={() => void handleCreateParty()}
+                  className="btn-secondary"
+                >
+                  Create empty party first
+                </button>
+              </div>
             </div>
           ) : (
             <div className="card p-6">
@@ -433,14 +496,14 @@ export function ProfilePage() {
                 <div className="flex gap-2">
                   <input
                     type="text"
-                    value={inviteUsername}
-                    onChange={(e) => setInviteUsername(e.target.value)}
-                    placeholder="Invite by username"
+                    value={inviteHeirName}
+                    onChange={(e) => setInviteHeirName(e.target.value)}
+                    placeholder="Invite by heir name"
                     className="flex-1 px-3 py-2 rounded-md bg-secondary border border-border text-sm"
                   />
                   <button
                     type="button"
-                    disabled={loading || !inviteUsername.trim()}
+                    disabled={loading || !inviteHeirName.trim()}
                     onClick={() => void handleInvite()}
                     className="btn-primary flex items-center gap-1 px-4"
                   >
@@ -448,6 +511,11 @@ export function ProfilePage() {
                     Invite
                   </button>
                 </div>
+              )}
+              {!isLeader && (
+                <p className="text-xs text-muted-foreground">
+                  Only {members.find((m) => m.isLeader)?.heirName ?? "the leader"} can invite others.
+                </p>
               )}
             </div>
           )}

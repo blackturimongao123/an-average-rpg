@@ -384,6 +384,30 @@ export interface MerchantBoard {
   nextRerollAtMs: number;
 }
 
+export interface PartyDungeonBattleSummary {
+  victory: boolean;
+  heirDied: boolean;
+  monsterFaced: string;
+  monsterId: string;
+  rewards: { gold: number; xp: number; items: string[] };
+  floorCleared: boolean;
+  dungeonCompleted: boolean;
+  choiceLabel?: string;
+}
+
+export interface PartyActiveDungeon {
+  dungeonId: string;
+  dungeonName: string;
+  currentFloor: number;
+  phase: "floor_event" | "battle";
+  floorChoiceId: string | null;
+  battleSeed: string | null;
+  battleReplay: BattleReplayPayload | null;
+  battleSummary: PartyDungeonBattleSummary | null;
+  runLog: Array<{ text: string; timestampMs: number }>;
+  updatedAtMs: number;
+}
+
 export interface Party {
   id: string;
   leaderUid: string;
@@ -391,6 +415,7 @@ export interface Party {
   memberUids: string[];
   memberLineageIds: string[];
   createdAtMs: number;
+  activeDungeon?: PartyActiveDungeon | null;
 }
 
 export interface PartyInvite {
@@ -400,6 +425,20 @@ export interface PartyInvite {
   partyId: string;
   status: "pending" | "accepted" | "declined";
   createdAtMs: number;
+  fromHeirName: string;
+  fromFamilyName: string;
+  toHeirName?: string;
+}
+
+export interface HeirLookupEntry {
+  heirName: string;
+  nameKey: string;
+  ownerUid: string;
+  lineageId: string;
+  heirId: string;
+  familyName: string;
+  classId: string;
+  updatedAtMs: number;
 }
 
 export interface Effect {

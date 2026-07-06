@@ -9,6 +9,8 @@ import { useJobShiftTimer } from "@/hooks/useJobShiftTimer";
 import { normalizeAdventurerRank } from "@/lib/missions";
 import { migrateEquipment } from "@bloodline/shared/equipment";
 import type { ActiveMission, MerchantBoard } from "@bloodline/shared/types";
+import { PartyInviteModal } from "@/components/game/PartyInviteModal";
+import { registerHeirLookup } from "@/firebase/heirLookup";
 import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
 import { JobShiftBanner } from "./JobShiftBanner";
@@ -21,7 +23,7 @@ export function GameShell({ children }: GameShellProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuthStore();
-  const { setLineage, setHeir, setLoading, heir } = useGameStore();
+  const { setLineage, setHeir, setLoading, heir, lineage } = useGameStore();
   const dungeonRunActive = useUIStore((s) => s.dungeonRunActive);
   const battleReplayActive = useUIStore((s) => s.battleReplayActive);
   const isImmersive =
@@ -134,6 +136,12 @@ export function GameShell({ children }: GameShellProps) {
     return () => unsubscribeLineage();
   }, [user, setLineage, setHeir, setLoading, navigate]);
 
+  useEffect(() => {
+    if (lineage && heir && heir.status === "alive") {
+      void registerHeirLookup(lineage, heir);
+    }
+  }, [lineage, heir]);
+
   // Single layout tree so route children (e.g. DungeonsPage local run state) are not
   // remounted when immersive mode toggles.
   return (
@@ -156,6 +164,7 @@ export function GameShell({ children }: GameShellProps) {
           {children}
         </main>
       </div>
+      <PartyInviteModal />
     </div>
   );
 }

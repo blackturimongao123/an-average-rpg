@@ -15,6 +15,7 @@ import {
   ChevronRight,
   Coins,
   Compass,
+  Crown,
   Flame,
   Heart,
   Map,
@@ -87,6 +88,15 @@ export interface AdventureJourneyNode {
   label?: string;
 }
 
+export interface AdventurePartyMember {
+  heirName: string;
+  classId: string;
+  subclassId?: string | null;
+  level: number;
+  isLeader?: boolean;
+  isSelf?: boolean;
+}
+
 export interface AdventureEventViewProps {
   heir: Heir;
   eventTitle: string;
@@ -109,6 +119,9 @@ export interface AdventureEventViewProps {
   eventTypeLabel?: string;
   difficultyLabel?: string;
   footerHint?: string;
+  partyMembers?: AdventurePartyMember[];
+  choicesDisabled?: boolean;
+  leaderHint?: string;
 }
 
 export function AdventureEventView({
@@ -133,6 +146,9 @@ export function AdventureEventView({
   eventTypeLabel,
   difficultyLabel,
   footerHint,
+  partyMembers,
+  choicesDisabled = false,
+  leaderHint,
 }: AdventureEventViewProps) {
   const [hoveredChoiceId, setHoveredChoiceId] = useState<string | null>(null);
 
@@ -234,43 +250,76 @@ export function AdventureEventView({
       <div className="adventure-body">
         <aside className="adventure-panel">
           <p className="adventure-panel-title">Party</p>
-          <div className="adventure-party-card">
-            <ClassIcon classId={heir.classId} subclassId={heir.subclassId} size={44} />
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between gap-2">
-                <p className="font-semibold text-sm truncate">{heir.name}</p>
-                <span className="text-[0.65rem] text-white/50">Lv.{heir.level}</span>
-              </div>
-              <p className="text-xs text-white/55 mb-2">{getClassName(heir.classId)}</p>
-              <div className="space-y-1.5">
-                <div>
-                  <div className="flex justify-between text-[0.65rem] text-white/50 mb-0.5">
-                    <span className="flex items-center gap-1">
-                      <Heart className="w-3 h-3" /> HP
-                    </span>
-                    <span>
-                      {currentHp}/{maxHp}
-                    </span>
-                  </div>
-                  <div className="adventure-bar hp">
-                    <span style={{ width: `${hpPercent}%` }} />
-                  </div>
+          {(partyMembers && partyMembers.length > 0 ? partyMembers : [
+            {
+              heirName: heir.name,
+              classId: heir.classId,
+              subclassId: heir.subclassId,
+              level: heir.level,
+              isSelf: true,
+            },
+          ]).map((member) => (
+            <div
+              key={`${member.heirName}-${member.isSelf ? "self" : "ally"}`}
+              className={`adventure-party-card ${member.isSelf ? "mb-2" : "mb-2 opacity-95"}`}
+            >
+              <ClassIcon
+                classId={member.classId}
+                subclassId={member.subclassId ?? null}
+                size={44}
+              />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="font-semibold text-sm truncate">
+                    {member.heirName}
+                    {member.isLeader && (
+                      <Crown className="inline w-3.5 h-3.5 ml-1 text-gold" />
+                    )}
+                  </p>
+                  <span className="text-[0.65rem] text-white/50">Lv.{member.level}</span>
                 </div>
-                <div>
-                  <div className="flex justify-between text-[0.65rem] text-white/50 mb-0.5">
-                    <span>{getResourceLabel(heir.classId)}</span>
-                    <span>{Math.round((resourcePct / 100) * maxResource)}/{maxResource}</span>
+                <p className="text-xs text-white/55 mb-2">{getClassName(member.classId)}</p>
+                {member.isSelf && (
+                  <div className="space-y-1.5">
+                    <div>
+                      <div className="flex justify-between text-[0.65rem] text-white/50 mb-0.5">
+                        <span className="flex items-center gap-1">
+                          <Heart className="w-3 h-3" /> HP
+                        </span>
+                        <span>
+                          {currentHp}/{maxHp}
+                        </span>
+                      </div>
+                      <div className="adventure-bar hp">
+                        <span style={{ width: `${hpPercent}%` }} />
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between text-[0.65rem] text-white/50 mb-0.5">
+                        <span>{getResourceLabel(heir.classId)}</span>
+                        <span>
+                          {Math.round((resourcePct / 100) * maxResource)}/{maxResource}
+                        </span>
+                      </div>
+                      <div className="adventure-bar resource">
+                        <span style={{ width: `${resourcePct}%` }} />
+                      </div>
+                    </div>
                   </div>
-                  <div className="adventure-bar resource">
-                    <span style={{ width: `${resourcePct}%` }} />
-                  </div>
-                </div>
+                )}
               </div>
             </div>
-          </div>
-          <p className="text-[0.7rem] text-white/45 leading-relaxed">
-            Solo expedition — party co-op coming later.
-          </p>
+          ))}
+          {partyMembers && partyMembers.length > 1 && (
+            <p className="text-[0.7rem] text-white/45 leading-relaxed">
+              {leaderHint ?? "Party expedition — choices are made by the leader."}
+            </p>
+          )}
+          {(!partyMembers || partyMembers.length <= 1) && (
+            <p className="text-[0.7rem] text-white/45 leading-relaxed">
+              Solo expedition — invite friends by heir name from Profile → Party.
+            </p>
+          )}
         </aside>
 
         <main className="adventure-center">
@@ -300,7 +349,7 @@ export function AdventureEventView({
                   className={`adventure-choice tone-${tone} ${
                     hoveredChoiceId === choice.id ? "is-hovered" : ""
                   }`}
-                  disabled={loading || blocked}
+                  disabled={loading || blocked || choicesDisabled}
                   onMouseEnter={() => setHoveredChoiceId(choice.id)}
                   onMouseLeave={() => setHoveredChoiceId(null)}
                   onClick={() => handleChoice(choice)}

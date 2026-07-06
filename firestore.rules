@@ -171,19 +171,40 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    // Parties - members can read; writes via Cloud Functions only
+    // Parties — members read; leader/members update roster fields client-side
     match /parties/{partyId} {
       allow read: if signedIn()
         && request.auth.uid in resource.data.memberUids;
-      allow write: if false;
+      allow create: if signedIn()
+        && request.resource.data.leaderUid == request.auth.uid
+        && request.auth.uid in request.resource.data.memberUids;
+      allow update: if signedIn()
+        && request.auth.uid in resource.data.memberUids;
+      allow delete: if signedIn()
+        && resource.data.leaderUid == request.auth.uid;
     }
 
-    // Party invites - sender or recipient can read
+    // Party invites — client-side for trusted friends group
     match /partyInvites/{inviteId} {
       allow read: if signedIn()
         && (resource.data.fromUid == request.auth.uid
             || resource.data.toUid == request.auth.uid);
-      allow write: if false;
+      allow create: if signedIn()
+        && request.resource.data.fromUid == request.auth.uid
+        && request.resource.data.status == 'pending';
+      allow update: if signedIn()
+        && (resource.data.toUid == request.auth.uid
+            || resource.data.fromUid == request.auth.uid);
+      allow delete: if false;
+    }
+
+    // Heir name lookup for party invites (character name → account)
+    match /heirLookup/{nameKey} {
+      allow read: if signedIn();
+      allow create, update: if signedIn()
+        && request.resource.data.ownerUid == request.auth.uid;
+      allow delete: if signedIn()
+        && resource.data.ownerUid == request.auth.uid;
     }
 
     // Unique item registry (world state)
