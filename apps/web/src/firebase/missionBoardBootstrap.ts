@@ -24,6 +24,11 @@ import { db } from "./config";
 
 const BOARD_DOC_ID = "current";
 
+/** Firestore rejects undefined field values — strip them before writes. */
+function firestoreSafe<T>(value: T): T {
+  return JSON.parse(JSON.stringify(value)) as T;
+}
+
 function boardRef(lineageId: string) {
   return doc(db, "lineages", lineageId, "missionBoard", BOARD_DOC_ID);
 }
@@ -167,7 +172,7 @@ export async function bootstrapAcceptMission(
 
   const batch = writeBatch(db);
   batch.set(boardDocRef, { ...board, slots: updatedSlots });
-  batch.update(heirRef, { activeMission });
+  batch.update(heirRef, { activeMission: firestoreSafe(activeMission) });
   await batch.commit();
 
   return { activeMission, mission, board: { ...board, slots: updatedSlots } };
@@ -239,7 +244,7 @@ export async function bootstrapAdvanceMission(
     };
 
     const batch = writeBatch(db);
-    batch.update(heirRef, { activeMission: nextMission });
+    batch.update(heirRef, { activeMission: firestoreSafe(nextMission) });
     await batch.commit();
 
     return {

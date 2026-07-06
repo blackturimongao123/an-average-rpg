@@ -63,7 +63,13 @@ export function DungeonsPage() {
   }, [selectedDungeon, floorIndex]);
 
   const handleEnterDungeon = (dungeon: DungeonData) => {
+    if (isBusyOnJob) {
+      setError("Finish your job shift before entering a dungeon.");
+      return;
+    }
+
     setError("");
+    setDungeonRunActive(true);
     setSelectedDungeon(dungeon);
     setCurrentFloor(1);
     setBattleResult(null);

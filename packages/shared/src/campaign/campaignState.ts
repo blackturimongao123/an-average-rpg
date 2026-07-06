@@ -25,7 +25,7 @@ export function createInitialCampaignState(mission: MissionTemplate): CampaignRu
     runXp: 0,
     runItems: [],
     hpPercent: 100,
-    regionName: mission.campaign.regionName,
+    regionName: mission.campaign.regionName ?? mission.name,
   };
 }
 

@@ -132,22 +132,25 @@ export function GameShell({ children }: GameShellProps) {
     return () => unsubscribeLineage();
   }, [user, setLineage, setHeir, setLoading, navigate]);
 
-  if (isImmersive) {
-    return (
-      <div className="h-screen w-screen overflow-hidden bg-background flex flex-col">
-        {location.pathname !== "/skills" && <TopBar />}
-        <div className="flex-1 overflow-hidden">{children}</div>
-      </div>
-    );
-  }
-
+  // Single layout tree so route children (e.g. DungeonsPage local run state) are not
+  // remounted when immersive mode toggles.
   return (
-    <div className="min-h-screen bg-background flex">
-      <Sidebar />
-      <div className="flex-1 flex flex-col">
-        <TopBar />
-        <JobShiftBanner />
-        <main className="flex-1 p-6 overflow-auto">
+    <div
+      className={
+        isImmersive
+          ? "h-screen w-screen overflow-hidden bg-background flex flex-col"
+          : "min-h-screen bg-background flex"
+      }
+    >
+      {!isImmersive && <Sidebar />}
+      <div className={`flex-1 flex flex-col min-h-0 ${isImmersive ? "" : ""}`}>
+        {(!isImmersive || location.pathname !== "/skills") && <TopBar />}
+        {!isImmersive && <JobShiftBanner />}
+        <main
+          className={
+            isImmersive ? "flex-1 overflow-hidden min-h-0" : "flex-1 p-6 overflow-auto"
+          }
+        >
           {children}
         </main>
       </div>
