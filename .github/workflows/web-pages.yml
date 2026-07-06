@@ -129,7 +129,7 @@ jobs:
           cache: pnpm
 
       - name: Authenticate to Google Cloud (Workload Identity)
-        if: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER != '' }}
+        if: vars.FIREBASE_DEPLOY_AUTH != 'token'
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
@@ -137,18 +137,21 @@ jobs:
 
       - name: Configure Firebase CLI auth
         run: |
+          if [ "${{ vars.FIREBASE_DEPLOY_AUTH }}" = "token" ]; then
+            if [ -z "${{ secrets.FIREBASE_TOKEN }}" ]; then
+              echo "::error::Set repository variable FIREBASE_DEPLOY_AUTH=token and secret FIREBASE_TOKEN."
+              exit 1
+            fi
+            echo "Firebase deploy auth: FIREBASE_TOKEN (firebase login:ci)"
+            echo "FIREBASE_DEPLOY_TOKEN=${{ secrets.FIREBASE_TOKEN }}" >> "$GITHUB_ENV"
+            exit 0
+          fi
           if [ -n "${GOOGLE_APPLICATION_CREDENTIALS:-}" ]; then
             echo "Firebase deploy auth: Workload Identity (no service account keys)"
             exit 0
           fi
-          if [ -n "${{ secrets.FIREBASE_TOKEN }}" ]; then
-            echo "Firebase deploy auth: FIREBASE_TOKEN fallback (firebase login:ci)"
-            echo "FIREBASE_DEPLOY_TOKEN=${{ secrets.FIREBASE_TOKEN }}" >> "$GITHUB_ENV"
-            exit 0
-          fi
-          echo "::error title=Missing Firebase deploy auth::Org policy blocks service account keys on many Google accounts."
-          echo "Option A (recommended): Workload Identity Federation — add GitHub secrets GCP_WORKLOAD_IDENTITY_PROVIDER and GCP_SERVICE_ACCOUNT (see AGENTS.md)."
-          echo "Option B: Run firebase login:ci locally and add repository secret FIREBASE_TOKEN."
+          echo "::error title=Workload Identity auth failed::Check secrets GCP_WORKLOAD_IDENTITY_PROVIDER and GCP_SERVICE_ACCOUNT (see AGENTS.md)."
+          echo "To use FIREBASE_TOKEN instead, set repository variable FIREBASE_DEPLOY_AUTH=token."
           exit 1
 
       - name: Install dependencies

@@ -149,7 +149,7 @@ echo "GCP_SERVICE_ACCOUNT=${SA_EMAIL}"
 
 Paste the two echoed lines into GitHub → Settings → Secrets → Actions.
 
-**Option B — CI token (quick fallback):** `FIREBASE_TOKEN` from `firebase login:ci` on your machine. Works for `firebase deploy`; no JSON key needed.
+**Option B — CI token:** Set repository variable `FIREBASE_DEPLOY_AUTH` = `token`, then add secret `FIREBASE_TOKEN` from `firebase login:ci`.
 
 ---
 
