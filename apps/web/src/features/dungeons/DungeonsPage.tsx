@@ -1,22 +1,39 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useGameStore } from "@/stores/gameStore";
+import { useUIStore } from "@/stores/uiStore";
 import { BusyActivityBlock, useIsHeirBusyOnJob } from "@/components/game/BusyActivityBlock";
+import { AdventureEventView } from "@/features/adventure/AdventureEventView";
 import { resolveDungeon } from "@/firebase/functions";
 import { getFirebaseErrorMessage, isFunctionsUnavailable } from "@/lib/firebaseErrors";
-import { Castle, Skull, Swords, Coins, Star, ChevronRight } from "lucide-react";
-import type { BattleRound, DungeonData } from "@bloodline/shared/types";
+import {
+  getDungeonFloorApproach,
+  getDungeonFloorChoices,
+} from "@bloodline/shared/adventure";
+import type { BattleRound, DungeonData, MissionCampaignChoice } from "@bloodline/shared/types";
+import { Castle, ChevronRight, Coins, Skull, Star, Swords } from "lucide-react";
 
 import dungeonsData from "@game-data/dungeons.json";
 
 const dungeons = dungeonsData.dungeons as DungeonData[];
 
+type DungeonPhase = "list" | "floor_event" | "battle_result";
+
+interface DungeonRunLog {
+  text: string;
+  timestampMs: number;
+}
+
 export function DungeonsPage() {
-  const { lineage, heir, updateHeirGold, updateHeirXp, updateHeirLevel } = useGameStore();
+  const { lineage, heir, updateHeirGold, updateHeirXp } = useGameStore();
+  const setDungeonRunActive = useUIStore((s) => s.setDungeonRunActive);
   const isBusyOnJob = useIsHeirBusyOnJob();
-  const [selectedDungeon, setSelectedDungeon] = useState<typeof dungeons[0] | null>(null);
+
+  const [phase, setPhase] = useState<DungeonPhase>("list");
+  const [selectedDungeon, setSelectedDungeon] = useState<DungeonData | null>(null);
   const [currentFloor, setCurrentFloor] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [runLog, setRunLog] = useState<DungeonRunLog[]>([]);
   const [battleResult, setBattleResult] = useState<{
     victory: boolean;
     heirDied: boolean;
@@ -25,18 +42,46 @@ export function DungeonsPage() {
     battleRounds: BattleRound[];
     floorCleared: boolean;
     dungeonCompleted: boolean;
+    choiceLabel?: string;
   } | null>(null);
 
-  const handleEnterFloor = async () => {
-    if (!heir || !selectedDungeon) return;
-    if (!lineage) {
-      setError("Lineage data is still loading. Try again in a moment.");
-      return;
-    }
+  const floorIndex = currentFloor - 1;
+
+  useEffect(() => {
+    setDungeonRunActive(phase !== "list" && selectedDungeon !== null);
+    return () => setDungeonRunActive(false);
+  }, [phase, selectedDungeon, setDungeonRunActive]);
+
+  const floorApproach = useMemo(() => {
+    if (!selectedDungeon) return null;
+    return getDungeonFloorApproach(selectedDungeon, floorIndex);
+  }, [selectedDungeon, floorIndex]);
+
+  const floorChoices = useMemo(() => {
+    if (!selectedDungeon) return [];
+    return getDungeonFloorChoices(selectedDungeon, floorIndex);
+  }, [selectedDungeon, floorIndex]);
+
+  const handleEnterDungeon = (dungeon: DungeonData) => {
+    setError("");
+    setSelectedDungeon(dungeon);
+    setCurrentFloor(1);
+    setBattleResult(null);
+    setRunLog([
+      {
+        text: `Entered ${dungeon.name}`,
+        timestampMs: Date.now(),
+      },
+    ]);
+    setPhase("floor_event");
+  };
+
+  const handleFloorChoice = async (choice: MissionCampaignChoice) => {
+    if (!heir || !selectedDungeon || !lineage) return;
 
     setLoading(true);
-    setBattleResult(null);
     setError("");
+    setBattleResult(null);
 
     try {
       const response = await resolveDungeon({
@@ -44,9 +89,10 @@ export function DungeonsPage() {
         heirId: heir.id,
         dungeonId: selectedDungeon.id,
         floor: currentFloor,
+        floorChoiceId: choice.id,
       });
 
-      setBattleResult({
+      const result = {
         victory: response.data.victory,
         heirDied: response.data.heirDied,
         monsterFaced: response.data.monsterFaced,
@@ -54,13 +100,24 @@ export function DungeonsPage() {
         battleRounds: response.data.battleRounds as BattleRound[],
         floorCleared: response.data.floorCleared,
         dungeonCompleted: response.data.dungeonCompleted,
-      });
+        choiceLabel: choice.label,
+      };
+
+      setBattleResult(result);
+      setRunLog((prev) => [
+        ...prev,
+        {
+          text: `${choice.label}: faced ${result.monsterFaced} — ${result.victory ? "victory" : "defeat"}`,
+          timestampMs: Date.now(),
+        },
+      ]);
 
       if (response.data.victory) {
         updateHeirGold(heir.gold + response.data.rewards.gold);
         updateHeirXp(heir.xp + response.data.rewards.xp);
       }
 
+      setPhase("battle_result");
     } catch (err) {
       console.error("Dungeon error:", err);
       const message = getFirebaseErrorMessage(err);
@@ -75,17 +132,21 @@ export function DungeonsPage() {
   };
 
   const handleContinue = () => {
-    if (battleResult?.floorCleared && !battleResult.dungeonCompleted) {
+    if (battleResult?.floorCleared && !battleResult.dungeonCompleted && !battleResult.heirDied) {
       setCurrentFloor((f) => f + 1);
+      setPhase("floor_event");
     }
     setBattleResult(null);
+    setError("");
   };
 
   const handleLeaveDungeon = () => {
     setSelectedDungeon(null);
     setCurrentFloor(1);
     setBattleResult(null);
+    setRunLog([]);
     setError("");
+    setPhase("list");
   };
 
   const heirLevel = heir?.level ?? 1;
@@ -116,26 +177,52 @@ export function DungeonsPage() {
     return `${actorName} uses ${abilityLabel}${hits} — ${round.damage} damage${crit}`;
   }
 
-  return (
-    <div className="max-w-4xl mx-auto">
-      <div className="flex items-center gap-3 mb-6">
-        <Castle className="w-8 h-8 text-gold" />
-        <div>
-          <h1 className="font-display text-2xl font-bold">Dungeons</h1>
-          <p className="text-muted-foreground">Automatic speed-gauge combat — build your heir, then watch the fight</p>
-        </div>
+  if (!isBusyOnJob && phase === "floor_event" && selectedDungeon && floorApproach) {
+    return (
+      <div className="h-full p-2 md:p-3 overflow-hidden">
+        {error && (
+          <div className="mb-3 p-3 rounded-md bg-destructive/20 text-destructive text-sm">
+            {error}
+          </div>
+        )}
+        <AdventureEventView
+          heir={heir}
+          eventTitle={floorApproach.title ?? `Floor ${currentFloor}`}
+          regionLabel={selectedDungeon.name.toUpperCase()}
+          progressLabel={`Floor ${currentFloor} / ${selectedDungeon.floors.length}`}
+          step={floorApproach}
+          choices={floorChoices}
+          loading={loading}
+          onChoose={handleFloorChoice}
+          onLeave={handleLeaveDungeon}
+          eventLog={runLog}
+          journeyNodes={selectedDungeon.floors.map((f) => ({
+            eventType: f.approach?.eventType ?? (f.bossId ? "combat" : "discovery"),
+          }))}
+          journeyCurrent={floorIndex}
+          possibleRewards={{
+            gold: 0,
+            xp: 0,
+            rankXp: 0,
+            items: selectedDungeon.rewards?.completionBonus.items ?? [],
+          }}
+          eventTypeLabel={floorApproach.eventType ?? "dungeon"}
+          difficultyLabel={selectedDungeon.difficulty ?? "normal"}
+          footerHint="Choose your approach — combat resolves after your decision"
+        />
       </div>
+    );
+  }
 
-      {isBusyOnJob && <BusyActivityBlock activityName="dungeon" />}
-
-      {error && (
-        <div className="mb-4 p-4 rounded-md bg-destructive/20 text-destructive text-sm">
-          {error}
-        </div>
-      )}
-
-      {!isBusyOnJob && battleResult ? (
-        <div className="card p-6 animate-fade-in">
+  if (!isBusyOnJob && phase === "battle_result" && battleResult && selectedDungeon) {
+    return (
+      <div className="h-full p-2 md:p-3 overflow-auto">
+        <div className="max-w-3xl mx-auto card p-6 animate-fade-in">
+          {battleResult.choiceLabel && (
+            <p className="text-sm text-muted-foreground mb-2">
+              Approach: <span className="text-foreground">{battleResult.choiceLabel}</span>
+            </p>
+          )}
           <h2 className="font-display text-xl font-semibold mb-4">
             {battleResult.victory ? "Victory!" : "Defeat..."}
           </h2>
@@ -153,9 +240,6 @@ export function DungeonsPage() {
                   <span className={round.actor === heir.id ? "text-blue-400" : "text-red-400"}>
                     {formatRoundLine(round, heir.name, battleResult.monsterFaced)}
                   </span>
-                  {round.actorGaugeAfter !== undefined && round.actor === heir.id && (
-                    <span className="text-xs text-muted-foreground">gauge {round.actorGaugeAfter}%</span>
-                  )}
                 </div>
               ))}
             </div>
@@ -185,15 +269,21 @@ export function DungeonsPage() {
           {battleResult.dungeonCompleted && (
             <div className="p-4 bg-primary/20 rounded-md mb-4">
               <p className="text-primary font-semibold">
-                Dungeon Complete! You have conquered {selectedDungeon?.name}!
+                Dungeon Complete! You have conquered {selectedDungeon.name}!
               </p>
+            </div>
+          )}
+
+          {error && (
+            <div className="mb-4 p-3 rounded-md bg-destructive/20 text-destructive text-sm">
+              {error}
             </div>
           )}
 
           <div className="flex gap-3">
             {battleResult.floorCleared && !battleResult.dungeonCompleted && !battleResult.heirDied && (
               <button onClick={handleContinue} className="btn-primary">
-                Continue to Floor {currentFloor + 1}
+                Next Floor ({currentFloor + 1})
               </button>
             )}
             <button onClick={handleLeaveDungeon} className="btn-secondary">
@@ -201,47 +291,29 @@ export function DungeonsPage() {
             </button>
           </div>
         </div>
-      ) : !isBusyOnJob && selectedDungeon ? (
-        <div className="card p-6 animate-fade-in">
-          <button
-            onClick={handleLeaveDungeon}
-            className="text-sm text-muted-foreground hover:text-foreground mb-4"
-          >
-            ← Back to dungeon list
-          </button>
+      </div>
+    );
+  }
 
-          <h2 className="font-display text-xl font-semibold mb-2">
-            {selectedDungeon.name}
-          </h2>
-          <p className="text-muted-foreground mb-4">{selectedDungeon.description}</p>
-
-          <div className="flex items-center gap-4 mb-6">
-            <div className="flex items-center gap-2">
-              <Castle className="w-4 h-4 text-muted-foreground" />
-              <span>Floor {currentFloor} / {selectedDungeon.floors.length}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Skull className="w-4 h-4 text-muted-foreground" />
-              <span className="capitalize">{selectedDungeon.difficulty || "Normal"}</span>
-            </div>
-          </div>
-
-          <button
-            onClick={handleEnterFloor}
-            disabled={loading}
-            className="btn-primary w-full"
-          >
-            {loading ? (
-              "Fighting..."
-            ) : (
-              <span className="flex items-center justify-center gap-2">
-                <Swords className="w-4 h-4" />
-                Enter Floor {currentFloor}
-              </span>
-            )}
-          </button>
+  return (
+    <div className="max-w-4xl mx-auto">
+      <div className="flex items-center gap-3 mb-6">
+        <Castle className="w-8 h-8 text-gold" />
+        <div>
+          <h1 className="font-display text-2xl font-bold">Dungeons</h1>
+          <p className="text-muted-foreground">Choose a dungeon — each floor begins with a tactical decision</p>
         </div>
-      ) : !isBusyOnJob ? (
+      </div>
+
+      {isBusyOnJob && <BusyActivityBlock activityName="dungeon" />}
+
+      {error && (
+        <div className="mb-4 p-4 rounded-md bg-destructive/20 text-destructive text-sm">
+          {error}
+        </div>
+      )}
+
+      {!isBusyOnJob && (
         <div className="grid gap-4">
           {dungeons.length === 0 && (
             <p className="text-muted-foreground">No dungeons are configured yet.</p>
@@ -254,10 +326,7 @@ export function DungeonsPage() {
                 key={dungeon.id}
                 type="button"
                 onClick={() => {
-                  if (canEnter) {
-                    setError("");
-                    setSelectedDungeon(dungeon);
-                  }
+                  if (canEnter) handleEnterDungeon(dungeon);
                 }}
                 disabled={!canEnter}
                 title={
@@ -301,7 +370,7 @@ export function DungeonsPage() {
             );
           })}
         </div>
-      ) : null}
+      )}
     </div>
   );
 }

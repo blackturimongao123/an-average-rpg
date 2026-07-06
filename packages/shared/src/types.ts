@@ -126,7 +126,11 @@ export interface MissionCampaignStep {
   timeCost?: MissionTimeCost;
   choices?: MissionCampaignChoice[];
   sceneGradient?: string;
+  sceneImage?: string;
 }
+
+/** Event step for missions, dungeon floor approach, and shared adventure UI. */
+export type AdventureEventStep = MissionCampaignStep;
 
 export interface MissionCampaign {
   regionName?: string;
@@ -437,6 +441,7 @@ export interface DungeonFloor {
   bossId: string | null;
   lootModifier: number;
   xpModifier: number;
+  approach?: AdventureEventStep;
 }
 
 export interface TavernEvent {

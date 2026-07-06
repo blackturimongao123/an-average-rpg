@@ -1,6 +1,7 @@
 import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { FieldValue } from "firebase-admin/firestore";
 import { STAT_POINTS_PER_LEVEL } from "@bloodline/shared/constants";
+import { getFloorChoiceModifiers } from "@bloodline/shared/adventure";
 import { db } from "../index.js";
 import {
   generateSeed,
@@ -19,6 +20,7 @@ interface ResolveDungeonRequest {
   heirId: string;
   dungeonId: string;
   floor: number;
+  floorChoiceId?: string;
 }
 
 interface ResolveDungeonResponse {
@@ -43,7 +45,7 @@ export const resolveDungeon = onCall<ResolveDungeonRequest>(
       throw new HttpsError("unauthenticated", "Must be signed in");
     }
 
-    const { lineageId, heirId, dungeonId, floor } = request.data;
+    const { lineageId, heirId, dungeonId, floor, floorChoiceId } = request.data;
 
     if (!lineageId || !heirId || !dungeonId || floor === undefined) {
       throw new HttpsError("invalid-argument", "Missing required fields");
@@ -91,7 +93,15 @@ export const resolveDungeon = onCall<ResolveDungeonRequest>(
       throw new HttpsError("invalid-argument", "Floor not found");
     }
 
-    const seed = generateSeed(lineageId, heirId, `dungeon-${dungeonId}-${floor}-${Date.now()}`);
+    const modifiers = getFloorChoiceModifiers(
+      typeof floorChoiceId === "string" ? floorChoiceId : undefined
+    );
+
+    const seed = generateSeed(
+      lineageId,
+      heirId,
+      `dungeon-${dungeonId}-${floor}-${floorChoiceId ?? "default"}-${Date.now()}`
+    );
 
     const monsterId = floorData.bossId || seededRandomChoice(seed, floorData.monsterPool, 0);
     const baseMonster = monstersMap.get(monsterId);
@@ -105,14 +115,25 @@ export const resolveDungeon = onCall<ResolveDungeonRequest>(
       ...baseMonster,
       level: baseMonster.level + floor - 1,
       hp: Math.floor(baseMonster.hp * floorScaling),
-      damage: Math.floor(baseMonster.damage * floorScaling),
+      damage: Math.floor(baseMonster.damage * floorScaling * modifiers.monsterDamageMult),
       defense: Math.floor(baseMonster.defense * floorScaling),
       xpReward: Math.floor(baseMonster.xpReward * floorScaling),
       goldRewardMin: Math.floor(baseMonster.goldRewardMin * floorScaling),
       goldRewardMax: Math.floor(baseMonster.goldRewardMax * floorScaling),
     };
 
-    const battleResult = simulateBattle(heir, monster, seed);
+    const battleHeir: Heir =
+      modifiers.heirHealFlat > 0
+        ? {
+            ...heir,
+            stats: {
+              ...heir.stats,
+              constitution: heir.stats.constitution + Math.floor(modifiers.heirHealFlat / 8),
+            },
+          }
+        : heir;
+
+    const battleResult = simulateBattle(battleHeir, monster, seed);
 
     const batch = db.batch();
 
@@ -126,6 +147,7 @@ export const resolveDungeon = onCall<ResolveDungeonRequest>(
       heirId,
       dungeonId,
       floor,
+      floorChoiceId: floorChoiceId ?? null,
       monsterId,
       result: battleResult,
       createdAt: FieldValue.serverTimestamp(),
@@ -135,8 +157,8 @@ export const resolveDungeon = onCall<ResolveDungeonRequest>(
 
     if (battleResult.victory) {
       rewards = {
-        gold: Math.floor(battleResult.goldGained * floorData.lootModifier),
-        xp: Math.floor(battleResult.xpGained * floorData.xpModifier),
+        gold: Math.floor(battleResult.goldGained * floorData.lootModifier * modifiers.rewardMult),
+        xp: Math.floor(battleResult.xpGained * floorData.xpModifier * modifiers.rewardMult),
         items: battleResult.itemIds,
       };
 

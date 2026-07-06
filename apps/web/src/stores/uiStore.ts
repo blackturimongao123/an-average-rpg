@@ -5,9 +5,11 @@ interface UIState {
   activeModal: string | null;
   modalData: unknown;
   notifications: Notification[];
-  
+  dungeonRunActive: boolean;
+
   toggleSidebar: () => void;
   setSidebarCollapsed: (collapsed: boolean) => void;
+  setDungeonRunActive: (active: boolean) => void;
   openModal: (modalId: string, data?: unknown) => void;
   closeModal: () => void;
   addNotification: (notification: Omit<Notification, "id">) => void;
@@ -27,11 +29,14 @@ export const useUIStore = create<UIState>((set) => ({
   activeModal: null,
   modalData: null,
   notifications: [],
+  dungeonRunActive: false,
 
   toggleSidebar: () =>
     set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
 
   setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
+
+  setDungeonRunActive: (active) => set({ dungeonRunActive: active }),
 
   openModal: (modalId, data) =>
     set({ activeModal: modalId, modalData: data }),

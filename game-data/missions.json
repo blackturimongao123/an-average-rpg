@@ -9,12 +9,23 @@
       "minHeirLevel": 1,
       "weight": 100,
       "type": "combat",
-      "rewards": { "gold": 8, "xp": 15, "rankXp": 10, "items": [] },
+      "rewards": {
+        "gold": 8,
+        "xp": 15,
+        "rankXp": 10,
+        "items": []
+      },
       "campaign": {
         "steps": [
-          { "text": "You descend into the damp cellar, torch in hand. Squeaks echo from the shadows." },
-          { "text": "A swarm of rats charges. You fight them off with quick strikes." },
-          { "text": "The last rat falls. The innkeeper owes you a drink—and coin." }
+          {
+            "text": "You descend into the damp cellar, torch in hand. Squeaks echo from the shadows."
+          },
+          {
+            "text": "A swarm of rats charges. You fight them off with quick strikes."
+          },
+          {
+            "text": "The last rat falls. The innkeeper owes you a drink—and coin."
+          }
         ]
       }
     },
@@ -27,12 +38,23 @@
       "minHeirLevel": 1,
       "weight": 90,
       "type": "deliver",
-      "rewards": { "gold": 12, "xp": 20, "rankXp": 10, "items": [] },
+      "rewards": {
+        "gold": 12,
+        "xp": 20,
+        "rankXp": 10,
+        "items": []
+      },
       "campaign": {
         "steps": [
-          { "text": "You follow muddy tracks into the woods." },
-          { "text": "A bandit camp holds the crate. You slip in and grab it." },
-          { "text": "The merchant pays well for discretion." }
+          {
+            "text": "You follow muddy tracks into the woods."
+          },
+          {
+            "text": "A bandit camp holds the crate. You slip in and grab it."
+          },
+          {
+            "text": "The merchant pays well for discretion."
+          }
         ]
       }
     },
@@ -45,12 +67,25 @@
       "minHeirLevel": 2,
       "weight": 85,
       "type": "explore",
-      "rewards": { "gold": 15, "xp": 25, "rankXp": 15, "items": ["health_potion"] },
+      "rewards": {
+        "gold": 15,
+        "xp": 25,
+        "rankXp": 15,
+        "items": [
+          "health_potion"
+        ]
+      },
       "campaign": {
         "steps": [
-          { "text": "Moonlight washes the meadow silver." },
-          { "text": "Wolves prowl nearby—you gather quickly and retreat." },
-          { "text": "The apothecary inspects your haul and nods approvingly." }
+          {
+            "text": "Moonlight washes the meadow silver."
+          },
+          {
+            "text": "Wolves prowl nearby—you gather quickly and retreat."
+          },
+          {
+            "text": "The apothecary inspects your haul and nods approvingly."
+          }
         ]
       }
     },
@@ -63,12 +98,23 @@
       "minHeirLevel": 3,
       "weight": 80,
       "type": "combat",
-      "rewards": { "gold": 22, "xp": 35, "rankXp": 15, "items": [] },
+      "rewards": {
+        "gold": 22,
+        "xp": 35,
+        "rankXp": 15,
+        "items": []
+      },
       "campaign": {
         "steps": [
-          { "text": "You spot smoke from a roadside camp." },
-          { "text": "The bandits scatter after a brief skirmish." },
-          { "text": "The guild clerk stamps your contract complete." }
+          {
+            "text": "You spot smoke from a roadside camp."
+          },
+          {
+            "text": "The bandits scatter after a brief skirmish."
+          },
+          {
+            "text": "The guild clerk stamps your contract complete."
+          }
         ]
       }
     },
@@ -81,7 +127,12 @@
       "minHeirLevel": 4,
       "weight": 70,
       "type": "investigate",
-      "rewards": { "gold": 35, "xp": 50, "rankXp": 25, "items": [] },
+      "rewards": {
+        "gold": 35,
+        "xp": 50,
+        "rankXp": 25,
+        "items": []
+      },
       "campaign": {
         "regionName": "The Forsaken Mill",
         "maxStages": 8,
@@ -99,8 +150,14 @@
                 "label": "Explore the Shrine",
                 "subtitle": "Search for relics and hidden passages",
                 "tags": [
-                  { "label": "High Reward", "tone": "reward" },
-                  { "label": "High Risk", "tone": "risk" }
+                  {
+                    "label": "High Reward",
+                    "tone": "reward"
+                  },
+                  {
+                    "label": "High Risk",
+                    "tone": "risk"
+                  }
                 ],
                 "stageCost": 1,
                 "hpDelta": -8,
@@ -111,8 +168,14 @@
                 "label": "Take the Safe Path",
                 "subtitle": "Circle the shrine and press toward the mill",
                 "tags": [
-                  { "label": "Low Risk", "tone": "neutral" },
-                  { "label": "Low Reward", "tone": "neutral" }
+                  {
+                    "label": "Low Risk",
+                    "tone": "neutral"
+                  },
+                  {
+                    "label": "Low Reward",
+                    "tone": "neutral"
+                  }
                 ],
                 "stageCost": 1
               },
@@ -120,7 +183,12 @@
                 "id": "persuade_spirits",
                 "label": "Attempt Persuasion",
                 "subtitle": "Offer tribute to calm the restless dead",
-                "tags": [{ "label": "Rewards Vary", "tone": "neutral" }],
+                "tags": [
+                  {
+                    "label": "Rewards Vary",
+                    "tone": "neutral"
+                  }
+                ],
                 "supplyCost": 5,
                 "stageCost": 1,
                 "moraleDelta": 6
@@ -130,27 +198,36 @@
                 "label": "Set Camp",
                 "subtitle": "Rest and restore before entering the mill",
                 "tags": [
-                  { "label": "Restore HP", "tone": "reward" },
-                  { "label": "-10 Supplies", "tone": "cost" }
+                  {
+                    "label": "Restore HP",
+                    "tone": "reward"
+                  },
+                  {
+                    "label": "-10 Supplies",
+                    "tone": "cost"
+                  }
                 ],
                 "supplyCost": 10,
                 "hpDelta": 18,
                 "moraleDelta": 5,
                 "stageCost": 1
               }
-            ]
+            ],
+            "sceneImage": "/an-average-rpg/scenes/forest-shrine.png"
           },
           {
             "title": "The Creaking Wheel",
             "text": "The mill wheel groans though no water flows. Lantern light dances across rotting timber and suspiciously fresh footprints.",
             "eventType": "hazard",
-            "timeCost": "normal"
+            "timeCost": "normal",
+            "sceneImage": "/an-average-rpg/scenes/forest.png"
           },
           {
             "title": "Smuggler's Stash",
             "text": "Will-o-wisps lead you not to ghosts, but to a smuggler's cache hidden beneath the floorboards. Coin, contraband, and a ledger of bribes.",
             "eventType": "discovery",
-            "timeCost": "high"
+            "timeCost": "high",
+            "sceneImage": "/an-average-rpg/scenes/goblin-cave-inside.png"
           }
         ]
       }
@@ -164,12 +241,23 @@
       "minHeirLevel": 5,
       "weight": 65,
       "type": "deliver",
-      "rewards": { "gold": 45, "xp": 60, "rankXp": 25, "items": [] },
+      "rewards": {
+        "gold": 45,
+        "xp": 60,
+        "rankXp": 25,
+        "items": []
+      },
       "campaign": {
         "steps": [
-          { "text": "The caravan rolls out at first light." },
-          { "text": "Goblins ambush at the ravine—you hold the line." },
-          { "text": "Spices delivered. The merchant shares a generous cut." }
+          {
+            "text": "The caravan rolls out at first light."
+          },
+          {
+            "text": "Goblins ambush at the ravine—you hold the line."
+          },
+          {
+            "text": "Spices delivered. The merchant shares a generous cut."
+          }
         ]
       }
     },
@@ -182,12 +270,25 @@
       "minHeirLevel": 6,
       "weight": 55,
       "type": "combat",
-      "rewards": { "gold": 60, "xp": 80, "rankXp": 40, "items": ["iron_sword"] },
+      "rewards": {
+        "gold": 60,
+        "xp": 80,
+        "rankXp": 40,
+        "items": [
+          "iron_sword"
+        ]
+      },
       "campaign": {
         "steps": [
-          { "text": "Tombstones lean like rotten teeth." },
-          { "text": "Skeletons rise—you shatter bone and curse alike." },
-          { "text": "The gravekeeper pays from the church coffers." }
+          {
+            "text": "Tombstones lean like rotten teeth."
+          },
+          {
+            "text": "Skeletons rise—you shatter bone and curse alike."
+          },
+          {
+            "text": "The gravekeeper pays from the church coffers."
+          }
         ]
       }
     },
@@ -200,12 +301,23 @@
       "minHeirLevel": 7,
       "weight": 50,
       "type": "deliver",
-      "rewards": { "gold": 75, "xp": 90, "rankXp": 40, "items": [] },
+      "rewards": {
+        "gold": 75,
+        "xp": 90,
+        "rankXp": 40,
+        "items": []
+      },
       "campaign": {
         "steps": [
-          { "text": "You blend into the city crowds at dusk." },
-          { "text": "House guards almost spot you—you use a side alley." },
-          { "text": "The letter is delivered. Gold follows by morning." }
+          {
+            "text": "You blend into the city crowds at dusk."
+          },
+          {
+            "text": "House guards almost spot you—you use a side alley."
+          },
+          {
+            "text": "The letter is delivered. Gold follows by morning."
+          }
         ]
       }
     },
@@ -218,12 +330,25 @@
       "minHeirLevel": 8,
       "weight": 40,
       "type": "combat",
-      "rewards": { "gold": 100, "xp": 120, "rankXp": 60, "items": ["chain_mail"] },
+      "rewards": {
+        "gold": 100,
+        "xp": 120,
+        "rankXp": 60,
+        "items": [
+          "chain_mail"
+        ]
+      },
       "campaign": {
         "steps": [
-          { "text": "Wingbeats shake the cliffs as you climb." },
-          { "text": "The wyvern dives—you dodge and strike its wing." },
-          { "text": "It flees the valley. Farmers cheer your name." }
+          {
+            "text": "Wingbeats shake the cliffs as you climb."
+          },
+          {
+            "text": "The wyvern dives—you dodge and strike its wing."
+          },
+          {
+            "text": "It flees the valley. Farmers cheer your name."
+          }
         ]
       }
     },
@@ -236,12 +361,23 @@
       "minHeirLevel": 9,
       "weight": 35,
       "type": "investigate",
-      "rewards": { "gold": 120, "xp": 140, "rankXp": 60, "items": [] },
+      "rewards": {
+        "gold": 120,
+        "xp": 140,
+        "rankXp": 60,
+        "items": []
+      },
       "campaign": {
         "steps": [
-          { "text": "Sewer tunnels reek of incense and rot." },
-          { "text": "Cultists guard the relic—you fight through chanting halls." },
-          { "text": "The temple rewards you with gold and a blessing." }
+          {
+            "text": "Sewer tunnels reek of incense and rot."
+          },
+          {
+            "text": "Cultists guard the relic—you fight through chanting halls."
+          },
+          {
+            "text": "The temple rewards you with gold and a blessing."
+          }
         ]
       }
     },
@@ -254,12 +390,25 @@
       "minHeirLevel": 10,
       "weight": 28,
       "type": "explore",
-      "rewards": { "gold": 160, "xp": 180, "rankXp": 85, "items": ["dragon_scale_armor"] },
+      "rewards": {
+        "gold": 160,
+        "xp": 180,
+        "rankXp": 85,
+        "items": [
+          "dragon_scale_armor"
+        ]
+      },
       "campaign": {
         "steps": [
-          { "text": "Scorched earth marks the dragon's territory." },
-          { "text": "You wait until it hunts, then gather scales under ash clouds." },
-          { "text": "The armorer pays a fortune for rare material." }
+          {
+            "text": "Scorched earth marks the dragon's territory."
+          },
+          {
+            "text": "You wait until it hunts, then gather scales under ash clouds."
+          },
+          {
+            "text": "The armorer pays a fortune for rare material."
+          }
         ]
       }
     },
@@ -272,12 +421,23 @@
       "minHeirLevel": 11,
       "weight": 22,
       "type": "combat",
-      "rewards": { "gold": 200, "xp": 220, "rankXp": 85, "items": [] },
+      "rewards": {
+        "gold": 200,
+        "xp": 220,
+        "rankXp": 85,
+        "items": []
+      },
       "campaign": {
         "steps": [
-          { "text": "Arcane symbols pulse with sickly light." },
-          { "text": "A lesser demon manifests—you shatter the focus stone." },
-          { "text": "The circle collapses. Mages guild pays hazard rates." }
+          {
+            "text": "Arcane symbols pulse with sickly light."
+          },
+          {
+            "text": "A lesser demon manifests—you shatter the focus stone."
+          },
+          {
+            "text": "The circle collapses. Mages guild pays hazard rates."
+          }
         ]
       }
     },
@@ -290,12 +450,25 @@
       "minHeirLevel": 12,
       "weight": 15,
       "type": "combat",
-      "rewards": { "gold": 280, "xp": 300, "rankXp": 120, "items": ["lucky_coin"] },
+      "rewards": {
+        "gold": 280,
+        "xp": 300,
+        "rankXp": 120,
+        "items": [
+          "lucky_coin"
+        ]
+      },
       "campaign": {
         "steps": [
-          { "text": "Cold drains warmth from the tomb air." },
-          { "text": "Wraiths guard the sigil—you destroy it in a blaze of faith." },
-          { "text": "The lich's influence wanes. Royal coin follows." }
+          {
+            "text": "Cold drains warmth from the tomb air."
+          },
+          {
+            "text": "Wraiths guard the sigil—you destroy it in a blaze of faith."
+          },
+          {
+            "text": "The lich's influence wanes. Royal coin follows."
+          }
         ]
       }
     },
@@ -308,12 +481,23 @@
       "minHeirLevel": 14,
       "weight": 8,
       "type": "investigate",
-      "rewards": { "gold": 400, "xp": 420, "rankXp": 170, "items": [] },
+      "rewards": {
+        "gold": 400,
+        "xp": 420,
+        "rankXp": 170,
+        "items": []
+      },
       "campaign": {
         "steps": [
-          { "text": "Reality warps—grass floats, stars show at noon." },
-          { "text": "You anchor the rift with ancient wards and sheer will." },
-          { "text": "Scholars record your deed. The crown pays in gold." }
+          {
+            "text": "Reality warps—grass floats, stars show at noon."
+          },
+          {
+            "text": "You anchor the rift with ancient wards and sheer will."
+          },
+          {
+            "text": "Scholars record your deed. The crown pays in gold."
+          }
         ]
       }
     },
@@ -326,12 +510,25 @@
       "minHeirLevel": 16,
       "weight": 3,
       "type": "combat",
-      "rewards": { "gold": 600, "xp": 650, "rankXp": 250, "items": ["veterans_blade"] },
+      "rewards": {
+        "gold": 600,
+        "xp": 650,
+        "rankXp": 250,
+        "items": [
+          "veterans_blade"
+        ]
+      },
       "campaign": {
         "steps": [
-          { "text": "The crystal hums with apocalyptic memory." },
-          { "text": "The echo takes form—you battle across shattered time." },
-          { "text": "Silence returns. Legends will speak of this day." }
+          {
+            "text": "The crystal hums with apocalyptic memory."
+          },
+          {
+            "text": "The echo takes form—you battle across shattered time."
+          },
+          {
+            "text": "Silence returns. Legends will speak of this day."
+          }
         ]
       }
     }

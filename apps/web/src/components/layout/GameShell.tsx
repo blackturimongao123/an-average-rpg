@@ -4,6 +4,7 @@ import { collection, query, where, onSnapshot, doc } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { useAuthStore } from "@/stores/authStore";
 import { useGameStore } from "@/stores/gameStore";
+import { useUIStore } from "@/stores/uiStore";
 import { useJobShiftTimer } from "@/hooks/useJobShiftTimer";
 import { normalizeAdventurerRank } from "@/lib/missions";
 import { migrateEquipment } from "@bloodline/shared/equipment";
@@ -21,9 +22,11 @@ export function GameShell({ children }: GameShellProps) {
   const location = useLocation();
   const { user } = useAuthStore();
   const { setLineage, setHeir, setLoading, heir } = useGameStore();
+  const dungeonRunActive = useUIStore((s) => s.dungeonRunActive);
   const isImmersive =
     location.pathname === "/skills" ||
-    (location.pathname === "/tavern" && Boolean(heir?.activeMission));
+    (location.pathname === "/tavern" && Boolean(heir?.activeMission)) ||
+    (location.pathname === "/dungeons" && dungeonRunActive);
 
   useJobShiftTimer();
 

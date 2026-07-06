@@ -44,7 +44,7 @@ export const resolveTavernQuest = httpsCallable<
 >(functions, "resolveTavernQuest");
 
 export const resolveDungeon = httpsCallable<
-  { lineageId: string; heirId: string; dungeonId: string; floor: number },
+  { lineageId: string; heirId: string; dungeonId: string; floor: number; floorChoiceId?: string },
   {
     battleId: string;
     victory: boolean;

@@ -9,80 +9,643 @@
       "floors": [
         {
           "floor": 1,
-          "monsterPool": ["goblin_scout"],
+          "monsterPool": [
+            "goblin_scout"
+          ],
           "bossId": null,
-          "lootModifier": 1.0,
-          "xpModifier": 1.0
+          "lootModifier": 1,
+          "xpModifier": 1,
+          "approach": {
+            "title": "Cave Mouth",
+            "text": "The Goblin Caves yawn before you — smoke, rot, and distant cackling drift from the dark.",
+            "eventType": "discovery",
+            "timeCost": "normal",
+            "sceneImage": "/an-average-rpg/scenes/goblin-cave-entrance.png",
+            "choices": [
+              {
+                "id": "explore",
+                "label": "Explore the Tunnels",
+                "subtitle": "Search side passages for loot and ambush points",
+                "tags": [
+                  {
+                    "label": "High Reward",
+                    "tone": "reward"
+                  },
+                  {
+                    "label": "High Risk",
+                    "tone": "risk"
+                  }
+                ]
+              },
+              {
+                "id": "safe_path",
+                "label": "Take the Safe Path",
+                "subtitle": "Stick to the main corridor",
+                "tags": [
+                  {
+                    "label": "Low Risk",
+                    "tone": "neutral"
+                  },
+                  {
+                    "label": "Low Reward",
+                    "tone": "neutral"
+                  }
+                ]
+              },
+              {
+                "id": "camp",
+                "label": "Set Camp",
+                "subtitle": "Catch your breath before pushing deeper",
+                "tags": [
+                  {
+                    "label": "Restore HP",
+                    "tone": "reward"
+                  },
+                  {
+                    "label": "Lose Time",
+                    "tone": "cost"
+                  }
+                ]
+              },
+              {
+                "id": "persuade",
+                "label": "Sneak Past",
+                "subtitle": "Try to avoid drawing attention",
+                "tags": [
+                  {
+                    "label": "Rewards Vary",
+                    "tone": "neutral"
+                  }
+                ]
+              }
+            ]
+          }
         },
         {
           "floor": 2,
-          "monsterPool": ["goblin_scout", "goblin_warrior"],
+          "monsterPool": [
+            "goblin_scout",
+            "goblin_warrior"
+          ],
           "bossId": null,
           "lootModifier": 1.1,
-          "xpModifier": 1.1
+          "xpModifier": 1.1,
+          "approach": {
+            "title": "Scrap Heap Passage",
+            "text": "Bones and broken shields litter a narrow tunnel. Goblins have been busy.",
+            "eventType": "combat",
+            "timeCost": "normal",
+            "sceneImage": "/an-average-rpg/scenes/goblin-cave-inside.png",
+            "choices": [
+              {
+                "id": "engage",
+                "label": "Engage in Combat",
+                "subtitle": "Fight head-on for full rewards",
+                "tags": [
+                  {
+                    "label": "High Risk",
+                    "tone": "risk"
+                  },
+                  {
+                    "label": "High Reward",
+                    "tone": "reward"
+                  }
+                ]
+              },
+              {
+                "id": "ambush",
+                "label": "Attempt Ambush",
+                "subtitle": "Strike from cover",
+                "tags": [
+                  {
+                    "label": "Rewards Vary",
+                    "tone": "neutral"
+                  }
+                ]
+              },
+              {
+                "id": "retreat",
+                "label": "Fall Back",
+                "subtitle": "Reposition before fighting",
+                "tags": [
+                  {
+                    "label": "Low Risk",
+                    "tone": "neutral"
+                  }
+                ]
+              }
+            ]
+          }
         },
         {
           "floor": 3,
-          "monsterPool": ["goblin_warrior"],
+          "monsterPool": [
+            "goblin_warrior"
+          ],
           "bossId": null,
           "lootModifier": 1.2,
-          "xpModifier": 1.2
+          "xpModifier": 1.2,
+          "approach": {
+            "title": "Fungal Grotto",
+            "text": "Pale mushrooms glow on the walls. Footprints circle back toward you.",
+            "eventType": "discovery",
+            "timeCost": "normal",
+            "sceneImage": "/an-average-rpg/scenes/goblin-cave-inside.png",
+            "choices": [
+              {
+                "id": "explore",
+                "label": "Explore the Tunnels",
+                "subtitle": "Search side passages for loot and ambush points",
+                "tags": [
+                  {
+                    "label": "High Reward",
+                    "tone": "reward"
+                  },
+                  {
+                    "label": "High Risk",
+                    "tone": "risk"
+                  }
+                ]
+              },
+              {
+                "id": "safe_path",
+                "label": "Take the Safe Path",
+                "subtitle": "Stick to the main corridor",
+                "tags": [
+                  {
+                    "label": "Low Risk",
+                    "tone": "neutral"
+                  },
+                  {
+                    "label": "Low Reward",
+                    "tone": "neutral"
+                  }
+                ]
+              },
+              {
+                "id": "camp",
+                "label": "Set Camp",
+                "subtitle": "Catch your breath before pushing deeper",
+                "tags": [
+                  {
+                    "label": "Restore HP",
+                    "tone": "reward"
+                  },
+                  {
+                    "label": "Lose Time",
+                    "tone": "cost"
+                  }
+                ]
+              },
+              {
+                "id": "persuade",
+                "label": "Sneak Past",
+                "subtitle": "Try to avoid drawing attention",
+                "tags": [
+                  {
+                    "label": "Rewards Vary",
+                    "tone": "neutral"
+                  }
+                ]
+              }
+            ]
+          }
         },
         {
           "floor": 4,
-          "monsterPool": ["goblin_warrior", "goblin_archer"],
+          "monsterPool": [
+            "goblin_warrior",
+            "goblin_archer"
+          ],
           "bossId": null,
           "lootModifier": 1.3,
-          "xpModifier": 1.3
+          "xpModifier": 1.3,
+          "approach": {
+            "title": "Archer Nests",
+            "text": "Crude platforms cling to the ceiling. Something watches from above.",
+            "eventType": "combat",
+            "timeCost": "normal",
+            "sceneImage": "/an-average-rpg/scenes/goblin-cave-inside.png",
+            "choices": [
+              {
+                "id": "engage",
+                "label": "Engage in Combat",
+                "subtitle": "Fight head-on for full rewards",
+                "tags": [
+                  {
+                    "label": "High Risk",
+                    "tone": "risk"
+                  },
+                  {
+                    "label": "High Reward",
+                    "tone": "reward"
+                  }
+                ]
+              },
+              {
+                "id": "ambush",
+                "label": "Attempt Ambush",
+                "subtitle": "Strike from cover",
+                "tags": [
+                  {
+                    "label": "Rewards Vary",
+                    "tone": "neutral"
+                  }
+                ]
+              },
+              {
+                "id": "retreat",
+                "label": "Fall Back",
+                "subtitle": "Reposition before fighting",
+                "tags": [
+                  {
+                    "label": "Low Risk",
+                    "tone": "neutral"
+                  }
+                ]
+              }
+            ]
+          }
         },
         {
           "floor": 5,
-          "monsterPool": ["goblin_archer", "goblin_shaman"],
+          "monsterPool": [
+            "goblin_archer",
+            "goblin_shaman"
+          ],
           "bossId": null,
           "lootModifier": 1.4,
-          "xpModifier": 1.4
+          "xpModifier": 1.4,
+          "approach": {
+            "title": "Shaman's Hollow",
+            "text": "Charred symbols smear the stone. A fetid brew bubbles in a stone bowl.",
+            "eventType": "discovery",
+            "timeCost": "normal",
+            "sceneImage": "/an-average-rpg/scenes/forest-shrine.png",
+            "choices": [
+              {
+                "id": "explore",
+                "label": "Explore the Tunnels",
+                "subtitle": "Search side passages for loot and ambush points",
+                "tags": [
+                  {
+                    "label": "High Reward",
+                    "tone": "reward"
+                  },
+                  {
+                    "label": "High Risk",
+                    "tone": "risk"
+                  }
+                ]
+              },
+              {
+                "id": "safe_path",
+                "label": "Take the Safe Path",
+                "subtitle": "Stick to the main corridor",
+                "tags": [
+                  {
+                    "label": "Low Risk",
+                    "tone": "neutral"
+                  },
+                  {
+                    "label": "Low Reward",
+                    "tone": "neutral"
+                  }
+                ]
+              },
+              {
+                "id": "camp",
+                "label": "Set Camp",
+                "subtitle": "Catch your breath before pushing deeper",
+                "tags": [
+                  {
+                    "label": "Restore HP",
+                    "tone": "reward"
+                  },
+                  {
+                    "label": "Lose Time",
+                    "tone": "cost"
+                  }
+                ]
+              },
+              {
+                "id": "persuade",
+                "label": "Sneak Past",
+                "subtitle": "Try to avoid drawing attention",
+                "tags": [
+                  {
+                    "label": "Rewards Vary",
+                    "tone": "neutral"
+                  }
+                ]
+              }
+            ]
+          }
         },
         {
           "floor": 6,
-          "monsterPool": ["goblin_warrior", "goblin_shaman"],
+          "monsterPool": [
+            "goblin_warrior",
+            "goblin_shaman"
+          ],
           "bossId": null,
           "lootModifier": 1.5,
-          "xpModifier": 1.5
+          "xpModifier": 1.5,
+          "approach": {
+            "title": "War Drums",
+            "text": "Rhythmic pounding echoes — the goblins know you are here.",
+            "eventType": "combat",
+            "timeCost": "normal",
+            "sceneImage": "/an-average-rpg/scenes/goblin-cave-inside.png",
+            "choices": [
+              {
+                "id": "engage",
+                "label": "Engage in Combat",
+                "subtitle": "Fight head-on for full rewards",
+                "tags": [
+                  {
+                    "label": "High Risk",
+                    "tone": "risk"
+                  },
+                  {
+                    "label": "High Reward",
+                    "tone": "reward"
+                  }
+                ]
+              },
+              {
+                "id": "ambush",
+                "label": "Attempt Ambush",
+                "subtitle": "Strike from cover",
+                "tags": [
+                  {
+                    "label": "Rewards Vary",
+                    "tone": "neutral"
+                  }
+                ]
+              },
+              {
+                "id": "retreat",
+                "label": "Fall Back",
+                "subtitle": "Reposition before fighting",
+                "tags": [
+                  {
+                    "label": "Low Risk",
+                    "tone": "neutral"
+                  }
+                ]
+              }
+            ]
+          }
         },
         {
           "floor": 7,
-          "monsterPool": ["goblin_elite"],
+          "monsterPool": [
+            "goblin_elite"
+          ],
           "bossId": null,
           "lootModifier": 1.6,
-          "xpModifier": 1.6
+          "xpModifier": 1.6,
+          "approach": {
+            "title": "Elite Guard Post",
+            "text": "Better-armed goblins block a reinforced gate.",
+            "eventType": "combat",
+            "timeCost": "normal",
+            "sceneImage": "/an-average-rpg/scenes/goblin-cave-inside.png",
+            "choices": [
+              {
+                "id": "engage",
+                "label": "Engage in Combat",
+                "subtitle": "Fight head-on for full rewards",
+                "tags": [
+                  {
+                    "label": "High Risk",
+                    "tone": "risk"
+                  },
+                  {
+                    "label": "High Reward",
+                    "tone": "reward"
+                  }
+                ]
+              },
+              {
+                "id": "ambush",
+                "label": "Attempt Ambush",
+                "subtitle": "Strike from cover",
+                "tags": [
+                  {
+                    "label": "Rewards Vary",
+                    "tone": "neutral"
+                  }
+                ]
+              },
+              {
+                "id": "retreat",
+                "label": "Fall Back",
+                "subtitle": "Reposition before fighting",
+                "tags": [
+                  {
+                    "label": "Low Risk",
+                    "tone": "neutral"
+                  }
+                ]
+              }
+            ]
+          }
         },
         {
           "floor": 8,
-          "monsterPool": ["goblin_elite", "goblin_shaman"],
+          "monsterPool": [
+            "goblin_elite",
+            "goblin_shaman"
+          ],
           "bossId": null,
           "lootModifier": 1.7,
-          "xpModifier": 1.7
+          "xpModifier": 1.7,
+          "approach": {
+            "title": "Collapsed Gallery",
+            "text": "A cave-in forces a detour through unstable rubble.",
+            "eventType": "discovery",
+            "timeCost": "normal",
+            "sceneImage": "/an-average-rpg/scenes/forest.png",
+            "choices": [
+              {
+                "id": "explore",
+                "label": "Explore the Tunnels",
+                "subtitle": "Search side passages for loot and ambush points",
+                "tags": [
+                  {
+                    "label": "High Reward",
+                    "tone": "reward"
+                  },
+                  {
+                    "label": "High Risk",
+                    "tone": "risk"
+                  }
+                ]
+              },
+              {
+                "id": "safe_path",
+                "label": "Take the Safe Path",
+                "subtitle": "Stick to the main corridor",
+                "tags": [
+                  {
+                    "label": "Low Risk",
+                    "tone": "neutral"
+                  },
+                  {
+                    "label": "Low Reward",
+                    "tone": "neutral"
+                  }
+                ]
+              },
+              {
+                "id": "camp",
+                "label": "Set Camp",
+                "subtitle": "Catch your breath before pushing deeper",
+                "tags": [
+                  {
+                    "label": "Restore HP",
+                    "tone": "reward"
+                  },
+                  {
+                    "label": "Lose Time",
+                    "tone": "cost"
+                  }
+                ]
+              },
+              {
+                "id": "persuade",
+                "label": "Sneak Past",
+                "subtitle": "Try to avoid drawing attention",
+                "tags": [
+                  {
+                    "label": "Rewards Vary",
+                    "tone": "neutral"
+                  }
+                ]
+              }
+            ]
+          }
         },
         {
           "floor": 9,
-          "monsterPool": ["goblin_elite"],
+          "monsterPool": [
+            "goblin_elite"
+          ],
           "bossId": null,
           "lootModifier": 1.8,
-          "xpModifier": 1.8
+          "xpModifier": 1.8,
+          "approach": {
+            "title": "King's Antechamber",
+            "text": "Trophies of failed adventurers hang from iron hooks.",
+            "eventType": "combat",
+            "timeCost": "high",
+            "sceneImage": "/an-average-rpg/scenes/goblin-cave-inside.png",
+            "choices": [
+              {
+                "id": "engage",
+                "label": "Engage in Combat",
+                "subtitle": "Fight head-on for full rewards",
+                "tags": [
+                  {
+                    "label": "High Risk",
+                    "tone": "risk"
+                  },
+                  {
+                    "label": "High Reward",
+                    "tone": "reward"
+                  }
+                ]
+              },
+              {
+                "id": "ambush",
+                "label": "Attempt Ambush",
+                "subtitle": "Strike from cover",
+                "tags": [
+                  {
+                    "label": "Rewards Vary",
+                    "tone": "neutral"
+                  }
+                ]
+              },
+              {
+                "id": "retreat",
+                "label": "Fall Back",
+                "subtitle": "Reposition before fighting",
+                "tags": [
+                  {
+                    "label": "Low Risk",
+                    "tone": "neutral"
+                  }
+                ]
+              }
+            ]
+          }
         },
         {
           "floor": 10,
-          "monsterPool": ["goblin_king"],
+          "monsterPool": [
+            "goblin_king"
+          ],
           "bossId": "goblin_king",
           "lootModifier": 2.5,
-          "xpModifier": 2.5
+          "xpModifier": 2.5,
+          "approach": {
+            "title": "Throne of the Goblin King",
+            "text": "A crude throne of stolen gold looms in the torchlight. The Goblin King rises to meet you.",
+            "eventType": "combat",
+            "timeCost": "high",
+            "sceneImage": "/an-average-rpg/scenes/goblin-king-room.png",
+            "choices": [
+              {
+                "id": "engage",
+                "label": "Engage in Combat",
+                "subtitle": "Fight head-on for full rewards",
+                "tags": [
+                  {
+                    "label": "High Risk",
+                    "tone": "risk"
+                  },
+                  {
+                    "label": "High Reward",
+                    "tone": "reward"
+                  }
+                ]
+              },
+              {
+                "id": "ambush",
+                "label": "Attempt Ambush",
+                "subtitle": "Strike from cover",
+                "tags": [
+                  {
+                    "label": "Rewards Vary",
+                    "tone": "neutral"
+                  }
+                ]
+              },
+              {
+                "id": "retreat",
+                "label": "Fall Back",
+                "subtitle": "Reposition before fighting",
+                "tags": [
+                  {
+                    "label": "Low Risk",
+                    "tone": "neutral"
+                  }
+                ]
+              }
+            ]
+          }
         }
       ],
       "rewards": {
         "completionBonus": {
           "gold": 100,
           "xp": 200,
-          "items": ["goblin_crown_shard"]
+          "items": [
+            "goblin_crown_shard"
+          ]
         }
       },
       "flavorText": "They say the Goblin King hoards a crown of stolen gold..."
@@ -96,80 +659,109 @@
       "floors": [
         {
           "floor": 1,
-          "monsterPool": ["skeleton_warrior"],
+          "monsterPool": [
+            "skeleton_warrior"
+          ],
           "bossId": null,
-          "lootModifier": 1.0,
+          "lootModifier": 1,
           "xpModifier": 1.2
         },
         {
           "floor": 2,
-          "monsterPool": ["skeleton_warrior", "zombie"],
+          "monsterPool": [
+            "skeleton_warrior",
+            "zombie"
+          ],
           "bossId": null,
           "lootModifier": 1.1,
           "xpModifier": 1.3
         },
         {
           "floor": 3,
-          "monsterPool": ["zombie", "ghost"],
+          "monsterPool": [
+            "zombie",
+            "ghost"
+          ],
           "bossId": null,
           "lootModifier": 1.2,
           "xpModifier": 1.4
         },
         {
           "floor": 4,
-          "monsterPool": ["skeleton_archer", "ghost"],
+          "monsterPool": [
+            "skeleton_archer",
+            "ghost"
+          ],
           "bossId": null,
           "lootModifier": 1.3,
           "xpModifier": 1.5
         },
         {
           "floor": 5,
-          "monsterPool": ["skeleton_mage", "wraith"],
+          "monsterPool": [
+            "skeleton_mage",
+            "wraith"
+          ],
           "bossId": null,
           "lootModifier": 1.4,
           "xpModifier": 1.6
         },
         {
           "floor": 6,
-          "monsterPool": ["wraith", "skeleton_knight"],
+          "monsterPool": [
+            "wraith",
+            "skeleton_knight"
+          ],
           "bossId": null,
           "lootModifier": 1.5,
           "xpModifier": 1.7
         },
         {
           "floor": 7,
-          "monsterPool": ["skeleton_knight", "bone_golem"],
+          "monsterPool": [
+            "skeleton_knight",
+            "bone_golem"
+          ],
           "bossId": null,
           "lootModifier": 1.6,
           "xpModifier": 1.8
         },
         {
           "floor": 8,
-          "monsterPool": ["bone_golem", "death_knight"],
+          "monsterPool": [
+            "bone_golem",
+            "death_knight"
+          ],
           "bossId": null,
           "lootModifier": 1.7,
           "xpModifier": 1.9
         },
         {
           "floor": 9,
-          "monsterPool": ["death_knight"],
+          "monsterPool": [
+            "death_knight"
+          ],
           "bossId": null,
           "lootModifier": 1.8,
-          "xpModifier": 2.0
+          "xpModifier": 2
         },
         {
           "floor": 10,
-          "monsterPool": ["lich_lord"],
+          "monsterPool": [
+            "lich_lord"
+          ],
           "bossId": "lich_lord",
-          "lootModifier": 3.0,
-          "xpModifier": 3.0
+          "lootModifier": 3,
+          "xpModifier": 3
         }
       ],
       "rewards": {
         "completionBonus": {
           "gold": 250,
           "xp": 500,
-          "items": ["lich_phylactery_shard"]
+          "items": [
+            "lich_phylactery_shard"
+          ]
         }
       },
       "specialMechanics": {
@@ -186,80 +778,112 @@
       "floors": [
         {
           "floor": 1,
-          "monsterPool": ["fire_elemental", "magma_slug"],
+          "monsterPool": [
+            "fire_elemental",
+            "magma_slug"
+          ],
           "bossId": null,
           "lootModifier": 1.2,
           "xpModifier": 1.5
         },
         {
           "floor": 2,
-          "monsterPool": ["magma_slug", "fire_imp"],
+          "monsterPool": [
+            "magma_slug",
+            "fire_imp"
+          ],
           "bossId": null,
           "lootModifier": 1.3,
           "xpModifier": 1.6
         },
         {
           "floor": 3,
-          "monsterPool": ["fire_imp", "salamander"],
+          "monsterPool": [
+            "fire_imp",
+            "salamander"
+          ],
           "bossId": null,
           "lootModifier": 1.4,
           "xpModifier": 1.7
         },
         {
           "floor": 4,
-          "monsterPool": ["salamander", "flame_hound"],
+          "monsterPool": [
+            "salamander",
+            "flame_hound"
+          ],
           "bossId": null,
           "lootModifier": 1.5,
           "xpModifier": 1.8
         },
         {
           "floor": 5,
-          "monsterPool": ["flame_hound", "drake_hatchling"],
+          "monsterPool": [
+            "flame_hound",
+            "drake_hatchling"
+          ],
           "bossId": null,
           "lootModifier": 1.6,
           "xpModifier": 1.9
         },
         {
           "floor": 6,
-          "monsterPool": ["drake_hatchling", "fire_giant"],
+          "monsterPool": [
+            "drake_hatchling",
+            "fire_giant"
+          ],
           "bossId": null,
           "lootModifier": 1.7,
-          "xpModifier": 2.0
+          "xpModifier": 2
         },
         {
           "floor": 7,
-          "monsterPool": ["fire_giant", "young_drake"],
+          "monsterPool": [
+            "fire_giant",
+            "young_drake"
+          ],
           "bossId": null,
           "lootModifier": 1.8,
           "xpModifier": 2.2
         },
         {
           "floor": 8,
-          "monsterPool": ["young_drake", "lava_golem"],
+          "monsterPool": [
+            "young_drake",
+            "lava_golem"
+          ],
           "bossId": null,
-          "lootModifier": 2.0,
+          "lootModifier": 2,
           "xpModifier": 2.4
         },
         {
           "floor": 9,
-          "monsterPool": ["lava_golem", "adult_drake"],
+          "monsterPool": [
+            "lava_golem",
+            "adult_drake"
+          ],
           "bossId": null,
           "lootModifier": 2.2,
           "xpModifier": 2.6
         },
         {
           "floor": 10,
-          "monsterPool": ["ancient_red_dragon"],
+          "monsterPool": [
+            "ancient_red_dragon"
+          ],
           "bossId": "ancient_red_dragon",
-          "lootModifier": 5.0,
-          "xpModifier": 5.0
+          "lootModifier": 5,
+          "xpModifier": 5
         }
       ],
       "rewards": {
         "completionBonus": {
           "gold": 1000,
           "xp": 2000,
-          "items": ["dragon_scale", "dragon_heart_shard"]
+          "items": [
+            "dragon_scale",
+            "dragon_heart_shard"
+          ]
         }
       },
       "specialMechanics": {
@@ -282,7 +906,12 @@
       "goldRewardMin": 2,
       "goldRewardMax": 6,
       "lootTable": [
-        { "itemId": "rusty_dagger", "weight": 20, "minQuantity": 1, "maxQuantity": 1 }
+        {
+          "itemId": "rusty_dagger",
+          "weight": 20,
+          "minQuantity": 1,
+          "maxQuantity": 1
+        }
       ]
     },
     {
@@ -297,8 +926,18 @@
       "goldRewardMin": 4,
       "goldRewardMax": 10,
       "lootTable": [
-        { "itemId": "crude_sword", "weight": 15, "minQuantity": 1, "maxQuantity": 1 },
-        { "itemId": "leather_scraps", "weight": 30, "minQuantity": 1, "maxQuantity": 2 }
+        {
+          "itemId": "crude_sword",
+          "weight": 15,
+          "minQuantity": 1,
+          "maxQuantity": 1
+        },
+        {
+          "itemId": "leather_scraps",
+          "weight": 30,
+          "minQuantity": 1,
+          "maxQuantity": 2
+        }
       ]
     },
     {
@@ -313,7 +952,12 @@
       "goldRewardMin": 5,
       "goldRewardMax": 12,
       "lootTable": [
-        { "itemId": "shortbow", "weight": 10, "minQuantity": 1, "maxQuantity": 1 }
+        {
+          "itemId": "shortbow",
+          "weight": 10,
+          "minQuantity": 1,
+          "maxQuantity": 1
+        }
       ]
     },
     {
@@ -328,8 +972,18 @@
       "goldRewardMin": 8,
       "goldRewardMax": 18,
       "lootTable": [
-        { "itemId": "shaman_staff", "weight": 8, "minQuantity": 1, "maxQuantity": 1 },
-        { "itemId": "mana_herb", "weight": 25, "minQuantity": 1, "maxQuantity": 3 }
+        {
+          "itemId": "shaman_staff",
+          "weight": 8,
+          "minQuantity": 1,
+          "maxQuantity": 1
+        },
+        {
+          "itemId": "mana_herb",
+          "weight": 25,
+          "minQuantity": 1,
+          "maxQuantity": 3
+        }
       ]
     },
     {
@@ -344,7 +998,12 @@
       "goldRewardMin": 12,
       "goldRewardMax": 25,
       "lootTable": [
-        { "itemId": "elite_goblin_blade", "weight": 12, "minQuantity": 1, "maxQuantity": 1 }
+        {
+          "itemId": "elite_goblin_blade",
+          "weight": 12,
+          "minQuantity": 1,
+          "maxQuantity": 1
+        }
       ]
     },
     {
@@ -359,11 +1018,24 @@
       "goldRewardMin": 50,
       "goldRewardMax": 100,
       "lootTable": [
-        { "itemId": "goblin_kings_crown", "weight": 25, "minQuantity": 1, "maxQuantity": 1 },
-        { "itemId": "kings_treasure_key", "weight": 50, "minQuantity": 1, "maxQuantity": 1 }
+        {
+          "itemId": "goblin_kings_crown",
+          "weight": 25,
+          "minQuantity": 1,
+          "maxQuantity": 1
+        },
+        {
+          "itemId": "kings_treasure_key",
+          "weight": 50,
+          "minQuantity": 1,
+          "maxQuantity": 1
+        }
       ],
       "isBoss": true,
-      "bossAbilities": ["rally_minions", "royal_decree"]
+      "bossAbilities": [
+        "rally_minions",
+        "royal_decree"
+      ]
     },
     {
       "id": "skeleton_warrior",
@@ -377,9 +1049,16 @@
       "goldRewardMin": 5,
       "goldRewardMax": 15,
       "lootTable": [
-        { "itemId": "bone_fragment", "weight": 40, "minQuantity": 1, "maxQuantity": 3 }
+        {
+          "itemId": "bone_fragment",
+          "weight": 40,
+          "minQuantity": 1,
+          "maxQuantity": 3
+        }
       ],
-      "traits": ["undead"]
+      "traits": [
+        "undead"
+      ]
     },
     {
       "id": "zombie",
@@ -393,9 +1072,17 @@
       "goldRewardMin": 3,
       "goldRewardMax": 8,
       "lootTable": [
-        { "itemId": "rotting_flesh", "weight": 50, "minQuantity": 1, "maxQuantity": 2 }
+        {
+          "itemId": "rotting_flesh",
+          "weight": 50,
+          "minQuantity": 1,
+          "maxQuantity": 2
+        }
       ],
-      "traits": ["undead", "slow"]
+      "traits": [
+        "undead",
+        "slow"
+      ]
     },
     {
       "id": "lich_lord",
@@ -409,12 +1096,29 @@
       "goldRewardMin": 150,
       "goldRewardMax": 300,
       "lootTable": [
-        { "itemId": "lich_staff", "weight": 20, "minQuantity": 1, "maxQuantity": 1 },
-        { "itemId": "soul_gem", "weight": 35, "minQuantity": 1, "maxQuantity": 2 }
+        {
+          "itemId": "lich_staff",
+          "weight": 20,
+          "minQuantity": 1,
+          "maxQuantity": 1
+        },
+        {
+          "itemId": "soul_gem",
+          "weight": 35,
+          "minQuantity": 1,
+          "maxQuantity": 2
+        }
       ],
       "isBoss": true,
-      "traits": ["undead", "spellcaster"],
-      "bossAbilities": ["life_drain", "summon_undead", "death_nova"]
+      "traits": [
+        "undead",
+        "spellcaster"
+      ],
+      "bossAbilities": [
+        "life_drain",
+        "summon_undead",
+        "death_nova"
+      ]
     },
     {
       "id": "ancient_red_dragon",
@@ -428,13 +1132,37 @@
       "goldRewardMin": 500,
       "goldRewardMax": 1500,
       "lootTable": [
-        { "itemId": "dragon_scale_armor", "weight": 15, "minQuantity": 1, "maxQuantity": 1 },
-        { "itemId": "dragon_fang", "weight": 30, "minQuantity": 1, "maxQuantity": 2 },
-        { "itemId": "dragon_hoard_key", "weight": 100, "minQuantity": 1, "maxQuantity": 1 }
+        {
+          "itemId": "dragon_scale_armor",
+          "weight": 15,
+          "minQuantity": 1,
+          "maxQuantity": 1
+        },
+        {
+          "itemId": "dragon_fang",
+          "weight": 30,
+          "minQuantity": 1,
+          "maxQuantity": 2
+        },
+        {
+          "itemId": "dragon_hoard_key",
+          "weight": 100,
+          "minQuantity": 1,
+          "maxQuantity": 1
+        }
       ],
       "isBoss": true,
-      "traits": ["dragon", "fire_immune", "flying"],
-      "bossAbilities": ["fire_breath", "tail_swipe", "terrifying_roar", "wing_buffet"]
+      "traits": [
+        "dragon",
+        "fire_immune",
+        "flying"
+      ],
+      "bossAbilities": [
+        "fire_breath",
+        "tail_swipe",
+        "terrifying_roar",
+        "wing_buffet"
+      ]
     }
   ]
 }

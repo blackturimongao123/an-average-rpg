@@ -12,7 +12,8 @@
     "src/types.ts",
     "src/combat/**/*",
     "src/skills/**/*",
-    "src/campaign/**/*"
+    "src/campaign/**/*",
+    "src/adventure/**/*"
   ],
   "exclude": ["node_modules", "dist"]
 }

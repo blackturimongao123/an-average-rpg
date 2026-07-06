@@ -52,6 +52,12 @@
       "import": "./src/campaign/index.ts",
       "require": "./dist/campaign/index.js",
       "default": "./dist/campaign/index.js"
+    },
+    "./adventure": {
+      "types": "./src/adventure/index.ts",
+      "import": "./src/adventure/index.ts",
+      "require": "./dist/adventure/index.js",
+      "default": "./dist/adventure/index.js"
     }
   },
   "scripts": {
