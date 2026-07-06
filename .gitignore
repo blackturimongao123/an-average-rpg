@@ -8,6 +8,8 @@ build/
 .next/
 out/
 functions/lib/
+functions/npm-packages/
+functions/game-data/
 
 # Dev caches
 .vite/
