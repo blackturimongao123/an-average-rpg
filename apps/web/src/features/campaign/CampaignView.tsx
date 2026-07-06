@@ -1,6 +1,6 @@
 import type { ActiveMission, Heir, MissionCampaignChoice, MissionTemplate } from "@bloodline/shared/types";
 import { activeMissionToAdventure } from "@bloodline/shared/adventure";
-import { AdventureEventView } from "@/features/adventure/AdventureEventView";
+import { AdventureEventView, type AdventurePartyMember } from "@/features/adventure/AdventureEventView";
 
 interface CampaignViewProps {
   heir: Heir;
@@ -9,6 +9,9 @@ interface CampaignViewProps {
   loading: boolean;
   onChoose: (choice: MissionCampaignChoice) => void;
   onAbandon?: () => void;
+  partyMembers?: AdventurePartyMember[];
+  choicesDisabled?: boolean;
+  leaderHint?: string;
 }
 
 export function CampaignView({
@@ -18,6 +21,9 @@ export function CampaignView({
   loading,
   onChoose,
   onAbandon,
+  partyMembers,
+  choicesDisabled,
+  leaderHint,
 }: CampaignViewProps) {
   const { step, choices, title, isInterlude, progressLabel } = activeMissionToAdventure(
     mission,
@@ -73,6 +79,9 @@ export function CampaignView({
             ? "Final stage — choice completes contract"
             : "Choose an action to advance"
       }
+      partyMembers={partyMembers}
+      choicesDisabled={choicesDisabled}
+      leaderHint={leaderHint}
     />
   );
 }

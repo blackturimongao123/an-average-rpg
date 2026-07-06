@@ -20,6 +20,8 @@ import {
   normalizeAdventurerRank,
   rerollMissionBoard,
 } from "@/lib/missions";
+import { startPartyMission } from "@/firebase/partyMissionClient";
+import type { Party } from "@bloodline/shared/types";
 import { db } from "./config";
 
 const BOARD_DOC_ID = "current";
@@ -169,6 +171,25 @@ export async function bootstrapAcceptMission(
     throw new Error("You already have an active mission");
   }
 
+  const partyId = lineage.partyId as string | null | undefined;
+  let party: Party | null = null;
+  if (partyId) {
+    const partyDoc = await getDoc(doc(db, "parties", partyId));
+    if (!partyDoc.exists()) {
+      throw new Error("Your party no longer exists");
+    }
+    party = partyDoc.data() as Party;
+    if (party.leaderUid !== userId) {
+      throw new Error("Only the party leader can accept a mission for the group");
+    }
+    if (party.activeDungeon) {
+      throw new Error("Your party is already in a dungeon");
+    }
+    if (party.activeMission) {
+      throw new Error("Your party already has an active mission");
+    }
+  }
+
   const adventurerRank = normalizeAdventurerRank(lineage.adventurerRank);
   const boardCtx = boardContextFromHeir(
     {
@@ -222,6 +243,14 @@ export async function bootstrapAcceptMission(
   batch.set(boardDocRef, { ...board, slots: updatedSlots });
   batch.update(heirRef, { activeMission: firestoreSafe(activeMission) });
   await batch.commit();
+
+  if (partyId && party) {
+    await startPartyMission(partyId, activeMission, {
+      uid: userId,
+      lineageId,
+      heirId,
+    });
+  }
 
   return { activeMission, mission, board: { ...board, slots: updatedSlots } };
 }

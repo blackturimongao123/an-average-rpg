@@ -579,6 +579,40 @@ export interface PartyActiveDungeon {
   updatedAtMs: number;
 }
 
+export interface PartyMissionPendingBattle {
+  battleReplay: BattleReplayPayload;
+  choiceLabel?: string;
+  missionFailed?: boolean;
+  completed?: boolean;
+  updatedAtMs: number;
+}
+
+export interface PartyMissionOutcome {
+  completed: boolean;
+  missionFailed?: boolean;
+  rewards?: MissionRewards | null;
+  adventurerRank?: AdventurerRank;
+  adventurerRankXp?: number;
+  updatedAtMs: number;
+}
+
+export interface PartyActiveMission {
+  missionId: string;
+  missionName: string;
+  difficulty: AdventurerRank;
+  slotIndex: number;
+  currentStep: number;
+  totalSteps: number;
+  startedAtMs: number;
+  campaignState?: CampaignRunState;
+  leaderUid: string;
+  leaderLineageId: string;
+  leaderHeirId: string;
+  updatedAtMs: number;
+  pendingBattle?: PartyMissionPendingBattle | null;
+  outcome?: PartyMissionOutcome | null;
+}
+
 export interface PartyMemberProfile {
   familyName: string;
   heirName: string;
@@ -596,6 +630,7 @@ export interface Party {
   memberProfiles?: PartyMemberProfile[];
   createdAtMs: number;
   activeDungeon?: PartyActiveDungeon | null;
+  activeMission?: PartyActiveMission | null;
 }
 
 export interface PartyInvite {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useGameStore } from "@/stores/gameStore";
 import { BusyActivityBlock, useIsHeirBusyOnJob } from "@/components/game/BusyActivityBlock";
 import { useAuthStore } from "@/stores/authStore";
@@ -29,10 +29,21 @@ import {
   ClipboardList,
   Clock,
   Coins,
+  Crown,
   Medal,
   Scroll,
   Star,
+  Users,
 } from "lucide-react";
+import { usePartyMembers } from "@/hooks/usePartyMembers";
+import type { AdventurePartyMember } from "@/features/adventure/AdventureEventView";
+import {
+  clearPartyMission,
+  clearPartyMissionPendingBattle,
+  setPartyMissionOutcome,
+  setPartyMissionPendingBattle,
+  syncPartyMissionState,
+} from "@/firebase/partyMissionClient";
 
 import itemsData from "@game-data/items.json";
 
@@ -103,6 +114,7 @@ export function TavernPage() {
   } = useGameStore();
   const isBusyOnJob = useIsHeirBusyOnJob();
   const { loading: boardLoading, countdownMs, refreshBoard } = useMissionBoard();
+  const { party, members } = usePartyMembers(lineage?.partyId);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [tavernTab, setTavernTab] = useState<"missions" | "encounters">("missions");
@@ -116,10 +128,58 @@ export function TavernPage() {
     choiceLabel?: string;
   } | null>(null);
 
+  const inParty = Boolean(lineage?.partyId && party);
+  const isPartyLeader = inParty && party?.leaderUid === user?.uid;
+  const partyMission = party?.activeMission ?? null;
+
+  const adventurePartyMembers: AdventurePartyMember[] = useMemo(() => {
+    if (!inParty || members.length === 0) return [];
+    return members.map((m) => ({
+      heirName: m.heirName,
+      classId: m.classId,
+      subclassId: m.subclassId,
+      level: m.level,
+      isLeader: m.isLeader,
+      isSelf: m.lineageId === lineage?.id,
+    }));
+  }, [inParty, members, lineage?.id]);
+
+  useEffect(() => {
+    if (!inParty || !partyMission?.pendingBattle || isPartyLeader) return;
+    const pending = partyMission.pendingBattle;
+    if (missionBattle?.replay === pending.battleReplay) return;
+
+    setMissionBattle({
+      replay: pending.battleReplay,
+      response: {
+        completed: pending.completed ?? false,
+        activeMission: heir?.activeMission ?? null,
+        missionFailed: pending.missionFailed,
+        stepText: "",
+        rewards: null,
+        rankUp: null,
+      },
+      choiceLabel: pending.choiceLabel,
+    });
+  }, [
+    inParty,
+    isPartyLeader,
+    partyMission?.pendingBattle?.updatedAtMs,
+    heir?.activeMission,
+    missionBattle?.replay,
+  ]);
+
   const applyAdvanceResponse = async (response: AdvanceMissionResult) => {
     if (response.missionFailed) {
       setActiveMission(null);
       setError("Your heir was defeated. The contract failed.");
+      if (inParty && lineage?.partyId && isPartyLeader) {
+        await setPartyMissionOutcome(lineage.partyId, {
+          completed: false,
+          missionFailed: true,
+        });
+        await clearPartyMission(lineage.partyId);
+      }
       await refreshBoard();
       return;
     }
@@ -140,9 +200,25 @@ export function TavernPage() {
         response.adventurerRankXp!
       );
       response.rewards.items.forEach((itemId) => addItemToInventory(itemId));
+      if (inParty && lineage?.partyId && isPartyLeader) {
+        await setPartyMissionOutcome(lineage.partyId, {
+          completed: true,
+          rewards: response.rewards,
+          adventurerRank: normalizeAdventurerRank(response.adventurerRank),
+          adventurerRankXp: response.adventurerRankXp,
+        });
+        await clearPartyMission(lineage.partyId);
+      }
       await refreshBoard();
     } else if (response.activeMission) {
       setActiveMission(response.activeMission);
+      if (inParty && lineage?.partyId && isPartyLeader && heir) {
+        await syncPartyMissionState(lineage.partyId, response.activeMission, {
+          uid: user!.uid,
+          lineageId: lineage.id,
+          heirId: heir.id,
+        });
+      }
     }
   };
 
@@ -156,6 +232,16 @@ export function TavernPage() {
 
   const handleAcceptMission = async (slotIndex: number) => {
     if (!lineage || !heir || !user) return;
+
+    if (inParty && !isPartyLeader) {
+      setError("Only the party leader can accept a mission for the group.");
+      return;
+    }
+
+    if (inParty && partyMission) {
+      setError("Your party already has an active mission.");
+      return;
+    }
 
     setLoading(true);
     setError("");
@@ -174,6 +260,11 @@ export function TavernPage() {
   const handleAdvanceMission = (choice: MissionCampaignChoice) => {
     if (!lineage || !heir || !user || !heir.activeMission) return;
 
+    if (inParty && !isPartyLeader) {
+      setError("Only the party leader can choose actions for the party.");
+      return;
+    }
+
     setError("");
 
     try {
@@ -190,6 +281,14 @@ export function TavernPage() {
           response,
           choiceLabel: choice.label,
         });
+        if (inParty && lineage.partyId) {
+          void setPartyMissionPendingBattle(lineage.partyId, {
+            battleReplay: response.battleReplay,
+            choiceLabel: choice.label,
+            missionFailed: response.missionFailed,
+            completed: response.completed,
+          });
+        }
         return;
       }
 
@@ -201,8 +300,15 @@ export function TavernPage() {
 
   const handleMissionBattleContinue = async () => {
     if (!missionBattle) return;
+    if (inParty && !isPartyLeader) {
+      setMissionBattle(null);
+      return;
+    }
     const { response } = missionBattle;
     setMissionBattle(null);
+    if (inParty && lineage?.partyId && isPartyLeader) {
+      await clearPartyMissionPendingBattle(lineage.partyId);
+    }
     setLoading(true);
     try {
       await applyAdvanceResponse(response);
@@ -215,6 +321,10 @@ export function TavernPage() {
 
   const handleAbandonMission = async () => {
     if (!lineage || !heir || !user) return;
+    if (inParty && !isPartyLeader) {
+      setError("Only the party leader can abandon the party mission.");
+      return;
+    }
     if (!window.confirm("Abandon this contract? Rewards will be lost and a cooldown applies.")) {
       return;
     }
@@ -224,6 +334,9 @@ export function TavernPage() {
 
     try {
       await bootstrapAbandonMission(user.uid, lineage.id, heir.id);
+      if (inParty && lineage.partyId) {
+        await clearPartyMission(lineage.partyId);
+      }
       setActiveMission(null);
       await refreshBoard();
     } catch (err: unknown) {
@@ -290,6 +403,15 @@ export function TavernPage() {
           loading={loading}
           onChoose={handleAdvanceMission}
           onAbandon={handleAbandonMission}
+          partyMembers={adventurePartyMembers}
+          choicesDisabled={inParty && !isPartyLeader}
+          leaderHint={
+            inParty && !isPartyLeader
+              ? "Waiting for the party leader to choose the next action."
+              : inParty
+                ? "Party expedition — your choices guide the whole group."
+                : undefined
+          }
         />
       </div>
     );
@@ -400,6 +522,17 @@ export function TavernPage() {
           <p className="text-sm text-muted-foreground mb-4">
             Contracts are tailored to your Adventurer Rank ({adventurerRank}). Unclaimed missions
             reroll every hour.
+            {inParty && (
+              <span className="block mt-1 text-gold/90">
+                <Users className="inline w-4 h-4 mr-1" />
+                Party active ({members.length} members)
+                {isPartyLeader ? (
+                  <Crown className="inline w-3.5 h-3.5 ml-1 text-gold" />
+                ) : (
+                  " — leader accepts missions for the group"
+                )}
+              </span>
+            )}
           </p>
 
           {boardLoading && !missionBoard ? (
@@ -434,10 +567,10 @@ export function TavernPage() {
                     <RewardList rewards={mission.rewards} />
                     <button
                       onClick={() => handleAcceptMission(slot.slotIndex)}
-                      disabled={loading}
+                      disabled={loading || (inParty && !isPartyLeader)}
                       className="btn-primary w-full mt-4"
                     >
-                      Accept Mission
+                      {inParty ? "Accept for Party" : "Accept Mission"}
                     </button>
                   </div>
                 );

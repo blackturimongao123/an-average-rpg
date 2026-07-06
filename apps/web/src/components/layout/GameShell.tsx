@@ -6,6 +6,7 @@ import { useAuthStore } from "@/stores/authStore";
 import { useGameStore } from "@/stores/gameStore";
 import { useUIStore } from "@/stores/uiStore";
 import { useJobShiftTimer } from "@/hooks/useJobShiftTimer";
+import { usePartyMissionSync } from "@/hooks/usePartyMissionSync";
 import { normalizeAdventurerRank, getMissionTemplate, hasResolvableActiveMission } from "@/lib/missions";
 import { migrateEquipment } from "@bloodline/shared/equipment";
 import type { ActiveMission, MerchantBoard } from "@bloodline/shared/types";
@@ -33,6 +34,7 @@ export function GameShell({ children }: GameShellProps) {
     battleReplayActive;
 
   useJobShiftTimer();
+  usePartyMissionSync();
 
   useEffect(() => {
     if (!hasResolvableActiveMission(heir?.activeMission)) return;
