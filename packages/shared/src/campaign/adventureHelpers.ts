@@ -195,4 +195,5 @@ export function getDefaultSceneGradient(eventType: MissionEventType): string {
       return "linear-gradient(180deg, #1e1a12 0%, #121018 50%, #18120a 100%)";
     default:
       return "linear-gradient(180deg, #1a2030 0%, #0c1018 50%, #181008 100%)";
+  }
 }
