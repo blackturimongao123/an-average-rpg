@@ -8,11 +8,11 @@ import {
   type CombatItemDef,
   type RandomFn,
 } from "@bloodline/shared/combat";
-import { seededRandom } from "./helpers.js";
-import type { Heir, Monster, BattleResult } from "./types.js";
+import type { BattleResult, Heir, Monster } from "@bloodline/shared/types";
+import { seededRandom } from "./seededRandom";
 
-import combatDataJson from "../../../game-data/combat.json";
-import itemsData from "../../../game-data/items.json";
+import combatDataJson from "@game-data/combat.json";
+import itemsData from "@game-data/items.json";
 
 const combatData = combatDataJson as CombatData;
 
@@ -35,7 +35,6 @@ export function getBattleReplaySpeeds(heir: Heir, monster: Monster) {
 
 export function simulateBattle(heir: Heir, monster: Monster, seed: string): BattleResult {
   const equipment = migrateEquipment(heir.equipment as unknown as Record<string, unknown>);
-
   const rand: RandomFn = (index) => seededRandom(seed, index);
 
   const result = simulateGaugeCombat(

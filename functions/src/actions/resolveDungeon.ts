@@ -8,7 +8,7 @@ import {
   generateSeed,
   seededRandomChoice,
 } from "../utils/helpers.js";
-import { simulateBattle } from "../utils/combat.js";
+import { simulateBattle, getBattleReplaySpeeds } from "../utils/combat.js";
 import type { BattleReplayPayload } from "@bloodline/shared/types";
 import type { Heir, Lineage, Monster, BattleRound } from "../utils/types.js";
 
@@ -218,6 +218,7 @@ export const resolveDungeon = onCall<ResolveDungeonRequest>(
     const heirMaxHp = calculateMaxHp(battleHeir.stats.constitution, battleHeir.level);
     const approach = (floorData as { approach?: { sceneImage?: string; sceneGradient?: string } })
       .approach;
+    const { heirSpeed, monsterSpeed, gaugeThreshold } = getBattleReplaySpeeds(battleHeir, monster);
     const battleReplay = buildBattleReplayPayload({
       heir: {
         id: heir.id,
@@ -225,6 +226,7 @@ export const resolveDungeon = onCall<ResolveDungeonRequest>(
         classId: heir.classId,
         level: battleHeir.level,
         stats: battleHeir.stats,
+        speed: heirSpeed,
         maxHp: heirMaxHp,
         startHp: heirMaxHp,
       },
@@ -232,9 +234,11 @@ export const resolveDungeon = onCall<ResolveDungeonRequest>(
         id: monster.id,
         name: monster.name,
         hp: monster.hp,
+        speed: monsterSpeed,
       },
       rounds: battleResult.rounds,
       victory: battleResult.victory,
+      gaugeThreshold,
       sceneImage: approach?.sceneImage,
       sceneGradient: approach?.sceneGradient,
     });

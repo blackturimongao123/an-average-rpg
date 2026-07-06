@@ -49,19 +49,25 @@ export function BattleView({
     return () => setBattleReplayActive(false);
   }, [setBattleReplayActive]);
 
+  const onFinishedRef = useRef(onFinished);
+  const resultSummaryRef = useRef(resultSummary);
+  onFinishedRef.current = onFinished;
+  resultSummaryRef.current = resultSummary;
+
   const handleComplete = useCallback(() => {
     setShowResult(true);
-    onFinished(resultSummary);
-  }, [onFinished, resultSummary]);
+    onFinishedRef.current(resultSummaryRef.current);
+  }, []);
 
   const registerUnitRef = useCallback((id: string, el: HTMLElement | null) => {
     if (el) unitRefs.current.set(id, el);
     else unitRefs.current.delete(id);
   }, []);
 
-  const { playing, hpById, logLines, activeActorId, skip } = useBattleReplay({
+  const { playing, hpById, gaugeById, logLines, activeActorId, skip } = useBattleReplay({
     combatants: replay.combatants,
     rounds: replay.rounds,
+    gaugeThreshold: replay.gaugeThreshold,
     onComplete: handleComplete,
     fieldRef,
     flashRef,
@@ -115,6 +121,8 @@ export function BattleView({
           allies={allies}
           enemies={enemies}
           hpById={hpById}
+          gaugeById={gaugeById}
+          gaugeThreshold={replay.gaugeThreshold ?? 100}
           activeActorId={activeActorId}
           registerUnitRef={registerUnitRef}
         />

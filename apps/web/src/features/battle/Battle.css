@@ -178,6 +178,36 @@
   margin-top: 0.2rem;
 }
 
+.battle-gauge-bar {
+  height: 0.32rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  margin-top: 0.35rem;
+}
+
+.battle-gauge-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #1a5c8b, #4ecdc4);
+  transition: width 0.12s linear;
+}
+
+.battle-unit.is-gauge-ready:not(.is-dead) .battle-gauge-fill {
+  background: linear-gradient(90deg, #2d8cff, #7ee8fa);
+  box-shadow: 0 0 8px rgba(78, 205, 196, 0.65);
+}
+
+.battle-unit.is-gauge-ready.is-active .battle-gauge-fill {
+  animation: battleGaugeReadyPulse 0.8s ease infinite;
+}
+
+@keyframes battleGaugeReadyPulse {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.35); }
+}
+
 .battle-hud {
   position: relative;
   z-index: 10;

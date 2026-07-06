@@ -42,6 +42,10 @@ export function playHeal(unitEl: HTMLElement | null) {
   addFxClass(unitEl, "fx-heal", BATTLE_PACE.healDuration);
 }
 
+export function playBuff(unitEl: HTMLElement | null) {
+  addFxClass(unitEl, "fx-buff", BATTLE_PACE.healDuration);
+}
+
 export function playDeath(unitEl: HTMLElement | null) {
   if (!unitEl) return;
   unitEl.classList.add("fx-death");
@@ -51,6 +55,7 @@ export interface DamagePopupOptions {
   text: string;
   isCrit?: boolean;
   isHeal?: boolean;
+  isBuff?: boolean;
   isMiss?: boolean;
   isDodge?: boolean;
 }
@@ -68,6 +73,7 @@ export function spawnDamagePopup(
   popup.className = "battle-damage-popup";
 
   if (options.isHeal) popup.classList.add("heal");
+  if (options.isBuff) popup.classList.add("buff");
   if (options.isCrit) popup.classList.add("crit");
   if (options.isMiss) popup.classList.add("miss");
   if (options.isDodge) popup.classList.add("dodge");

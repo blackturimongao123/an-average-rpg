@@ -55,6 +55,13 @@
   text-shadow: 0 0 10px rgba(81, 207, 102, 0.5);
 }
 
+.battle-damage-popup.buff {
+  font-size: 0.95rem;
+  color: #4ecdc4;
+  text-shadow: 0 0 10px rgba(78, 205, 196, 0.55);
+  letter-spacing: 0.04em;
+}
+
 .battle-damage-popup.miss,
 .battle-damage-popup.dodge {
   font-size: 1rem;
@@ -140,6 +147,15 @@
 
 .battle-unit.fx-heal {
   animation: battleUnitHeal 0.9s ease;
+}
+
+.battle-unit.fx-buff {
+  animation: battleUnitBuff 0.9s ease;
+}
+
+@keyframes battleUnitBuff {
+  0%, 100% { filter: brightness(1); transform: scale(1); }
+  50% { filter: brightness(1.5) drop-shadow(0 0 16px #4ecdc4); transform: scale(1.05); }
 }
 
 @keyframes battleUnitHeal {

@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
+import { useAuthStore } from "@/stores/authStore";
 import { useGameStore } from "@/stores/gameStore";
 import { useUIStore } from "@/stores/uiStore";
 import { BusyActivityBlock, useIsHeirBusyOnJob } from "@/components/game/BusyActivityBlock";
 import { AdventureEventView } from "@/features/adventure/AdventureEventView";
 import { BattleView, type BattleResultSummary } from "@/features/battle/BattleView";
-import { resolveDungeon } from "@/firebase/functions";
-import { getFirebaseErrorMessage, isFunctionsUnavailable } from "@/lib/firebaseErrors";
+import { persistDungeonResult, resolveDungeonLocal } from "@/firebase/dungeonClient";
+import { getFirebaseErrorMessage } from "@/lib/firebaseErrors";
 import {
   getDungeonFloorApproach,
   getDungeonFloorChoices,
@@ -29,6 +30,7 @@ interface DungeonRunLog {
 }
 
 export function DungeonsPage() {
+  const { user } = useAuthStore();
   const { lineage, heir, updateHeirGold, updateHeirXp } = useGameStore();
   const setDungeonRunActive = useUIStore((s) => s.setDungeonRunActive);
   const isBusyOnJob = useIsHeirBusyOnJob();
@@ -80,59 +82,67 @@ export function DungeonsPage() {
     setPhase("floor_event");
   };
 
-  const handleFloorChoice = async (choice: MissionCampaignChoice) => {
-    if (!heir || !selectedDungeon || !lineage) return;
+  const handleFloorChoice = (choice: MissionCampaignChoice) => {
+    if (!heir || !selectedDungeon || !lineage || !user) return;
 
-    setLoading(true);
     setError("");
     setBattleReplay(null);
     setBattleSummary(null);
 
     try {
-      const response = await resolveDungeon({
-        lineageId: lineage.id,
-        heirId: heir.id,
-        dungeonId: selectedDungeon.id,
+      const result = resolveDungeonLocal({
+        userId: user.uid,
+        lineage,
+        heir,
+        dungeon: selectedDungeon,
         floor: currentFloor,
         floorChoiceId: choice.id,
       });
 
       const summary: BattleResultSummary = {
-        victory: response.data.victory,
-        heirDied: response.data.heirDied,
-        monsterFaced: response.data.monsterFaced,
-        rewards: response.data.rewards,
-        floorCleared: response.data.floorCleared,
-        dungeonCompleted: response.data.dungeonCompleted,
+        victory: result.victory,
+        heirDied: result.heirDied,
+        monsterFaced: result.monsterFaced,
+        rewards: result.rewards,
+        floorCleared: result.floorCleared,
+        dungeonCompleted: result.dungeonCompleted,
         choiceLabel: choice.label,
       };
 
       setBattleSummary(summary);
-      setBattleReplay(response.data.battleReplay);
+      setBattleReplay(result.battleReplay);
       setRunLog((prev) => [
         ...prev,
         {
-          text: `${choice.label}: faced ${response.data.monsterFaced} — ${response.data.victory ? "victory" : "defeat"}`,
+          text: `${choice.label}: faced ${result.monsterFaced} — ${result.victory ? "victory" : "defeat"}`,
           timestampMs: Date.now(),
         },
       ]);
 
-      if (response.data.victory) {
-        updateHeirGold(heir.gold + response.data.rewards.gold);
-        updateHeirXp(heir.xp + response.data.rewards.xp);
+      if (result.victory) {
+        updateHeirGold(heir.gold + result.rewards.gold);
+        updateHeirXp(heir.xp + result.rewards.xp);
       }
 
       setPhase("battle");
+
+      void persistDungeonResult(
+        {
+          userId: user.uid,
+          lineage,
+          heir,
+          dungeon: selectedDungeon,
+          floor: currentFloor,
+          floorChoiceId: choice.id,
+        },
+        result
+      ).catch((err) => {
+        console.error("Dungeon persist error:", err);
+        setError(getFirebaseErrorMessage(err));
+      });
     } catch (err) {
       console.error("Dungeon error:", err);
-      const message = getFirebaseErrorMessage(err);
-      setError(
-        isFunctionsUnavailable(err)
-          ? `${message} Dungeon combat runs on Cloud Functions — deploy the backend (Firebase Blaze plan required).`
-          : message
-      );
-    } finally {
-      setLoading(false);
+      setError(getFirebaseErrorMessage(err));
     }
   };
 

@@ -146,7 +146,8 @@ service cloud.firestore {
       match /dungeonProgress/{dungeonId} {
         allow read: if signedIn() 
           && get(/databases/$(database)/documents/lineages/$(lineageId)).data.ownerUid == request.auth.uid;
-        allow write: if false;
+        allow create, update: if ownsLineage(lineageId);
+        allow delete: if false;
       }
 
       // Mission board subcollection

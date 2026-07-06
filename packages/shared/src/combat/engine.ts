@@ -428,6 +428,7 @@ export function simulateGaugeCombat(
         isMiss: anyMiss && totalDamage === 0,
         hitCount: resolved.hitCount,
       });
+      if (monster.hp <= 0 || heir.hp <= 0) break;
     } else {
       // Monster attack
       if (tryDodge(heir, actives, seedBase, rand)) {
@@ -470,6 +471,7 @@ export function simulateGaugeCombat(
         isCrit: result.isCrit,
         isMiss: result.isMiss,
       });
+      if (monster.hp <= 0 || heir.hp <= 0) break;
     }
   }
 

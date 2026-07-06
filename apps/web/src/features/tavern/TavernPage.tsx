@@ -169,17 +169,16 @@ export function TavernPage() {
     }
   };
 
-  const handleAdvanceMission = async (choice: MissionCampaignChoice) => {
+  const handleAdvanceMission = (choice: MissionCampaignChoice) => {
     if (!lineage || !heir || !user || !heir.activeMission) return;
 
-    setLoading(true);
     setError("");
 
     try {
-      const response = await advancePlayerMission(
+      const response = advancePlayerMission(
         user.uid,
-        lineage.id,
-        heir.id,
+        lineage,
+        heir,
         choice.id
       );
 
@@ -189,15 +188,12 @@ export function TavernPage() {
           response,
           choiceLabel: choice.label,
         });
-        setLoading(false);
         return;
       }
 
-      await applyAdvanceResponse(response);
+      void applyAdvanceResponse(response);
     } catch (err: unknown) {
       setError(getFirebaseErrorMessage(err));
-    } finally {
-      setLoading(false);
     }
   };
 

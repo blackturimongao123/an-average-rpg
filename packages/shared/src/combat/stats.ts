@@ -51,6 +51,11 @@ export function computeCombatSpeed(
   return Math.floor(speed);
 }
 
+/** Monster speed formula — matches gauge combat engine. */
+export function getMonsterCombatSpeed(dexterity: number): number {
+  return Math.floor(8 + dexterity * 1.5);
+}
+
 export function calculateMaxHp(constitution: number, level: number): number {
   return 50 + constitution * 10 + level * 8;
 }

@@ -2,7 +2,9 @@ import {
   bootstrapAcceptMission,
   bootstrapGetMissionBoard,
 } from "./missionBoardBootstrap";
-import { advanceMission as advanceMissionCallable, type AdvanceMissionResult } from "./functions";
+import { advanceMissionLocal, persistAdvanceMission } from "./missionClient";
+import type { AdvanceMissionResult } from "./functions";
+import type { Heir, Lineage } from "@bloodline/shared/types";
 
 export async function getPlayerMissionBoard(
   userId: string,
@@ -21,12 +23,17 @@ export async function acceptPlayerMission(
   return bootstrapAcceptMission(userId, lineageId, heirId, slotIndex);
 }
 
-export async function advancePlayerMission(
-  _userId: string,
-  lineageId: string,
-  heirId: string,
+export function advancePlayerMission(
+  userId: string,
+  lineage: Lineage,
+  heir: Heir,
   choiceId?: string
-): Promise<AdvanceMissionResult> {
-  const response = await advanceMissionCallable({ lineageId, heirId, choiceId });
-  return response.data;
+): AdvanceMissionResult {
+  const result = advanceMissionLocal({ userId, lineage, heir, choiceId });
+
+  void persistAdvanceMission({ userId, lineage, heir, choiceId }, result).catch((err) => {
+    console.error("Mission persist error:", err);
+  });
+
+  return result;
 }

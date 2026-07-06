@@ -6,19 +6,33 @@ import { Skull } from "lucide-react";
 interface BattleUnitCardProps {
   combatant: BattleCombatant;
   currentHp: number;
+  currentGauge: number;
+  gaugeThreshold: number;
   isActive: boolean;
   registerRef: (id: string, el: HTMLElement | null) => void;
 }
 
 export const BattleUnitCard = forwardRef<HTMLDivElement, BattleUnitCardProps>(
-  function BattleUnitCard({ combatant, currentHp, isActive, registerRef }) {
+  function BattleUnitCard({
+    combatant,
+    currentHp,
+    currentGauge,
+    gaugeThreshold,
+    isActive,
+    registerRef,
+  }) {
     const hpPct = Math.max(0, Math.min(100, (currentHp / combatant.maxHp) * 100));
+    const gaugePct = Math.max(
+      0,
+      Math.min(100, (currentGauge / gaugeThreshold) * 100)
+    );
     const isDead = currentHp <= 0;
+    const isGaugeReady = !isDead && currentGauge >= gaugeThreshold;
 
     return (
       <div
         ref={(el) => registerRef(combatant.id, el)}
-        className={`battle-unit ${isActive ? "is-active" : ""} ${isDead ? "is-dead" : ""}`}
+        className={`battle-unit ${isActive ? "is-active" : ""} ${isDead ? "is-dead" : ""} ${isGaugeReady ? "is-gauge-ready" : ""}`}
         data-side={combatant.side}
         data-unit-id={combatant.id}
       >
@@ -45,6 +59,9 @@ export const BattleUnitCard = forwardRef<HTMLDivElement, BattleUnitCardProps>(
         <p className="battle-hp-text">
           {Math.max(0, currentHp)}/{combatant.maxHp}
         </p>
+        <div className="battle-gauge-bar" title="Action gauge">
+          <span className="battle-gauge-fill" style={{ width: `${gaugePct}%` }} />
+        </div>
       </div>
     );
   }

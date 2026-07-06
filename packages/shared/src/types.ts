@@ -257,6 +257,7 @@ export interface BattleCombatant {
   side: "ally" | "enemy";
   maxHp: number;
   startHp: number;
+  speed: number;
   portraitSrc?: string;
   classId?: string;
 }
@@ -265,6 +266,7 @@ export interface BattleReplayPayload {
   combatants: BattleCombatant[];
   rounds: BattleRound[];
   victory: boolean;
+  gaugeThreshold: number;
   sceneImage?: string;
   sceneGradient?: string;
 }

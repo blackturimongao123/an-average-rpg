@@ -5,6 +5,8 @@ interface BattleFieldProps {
   allies: BattleCombatant[];
   enemies: BattleCombatant[];
   hpById: Record<string, number>;
+  gaugeById: Record<string, number>;
+  gaugeThreshold: number;
   activeActorId: string | null;
   registerUnitRef: (id: string, el: HTMLElement | null) => void;
   fieldRef?: React.Ref<HTMLDivElement>;
@@ -14,6 +16,8 @@ export function BattleField({
   allies,
   enemies,
   hpById,
+  gaugeById,
+  gaugeThreshold,
   activeActorId,
   registerUnitRef,
   fieldRef,
@@ -26,6 +30,8 @@ export function BattleField({
             key={combatant.id}
             combatant={combatant}
             currentHp={hpById[combatant.id] ?? combatant.startHp}
+            currentGauge={gaugeById[combatant.id] ?? 0}
+            gaugeThreshold={gaugeThreshold}
             isActive={activeActorId === combatant.id}
             registerRef={registerUnitRef}
           />
@@ -38,6 +44,8 @@ export function BattleField({
             key={combatant.id}
             combatant={combatant}
             currentHp={hpById[combatant.id] ?? combatant.startHp}
+            currentGauge={gaugeById[combatant.id] ?? 0}
+            gaugeThreshold={gaugeThreshold}
             isActive={activeActorId === combatant.id}
             registerRef={registerUnitRef}
           />

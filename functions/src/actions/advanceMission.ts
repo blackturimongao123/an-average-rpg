@@ -22,7 +22,7 @@ import type {
 } from "@bloodline/shared/types";
 import { db } from "../index.js";
 import { generateSeed } from "../utils/helpers.js";
-import { simulateBattle } from "../utils/combat.js";
+import { simulateBattle, getBattleReplaySpeeds } from "../utils/combat.js";
 import { getMissionTemplate } from "../utils/missions.js";
 import type { Heir as FunctionsHeir, Monster } from "../utils/types.js";
 
@@ -167,6 +167,10 @@ export const advanceMission = onCall<AdvanceMissionRequest>(
 
       const battleResult = simulateBattle(heir as unknown as FunctionsHeir, monster, seed);
       const heirMaxHp = calculateMaxHp(heir.stats.constitution, heir.level);
+      const { heirSpeed, monsterSpeed, gaugeThreshold } = getBattleReplaySpeeds(
+        heir as unknown as FunctionsHeir,
+        monster
+      );
 
       battleReplay = buildBattleReplayPayload({
         heir: {
@@ -175,12 +179,19 @@ export const advanceMission = onCall<AdvanceMissionRequest>(
           classId: heir.classId,
           level: heir.level,
           stats: heir.stats,
+          speed: heirSpeed,
           maxHp: heirMaxHp,
           startHp: heirMaxHp,
         },
-        monster: { id: monster.id, name: monster.name, hp: monster.hp },
+        monster: {
+          id: monster.id,
+          name: monster.name,
+          hp: monster.hp,
+          speed: monsterSpeed,
+        },
         rounds: battleResult.rounds,
         victory: battleResult.victory,
+        gaugeThreshold,
         sceneImage: step.sceneImage,
         sceneGradient: step.sceneGradient,
       });
