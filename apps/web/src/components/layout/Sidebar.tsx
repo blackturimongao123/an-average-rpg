@@ -2,6 +2,7 @@ import { NavLink } from "react-router-dom";
 import { useUIStore } from "@/stores/uiStore";
 import { useGameStore } from "@/stores/gameStore";
 import { APP_VERSION } from "@/constants/version";
+import { hasResolvableActiveMission } from "@/lib/missions";
 import {
   Beer,
   Castle,
@@ -29,7 +30,7 @@ const navItems = [
 export function Sidebar() {
   const { sidebarCollapsed, toggleSidebar } = useUIStore();
   const { heir } = useGameStore();
-  const onMission = Boolean(heir?.activeMission);
+  const onMission = hasResolvableActiveMission(heir?.activeMission);
 
   return (
     <aside
@@ -58,7 +59,7 @@ export function Sidebar() {
 
       <nav className="flex-1 p-2 space-y-1">
         {navItems.map(({ to, icon: Icon, label }) => {
-          const disabled = onMission;
+          const disabled = onMission && to !== "/tavern";
           return (
             <NavLink
               key={to}
@@ -76,7 +77,15 @@ export function Sidebar() {
                       : "text-muted-foreground hover:bg-accent/10 hover:text-foreground"
                 } ${sidebarCollapsed ? "justify-center" : ""}`
               }
-              title={sidebarCollapsed ? label : disabled ? `${label} (locked during mission)` : undefined}
+              title={
+                sidebarCollapsed
+                  ? label
+                  : disabled
+                    ? `${label} (locked during mission)`
+                    : onMission && to === "/tavern"
+                      ? "Return to active mission"
+                      : undefined
+              }
             >
               <Icon className="w-5 h-5 flex-shrink-0" />
               {!sidebarCollapsed && (

@@ -62,11 +62,6 @@ export function TopBar() {
                 />
               </div>
             </div>
-
-            <div className="flex items-center gap-1.5">
-              <Coins className="w-4 h-4 text-gold" />
-              <span className="text-sm font-medium gold-text">{heir.gold}</span>
-            </div>
           </>
         ) : lineage ? (
           <button
@@ -95,9 +90,9 @@ export function TopBar() {
       <div className="flex items-center gap-4">
         {lineage && (
           <div className="flex items-center gap-2 text-sm">
-            <span className="text-muted-foreground">Bank:</span>
+            <span className="text-muted-foreground">Gold:</span>
             <Coins className="w-4 h-4 text-gold" />
-            <span className="gold-text">{lineage.bankGold}</span>
+            <span className="gold-text">{heir ? heir.gold : lineage.bankGold}</span>
           </div>
         )}
 

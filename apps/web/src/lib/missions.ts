@@ -23,6 +23,14 @@ export function getMissionTemplate(missionId: string): MissionTemplate | undefin
   return MISSION_TEMPLATES.find((mission) => mission.id === missionId);
 }
 
+/** True when the heir has an in-progress mission that still exists in game data. */
+export function hasResolvableActiveMission(
+  activeMission: { missionId?: string | null } | null | undefined
+): boolean {
+  if (!activeMission?.missionId) return false;
+  return Boolean(getMissionTemplate(activeMission.missionId));
+}
+
 export function getHourBucket(nowMs: number = Date.now()): number {
   return Math.floor(nowMs / MISSION_BOARD_REROLL_MS);
 }

@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { collection, query, where, onSnapshot, doc } from "firebase/firestore";
+import { collection, query, where, onSnapshot, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { useAuthStore } from "@/stores/authStore";
 import { useGameStore } from "@/stores/gameStore";
 import { useUIStore } from "@/stores/uiStore";
 import { useJobShiftTimer } from "@/hooks/useJobShiftTimer";
-import { normalizeAdventurerRank } from "@/lib/missions";
+import { normalizeAdventurerRank, getMissionTemplate, hasResolvableActiveMission } from "@/lib/missions";
 import { migrateEquipment } from "@bloodline/shared/equipment";
 import type { ActiveMission, MerchantBoard } from "@bloodline/shared/types";
 import { PartyInviteModal } from "@/components/game/PartyInviteModal";
@@ -28,11 +28,17 @@ export function GameShell({ children }: GameShellProps) {
   const battleReplayActive = useUIStore((s) => s.battleReplayActive);
   const isImmersive =
     location.pathname === "/skills" ||
-    (location.pathname === "/tavern" && Boolean(heir?.activeMission)) ||
+    (location.pathname === "/tavern" && hasResolvableActiveMission(heir?.activeMission)) ||
     (location.pathname === "/dungeons" && dungeonRunActive) ||
     battleReplayActive;
 
   useJobShiftTimer();
+
+  useEffect(() => {
+    if (!hasResolvableActiveMission(heir?.activeMission)) return;
+    if (location.pathname === "/tavern") return;
+    navigate("/tavern", { replace: true });
+  }, [heir?.activeMission?.missionId, location.pathname, navigate]);
 
   useEffect(() => {
     if (!user) return;
@@ -82,6 +88,14 @@ export function GameShell({ children }: GameShellProps) {
           if (heirDoc.exists()) {
             const heirData = heirDoc.data();
             const rawMission = heirData.activeMission as ActiveMission | null | undefined;
+            const missionTemplate = rawMission?.missionId
+              ? getMissionTemplate(rawMission.missionId)
+              : undefined;
+
+            if (rawMission?.missionId && !missionTemplate) {
+              void updateDoc(heirRef, { activeMission: null });
+            }
+
             setHeir({
               id: heirDoc.id,
               ownerUid: heirData.ownerUid,
@@ -101,12 +115,13 @@ export function GameShell({ children }: GameShellProps) {
               inventory: heirData.inventory || [],
               jobRecords: heirData.jobRecords || {},
               activeJobShift: heirData.activeJobShift ?? null,
-              activeMission: rawMission
-                ? {
-                    ...rawMission,
-                    difficulty: normalizeAdventurerRank(rawMission.difficulty),
-                  }
-                : null,
+              activeMission:
+                rawMission && missionTemplate
+                  ? {
+                      ...rawMission,
+                      difficulty: normalizeAdventurerRank(rawMission.difficulty),
+                    }
+                  : null,
               subclassId: heirData.subclassId ?? null,
               subclassTier: heirData.subclassTier ?? 0,
               unspentStatPoints: heirData.unspentStatPoints ?? 0,
