@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { BattleCombatant, BattleRound } from "@bloodline/shared/types";
-import { DEFAULT_GAUGE_THRESHOLD } from "@bloodline/shared/combat";
+import { DEFAULT_GAUGE_THRESHOLD, simulateChargePhase } from "@bloodline/shared/combat";
 import {
   BATTLE_PACE,
   delay,
@@ -181,73 +181,37 @@ export function useBattleReplay({
     const run = async () => {
       const fighters = combatantsRef.current;
       const threshold = gaugeThresholdRef.current;
-      const speedById = Object.fromEntries(
-        fighters.map((c) => [c.id, c.speed > 0 ? c.speed : 10])
-      );
-      const enemyIds = new Set(
-        fighters.filter((c) => c.side === "enemy").map((c) => c.id)
-      );
-
-      const turnOrder = [
-        ...fighters.filter((c) => c.side === "ally").map((c) => c.id),
-        ...fighters.filter((c) => c.side === "enemy").map((c) => c.id),
-      ];
-      let turnCursor = 0;
 
       let gaugeState: Record<string, number> = Object.fromEntries(
         fighters.map((c) => [c.id, 0])
       );
 
-      const livingIds = (hp: Record<string, number>) =>
-        new Set(
-          fighters
-            .filter((c) => (hp[c.id] ?? c.startHp) > 0)
-            .map((c) => c.id)
-        );
+      const fightersForCharge = (hp: Record<string, number>) =>
+        fighters.map((c) => ({
+          id: c.id,
+          speed: c.speed > 0 ? c.speed : 10,
+          dexterity: 10,
+          hp: hp[c.id] ?? c.startHp,
+        }));
 
-      const nextLivingInTurnOrder = (living: Set<string>): string | null => {
-        if (living.size === 0) return null;
-        for (let i = 0; i < turnOrder.length; i++) {
-          const candidate = turnOrder[turnCursor % turnOrder.length];
-          turnCursor += 1;
-          if (living.has(candidate)) return candidate;
-        }
-        return null;
-      };
-
-      /** Alternating turns: each fighter charges gauge by their speed until actor is ready. */
-      const chargeTurnsUntilReady = async (
+      /** One smooth synchronized charge: all bars advance together for T engine ticks. */
+      const animateChargePhase = async (
         actorId: string,
-        currentHp: Record<string, number>
+        gaugeStart: Record<string, number>,
+        gaugeReady: Record<string, number>
       ) => {
-        const living = livingIds(currentHp);
-        if (!living.has(actorId)) return;
+        setGaugeById({ ...gaugeStart });
+        setActiveActorId(actorId);
+        await delay(16, controller.signal);
 
-        let safety = 0;
-        while (gaugeState[actorId] < threshold && safety < 400) {
-          safety += 1;
-          const chargerId = nextLivingInTurnOrder(living);
-          if (!chargerId) break;
-
-          setActiveActorId(chargerId);
-          gaugeState = {
-            ...gaugeState,
-            [chargerId]: Math.min(
-              threshold,
-              gaugeState[chargerId] + (speedById[chargerId] ?? 10)
-            ),
-          };
-          setGaugeById({ ...gaugeState });
-          await delay(BATTLE_PACE.turnCharge, controller.signal);
-        }
-
-        if (gaugeState[actorId] >= threshold) {
-          gaugeState = { ...gaugeState, [actorId]: threshold };
-          setGaugeById({ ...gaugeState });
-          setActiveActorId(actorId);
-          await delay(BATTLE_PACE.turnReady, controller.signal);
-        }
+        setGaugeById({ ...gaugeReady });
+        await delay(BATTLE_PACE.turnCharge, controller.signal);
+        await delay(BATTLE_PACE.turnReady, controller.signal);
       };
+
+      const enemyIds = new Set(
+        fighters.filter((c) => c.side === "enemy").map((c) => c.id)
+      );
 
       const playActionRound = async (
         round: BattleRound,
@@ -339,7 +303,25 @@ export function useBattleReplay({
         let i = 0;
         while (i < rounds.length) {
           const round = rounds[i];
-          await chargeTurnsUntilReady(round.actor, currentHp);
+          const charge = simulateChargePhase(
+            fightersForCharge(currentHp),
+            gaugeState,
+            threshold
+          );
+
+          if (charge) {
+            if (charge.actorId !== round.actor && import.meta.env.DEV) {
+              console.warn(
+                `[battle-replay] charge actor ${charge.actorId} !== round actor ${round.actor}`
+              );
+            }
+            await animateChargePhase(
+              round.actor,
+              charge.gaugeStart,
+              charge.gaugeReady
+            );
+            gaugeState = { ...charge.gaugeReady };
+          }
 
           const groupStart = i;
           while (i < rounds.length) {
