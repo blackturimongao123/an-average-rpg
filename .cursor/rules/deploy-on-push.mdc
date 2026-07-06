@@ -26,7 +26,7 @@ Why:
 
 **Current setup:** `.github/workflows/web-pages.yml` runs `build` + `deploy-firebase` (rules, indexes, functions) in parallel, then `deploy` (Pages) only if both succeed. `firebase-deploy.yml` was removed.
 
-Required secrets in that unified run: all `VITE_FIREBASE_*` (web build) + `FIREBASE_TOKEN` (Firebase CLI).
+Required secrets in that unified run: all `VITE_FIREBASE_*` (web build) + Firebase deploy auth (`GCP_WORKLOAD_IDENTITY_PROVIDER` + `GCP_SERVICE_ACCOUNT`, or fallback `FIREBASE_TOKEN`).
 
 When the user asks to push or deploy:
 

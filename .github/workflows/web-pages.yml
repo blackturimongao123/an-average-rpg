@@ -109,6 +109,9 @@ jobs:
 
   deploy-firebase:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
       - name: Checkout
@@ -125,15 +128,28 @@ jobs:
           node-version: 24
           cache: pnpm
 
-      - name: Verify FIREBASE_TOKEN is set
+      - name: Authenticate to Google Cloud (Workload Identity)
+        if: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER != '' }}
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Configure Firebase CLI auth
         run: |
-          if [ -z "${{ secrets.FIREBASE_TOKEN }}" ]; then
-            echo "::error title=Missing GitHub secret::FIREBASE_TOKEN is empty or not configured."
-            echo "Run: firebase login:ci"
-            echo "Add the token under Settings → Secrets and variables → Actions → Repository secrets."
-            exit 1
+          if [ -n "${GOOGLE_APPLICATION_CREDENTIALS:-}" ]; then
+            echo "Firebase deploy auth: Workload Identity (no service account keys)"
+            exit 0
           fi
-          echo "FIREBASE_TOKEN is set"
+          if [ -n "${{ secrets.FIREBASE_TOKEN }}" ]; then
+            echo "Firebase deploy auth: FIREBASE_TOKEN fallback (firebase login:ci)"
+            echo "FIREBASE_DEPLOY_TOKEN=${{ secrets.FIREBASE_TOKEN }}" >> "$GITHUB_ENV"
+            exit 0
+          fi
+          echo "::error title=Missing Firebase deploy auth::Org policy blocks service account keys on many Google accounts."
+          echo "Option A (recommended): Workload Identity Federation — add GitHub secrets GCP_WORKLOAD_IDENTITY_PROVIDER and GCP_SERVICE_ACCOUNT (see AGENTS.md)."
+          echo "Option B: Run firebase login:ci locally and add repository secret FIREBASE_TOKEN."
+          exit 1
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -151,27 +167,30 @@ jobs:
         run: npm install -g firebase-tools
 
       - name: Deploy Firestore Rules
-        run: firebase deploy --only firestore:rules --project ${{ env.FIREBASE_PROJECT }} --token "${{ secrets.FIREBASE_TOKEN }}"
+        run: |
+          TOKEN_ARG=""
+          if [ -n "${FIREBASE_DEPLOY_TOKEN:-}" ]; then TOKEN_ARG="--token $FIREBASE_DEPLOY_TOKEN"; fi
+          firebase deploy --only firestore:rules --project ${{ env.FIREBASE_PROJECT }} $TOKEN_ARG
 
       - name: Deploy Storage Rules
         continue-on-error: true
         run: |
-          firebase deploy --only storage:rules --project ${{ env.FIREBASE_PROJECT }} --token "${{ secrets.FIREBASE_TOKEN }}" \
+          TOKEN_ARG=""
+          if [ -n "${FIREBASE_DEPLOY_TOKEN:-}" ]; then TOKEN_ARG="--token $FIREBASE_DEPLOY_TOKEN"; fi
+          firebase deploy --only storage:rules --project ${{ env.FIREBASE_PROJECT }} $TOKEN_ARG \
             || echo "::warning::Storage rules not deployed. Enable Storage once at https://console.firebase.google.com/project/an-average-rpg/storage (Get Started), then re-run this workflow."
 
       - name: Deploy Firestore Indexes
-        run: firebase deploy --only firestore:indexes --project ${{ env.FIREBASE_PROJECT }} --token "${{ secrets.FIREBASE_TOKEN }}"
-
-      - name: Remove legacy us-central1 functions
-        continue-on-error: true
         run: |
-          FUNCS="createLineage createHeir killHeir dailyTick resolveTavernQuest resolveDungeon workJobShift depositGold withdrawGold depositItem withdrawItem claimSkill claimUniqueSkill equipItem unequipItem allocateStatPoints upgradeItem purchaseMerchantItem createParty inviteToParty acceptPartyInvite leaveParty abandonMission failMission"
-          for fn in $FUNCS; do
-            firebase functions:delete "$fn" --region us-central1 --project ${{ env.FIREBASE_PROJECT }} --token "${{ secrets.FIREBASE_TOKEN }}" --force 2>/dev/null || true
-          done
+          TOKEN_ARG=""
+          if [ -n "${FIREBASE_DEPLOY_TOKEN:-}" ]; then TOKEN_ARG="--token $FIREBASE_DEPLOY_TOKEN"; fi
+          firebase deploy --only firestore:indexes --project ${{ env.FIREBASE_PROJECT }} $TOKEN_ARG
 
       - name: Deploy Functions
-        run: firebase deploy --only functions --force --project ${{ env.FIREBASE_PROJECT }} --token "${{ secrets.FIREBASE_TOKEN }}"
+        run: |
+          TOKEN_ARG=""
+          if [ -n "${FIREBASE_DEPLOY_TOKEN:-}" ]; then TOKEN_ARG="--token $FIREBASE_DEPLOY_TOKEN"; fi
+          firebase deploy --only functions --force --project ${{ env.FIREBASE_PROJECT }} $TOKEN_ARG
 
   deploy:
     needs: [build, deploy-firebase]

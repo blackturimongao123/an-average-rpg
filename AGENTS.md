@@ -100,7 +100,56 @@ See `.cursor/rules/deploy-on-push.mdc`.
 
 **Recommended:** `VITE_ALLOW_REGISTRATION`, `VITE_ALLOWED_USERNAMES`
 
-**Firebase deploy:** `FIREBASE_TOKEN` (from `firebase login:ci`)
+**Firebase deploy (pick one — JSON keys are blocked on many accounts by org policy `iam.disableServiceAccountKeyCreation`):**
+
+**Option A — Workload Identity Federation (recommended, no keys):** GitHub secrets `GCP_WORKLOAD_IDENTITY_PROVIDER` + `GCP_SERVICE_ACCOUNT`.
+
+In [Cloud Shell](https://shell.cloud.google.com/?project=an-average-rpg) run (replace `REPO` if forked). **Skip pool create** if you already created `github-actions` (step 2 only).
+
+```bash
+PROJECT_ID=an-average-rpg
+PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format='value(projectNumber)')
+POOL_ID=github-actions
+PROVIDER_ID=github
+SA_ID=github-actions-firebase
+SA_EMAIL=${SA_ID}@${PROJECT_ID}.iam.gserviceaccount.com
+REPO=blackturimongao123/an-average-rpg
+
+# 1) Service account (create if missing — keys not needed)
+gcloud iam service-accounts describe $SA_EMAIL --project=$PROJECT_ID 2>/dev/null \
+  || gcloud iam service-accounts create $SA_ID \
+       --project=$PROJECT_ID --display-name="GitHub Actions Firebase Deploy"
+for ROLE in roles/firebase.admin roles/cloudfunctions.admin roles/run.admin roles/iam.serviceAccountUser; do
+  gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:${SA_EMAIL}" --role="$ROLE" --condition=None
+done
+
+# 2) Workload identity pool (skip if "already exists")
+gcloud iam workload-identity-pools describe $POOL_ID --project=$PROJECT_ID --location=global 2>/dev/null \
+  || gcloud iam workload-identity-pools create $POOL_ID \
+       --project=$PROJECT_ID --location=global --display-name="GitHub Actions"
+
+# 3) OIDC provider — attribute-condition is required on many orgs
+gcloud iam workload-identity-pools providers describe $PROVIDER_ID \
+  --project=$PROJECT_ID --location=global --workload-identity-pool=$POOL_ID 2>/dev/null \
+  || gcloud iam workload-identity-pools providers create-oidc $PROVIDER_ID \
+       --project=$PROJECT_ID --location=global --workload-identity-pool=$POOL_ID \
+       --display-name="GitHub" --issuer-uri="https://token.actions.githubusercontent.com" \
+       --attribute-mapping="google.subject=assertion.sub,attribute.actor=assertion.actor,attribute.repository=assertion.repository,attribute.repository_owner=assertion.repository_owner" \
+       --attribute-condition="assertion.repository=='${REPO}'"
+
+# 4) Let this repo impersonate the service account
+gcloud iam service-accounts add-iam-policy-binding $SA_EMAIL --project=$PROJECT_ID \
+  --role="roles/iam.workloadIdentityUser" \
+  --member="principalSet://iam.googleapis.com/projects/${PROJECT_NUMBER}/locations/global/workloadIdentityPools/${POOL_ID}/attribute.repository/${REPO}"
+
+echo "GCP_WORKLOAD_IDENTITY_PROVIDER=projects/${PROJECT_NUMBER}/locations/global/workloadIdentityPools/${POOL_ID}/providers/${PROVIDER_ID}"
+echo "GCP_SERVICE_ACCOUNT=${SA_EMAIL}"
+```
+
+Paste the two echoed lines into GitHub → Settings → Secrets → Actions.
+
+**Option B — CI token (quick fallback):** `FIREBASE_TOKEN` from `firebase login:ci` on your machine. Works for `firebase deploy`; no JSON key needed.
 
 ---
 
