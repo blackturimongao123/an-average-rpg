@@ -16,6 +16,7 @@ setGlobalOptions({
 initializeApp();
 
 export const db = getFirestore();
+db.settings({ ignoreUndefinedProperties: true });
 
 export * from "./actions/createLineage.js";
 export * from "./actions/createHeir.js";

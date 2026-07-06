@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useGameStore } from "@/stores/gameStore";
 import { BusyActivityBlock, useIsHeirBusyOnJob } from "@/components/game/BusyActivityBlock";
 import { resolveDungeon } from "@/firebase/functions";
-import { getFirebaseErrorMessage } from "@/lib/firebaseErrors";
+import { getFirebaseErrorMessage, isFunctionsUnavailable } from "@/lib/firebaseErrors";
 import { Castle, Skull, Swords, Coins, Star, ChevronRight } from "lucide-react";
 import type { BattleRound, DungeonData } from "@bloodline/shared/types";
 
@@ -65,7 +65,7 @@ export function DungeonsPage() {
       console.error("Dungeon error:", err);
       const message = getFirebaseErrorMessage(err);
       setError(
-        message.includes("not set up") || message.includes("unavailable")
+        isFunctionsUnavailable(err)
           ? `${message} Dungeon combat runs on Cloud Functions — deploy the backend (Firebase Blaze plan required).`
           : message
       );

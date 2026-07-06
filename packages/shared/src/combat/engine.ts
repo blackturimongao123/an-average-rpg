@@ -534,20 +534,20 @@ export function toLegacyBattleRounds(
   isDodge?: boolean;
   hitCount?: number;
 }> {
-  return rounds.map((r, index) => ({
+  return rounds.map((r) => ({
     round: r.tick,
     actor: r.actor,
     action: r.action,
-    abilityId: r.abilityId,
-    abilityName: r.abilityName,
     damage: r.damage,
-    healing: r.healing,
     actorHpAfter: r.actorHpAfter,
     targetHpAfter: r.targetHpAfter,
-    actorGaugeAfter: r.actorGaugeAfter,
     isCrit: r.isCrit,
     isMiss: r.isMiss,
-    isDodge: r.isDodge,
-    hitCount: r.hitCount,
+    ...(r.abilityId !== undefined ? { abilityId: r.abilityId } : {}),
+    ...(r.abilityName !== undefined ? { abilityName: r.abilityName } : {}),
+    ...(r.healing !== undefined ? { healing: r.healing } : {}),
+    ...(r.actorGaugeAfter !== undefined ? { actorGaugeAfter: r.actorGaugeAfter } : {}),
+    ...(r.isDodge !== undefined ? { isDodge: r.isDodge } : {}),
+    ...(r.hitCount !== undefined ? { hitCount: r.hitCount } : {}),
   }));
 }

@@ -23,6 +23,9 @@ const friendlyMessages: Record<string, string> = {
 
 export function getFirebaseErrorMessage(error: unknown): string {
   if (error instanceof FirebaseError) {
+    if (error.code?.startsWith("functions/") && error.message && error.message !== "INTERNAL") {
+      return error.message;
+    }
     return friendlyMessages[error.code] ?? error.message;
   }
 
@@ -36,7 +39,5 @@ export function getFirebaseErrorMessage(error: unknown): string {
 export function isFunctionsUnavailable(error: unknown): boolean {
   if (!(error instanceof FirebaseError)) return false;
 
-  return ["functions/not-found", "functions/unavailable", "functions/internal"].includes(
-    error.code
-  );
+  return ["functions/not-found", "functions/unavailable"].includes(error.code);
 }
