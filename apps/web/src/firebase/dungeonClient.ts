@@ -3,7 +3,7 @@ import {
   serverTimestamp,
   writeBatch,
 } from "firebase/firestore";
-import { getFloorChoiceModifiers } from "@bloodline/shared/adventure";
+import { getFloorChoiceModifiers, getDungeonFloorApproach, choiceTriggersDungeonBattle, resolveDungeonEventOutcome, type DungeonEventOutcome } from "@bloodline/shared/adventure";
 import { buildBattleReplayPayload, calculateMaxHp } from "@bloodline/shared/combat";
 import { STAT_POINTS_PER_LEVEL } from "@bloodline/shared/constants";
 import type {
@@ -42,6 +42,43 @@ export interface ResolveDungeonParams {
   floor: number;
   floorChoiceId?: string;
   seedOverride?: string;
+}
+
+export type DungeonFloorChoiceResult =
+  | { kind: "battle"; result: ResolveDungeonLocalResult }
+  | { kind: "event"; outcome: DungeonEventOutcome };
+
+export function resolveDungeonFloorChoice(
+  params: ResolveDungeonParams
+): DungeonFloorChoiceResult {
+  const { dungeon, floor, floorChoiceId } = params;
+  const floorData = dungeon.floors[floor - 1];
+  if (!floorData) {
+    throw new Error("Floor not found");
+  }
+
+  const approach = getDungeonFloorApproach(dungeon, floor - 1);
+  const choiceId = typeof floorChoiceId === "string" ? floorChoiceId : "";
+  const seed =
+    params.seedOverride ??
+    generateSeed(
+      params.lineage.id,
+      params.heir.id,
+      `dungeon-${dungeon.id}-${floor}-${choiceId || "default"}-${Date.now()}`
+    );
+
+  if (choiceTriggersDungeonBattle(approach, choiceId, floorData)) {
+    return {
+      kind: "battle",
+      result: resolveDungeonLocal({ ...params, seedOverride: seed }),
+    };
+  }
+
+  const modifiers = getFloorChoiceModifiers(choiceId);
+  return {
+    kind: "event",
+    outcome: resolveDungeonEventOutcome(dungeon, floor, choiceId, seed, modifiers),
+  };
 }
 
 export function resolveDungeonLocal(params: ResolveDungeonParams): ResolveDungeonLocalResult {
@@ -216,6 +253,48 @@ export async function persistDungeonResult(
     });
   }
 
+  await batch.commit();
+}
+
+export async function persistDungeonEventResult(
+  params: ResolveDungeonParams,
+  outcome: DungeonEventOutcome
+): Promise<void> {
+  const { lineage, heir, dungeon, floor } = params;
+  const lineageRef = doc(db, "lineages", lineage.id);
+  const heirRef = doc(db, "lineages", lineage.id, "heirs", heir.id);
+  const batch = writeBatch(db);
+
+  if (outcome.rewards.gold > 0 || outcome.rewards.xp > 0 || outcome.rewards.items.length > 0) {
+    const newXp = heir.xp + outcome.rewards.xp;
+    const xpForNextLevel = heir.level * 100;
+    const leveledUp = newXp >= xpForNextLevel;
+
+    batch.update(heirRef, {
+      gold: heir.gold + outcome.rewards.gold,
+      xp: leveledUp ? newXp - xpForNextLevel : newXp,
+      level: leveledUp ? heir.level + 1 : heir.level,
+      inventory: [...heir.inventory, ...outcome.rewards.items],
+      ...(leveledUp
+        ? { unspentStatPoints: (heir.unspentStatPoints ?? 0) + STAT_POINTS_PER_LEVEL }
+        : {}),
+    });
+  }
+
+  if (outcome.floorCleared) {
+    const progressRef = doc(db, "lineages", lineage.id, "dungeonProgress", dungeon.id);
+    batch.set(
+      progressRef,
+      {
+        [`clearedFloors.${floor}`]: true,
+        highestFloor: floor,
+        updatedAt: serverTimestamp(),
+      },
+      { merge: true }
+    );
+  }
+
+  batch.update(lineageRef, { updatedAt: serverTimestamp() });
   await batch.commit();
 }
 

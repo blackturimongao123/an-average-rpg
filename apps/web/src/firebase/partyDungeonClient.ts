@@ -30,6 +30,7 @@ export async function startPartyDungeon(
     battleSeed: null,
     battleReplay: null,
     battleSummary: null,
+    lastEventOutcome: null,
     runLog: [
       {
         text: `Party entered ${dungeon.name}`,
@@ -97,6 +98,7 @@ export async function advancePartyDungeonFloor(
     "activeDungeon.battleSeed": null,
     "activeDungeon.battleReplay": null,
     "activeDungeon.battleSummary": null,
+    "activeDungeon.lastEventOutcome": null,
     "activeDungeon.updatedAtMs": Date.now(),
   });
 }

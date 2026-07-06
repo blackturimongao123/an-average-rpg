@@ -1,9 +1,19 @@
 import { doc, getDoc, serverTimestamp, setDoc, updateDoc, writeBatch } from "firebase/firestore";
-import type { Heir, HeirLookupEntry, Lineage, Party, PartyInvite } from "@bloodline/shared/types";
+import type { Heir, HeirLookupEntry, Lineage, Party, PartyInvite, PartyMemberProfile } from "@bloodline/shared/types";
 import { db } from "./config";
 import { normalizeHeirNameKey } from "./heirLookup";
 
 const MAX_PARTY_SIZE = 4;
+
+function buildMemberProfile(lineage: Lineage, heir: Heir): PartyMemberProfile {
+  return {
+    familyName: lineage.familyName,
+    heirName: heir.name,
+    classId: heir.classId,
+    subclassId: heir.subclassId ?? null,
+    level: heir.level,
+  };
+}
 
 function createPartyId(): string {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -27,7 +37,8 @@ async function lookupHeirByName(heirName: string): Promise<HeirLookupEntry> {
 
 export async function createPartyClient(
   userId: string,
-  lineage: Lineage
+  lineage: Lineage,
+  heir?: Heir
 ): Promise<{ partyId: string }> {
   if (lineage.ownerUid !== userId) {
     throw new Error("You do not own this lineage");
@@ -45,6 +56,7 @@ export async function createPartyClient(
     leaderLineageId: lineage.id,
     memberUids: [userId],
     memberLineageIds: [lineage.id],
+    memberProfiles: heir ? [buildMemberProfile(lineage, heir)] : [],
     createdAtMs: Date.now(),
     activeDungeon: null,
   } satisfies Party);
@@ -70,7 +82,7 @@ export async function invitePlayerByHeirName(
 
   let partyId = lineage.partyId;
   if (!partyId) {
-    const created = await createPartyClient(userId, lineage);
+    const created = await createPartyClient(userId, lineage, heir);
     partyId = created.partyId;
   }
 
@@ -94,9 +106,7 @@ export async function invitePlayerByHeirName(
   if (party.memberUids.includes(target.ownerUid)) {
     throw new Error("That player is already in your party");
   }
-
-  const targetLineageSnap = await getDoc(doc(db, "lineages", target.lineageId));
-  if (targetLineageSnap.exists() && targetLineageSnap.data().partyId) {
+  if (target.partyId) {
     throw new Error("That player is already in another party");
   }
 
@@ -120,7 +130,8 @@ export async function invitePlayerByHeirName(
 export async function acceptPartyInviteClient(
   userId: string,
   lineage: Lineage,
-  inviteId: string
+  inviteId: string,
+  heir: Heir
 ): Promise<{ partyId: string }> {
   if (lineage.ownerUid !== userId) {
     throw new Error("You do not own this lineage");
@@ -158,6 +169,7 @@ export async function acceptPartyInviteClient(
   batch.update(partyRef, {
     memberUids: [...party.memberUids, userId],
     memberLineageIds: [...party.memberLineageIds, lineage.id],
+    memberProfiles: [...(party.memberProfiles ?? []), buildMemberProfile(lineage, heir)],
   });
   batch.update(doc(db, "lineages", lineage.id), {
     partyId: invite.partyId,
@@ -210,11 +222,13 @@ export async function leavePartyClient(
   const party = partySnap.data() as Party;
   const memberUids = party.memberUids.filter((id) => id !== userId);
   const memberLineageIds = party.memberLineageIds.filter((id) => id !== lineage.id);
+  const memberIndex = party.memberUids.indexOf(userId);
+  const memberProfiles = (party.memberProfiles ?? []).filter((_, i) => i !== memberIndex);
 
   if (memberUids.length === 0) {
     batch.delete(partyRef);
   } else {
-    const updates: Record<string, unknown> = { memberUids, memberLineageIds };
+    const updates: Record<string, unknown> = { memberUids, memberLineageIds, memberProfiles };
     if (party.leaderUid === userId) {
       updates.leaderUid = memberUids[0];
       updates.leaderLineageId = memberLineageIds[0];

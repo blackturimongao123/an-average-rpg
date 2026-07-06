@@ -12,7 +12,7 @@ import {
   startPartyDungeon,
   updatePartyDungeon,
 } from "@/firebase/partyDungeonClient";
-import { persistDungeonResult, persistPredeterminedDungeonResult, resolveDungeonLocal } from "@/firebase/dungeonClient";
+import { persistDungeonResult, persistDungeonEventResult, persistPredeterminedDungeonResult, resolveDungeonFloorChoice } from "@/firebase/dungeonClient";
 import { getFirebaseErrorMessage } from "@/lib/firebaseErrors";
 import { usePartyMembers } from "@/hooks/usePartyMembers";
 import {
@@ -58,6 +58,7 @@ export function DungeonsPage() {
   const [battleReplay, setBattleReplay] = useState<BattleReplayPayload | null>(null);
   const [battleSummary, setBattleSummary] = useState<BattleResultSummary | null>(null);
   const persistedBattleKeyRef = useRef<string | null>(null);
+  const persistedEventKeyRef = useRef<string | null>(null);
 
   const inParty = Boolean(lineage?.partyId && party);
   const isPartyLeader = inParty && party?.leaderUid === user?.uid;
@@ -121,6 +122,53 @@ export function DungeonsPage() {
     }
     applyPartyDungeonState(partyDungeon);
   }, [partyDungeon?.updatedAtMs, partyDungeon?.phase, inParty]);
+
+  useEffect(() => {
+    if (!inParty || !partyDungeon || !heir || !lineage || !user) return;
+    const eventOutcome = partyDungeon.lastEventOutcome;
+    if (!eventOutcome) return;
+
+    if (persistedEventKeyRef.current === eventOutcome.persistKey) return;
+    persistedEventKeyRef.current = eventOutcome.persistKey;
+
+    const dungeon = findDungeon(partyDungeon.dungeonId);
+    if (!dungeon) return;
+
+    if (eventOutcome.rewards.gold > 0) {
+      updateHeirGold(heir.gold + eventOutcome.rewards.gold);
+    }
+    if (eventOutcome.rewards.xp > 0) {
+      updateHeirXp(heir.xp + eventOutcome.rewards.xp);
+    }
+
+    void persistDungeonEventResult(
+      {
+        userId: user.uid,
+        lineage,
+        heir,
+        dungeon,
+        floor: eventOutcome.floor,
+        floorChoiceId: eventOutcome.floorChoiceId,
+      },
+      {
+        logText: eventOutcome.logText,
+        rewards: eventOutcome.rewards,
+        floorCleared: eventOutcome.floorCleared,
+        dungeonCompleted: eventOutcome.dungeonCompleted,
+        heirHealFlat: 0,
+      }
+    ).catch((err) => {
+      console.error("Party dungeon event persist error:", err);
+    });
+  }, [
+    inParty,
+    partyDungeon?.lastEventOutcome?.persistKey,
+    heir,
+    lineage,
+    user,
+    updateHeirGold,
+    updateHeirXp,
+  ]);
 
   useEffect(() => {
     if (!inParty || !partyDungeon || !heir || !lineage || !user) return;
@@ -243,7 +291,7 @@ export function DungeonsPage() {
             )
           : undefined;
 
-      const result = resolveDungeonLocal({
+      const resolution = resolveDungeonFloorChoice({
         userId: user.uid,
         lineage,
         heir,
@@ -252,6 +300,85 @@ export function DungeonsPage() {
         floorChoiceId: choice.id,
         seedOverride: battleSeed,
       });
+
+      if (resolution.kind === "event") {
+        const { outcome } = resolution;
+        const logEntry = {
+          text: `${choice.label}: ${outcome.logText}`,
+          timestampMs: Date.now(),
+        };
+        const nextLog = [...runLog, logEntry];
+        const persistKey = `${lineage.partyId ?? lineage.id}-${selectedDungeon.id}-${currentFloor}-${choice.id}-event`;
+
+        if (inParty && lineage.partyId && isPartyLeader) {
+          if (outcome.dungeonCompleted) {
+            await updatePartyDungeon(lineage.partyId, {
+              runLog: nextLog,
+              updatedAtMs: Date.now(),
+            });
+            await clearPartyDungeon(lineage.partyId);
+            return;
+          }
+
+          await updatePartyDungeon(lineage.partyId, {
+            phase: "floor_event",
+            currentFloor: outcome.floorCleared ? currentFloor + 1 : currentFloor,
+            floorChoiceId: choice.id,
+            battleSeed: null,
+            battleReplay: null,
+            battleSummary: null,
+            lastEventOutcome: {
+              persistKey,
+              floor: currentFloor,
+              floorChoiceId: choice.id,
+              logText: outcome.logText,
+              rewards: outcome.rewards,
+              floorCleared: outcome.floorCleared,
+              dungeonCompleted: outcome.dungeonCompleted,
+            },
+            runLog: nextLog,
+            updatedAtMs: Date.now(),
+          });
+          return;
+        }
+
+        if (outcome.rewards.gold > 0) {
+          updateHeirGold(heir.gold + outcome.rewards.gold);
+        }
+        if (outcome.rewards.xp > 0) {
+          updateHeirXp(heir.xp + outcome.rewards.xp);
+        }
+        setRunLog(nextLog);
+
+        void persistDungeonEventResult(
+          {
+            userId: user.uid,
+            lineage,
+            heir,
+            dungeon: selectedDungeon,
+            floor: currentFloor,
+            floorChoiceId: choice.id,
+            seedOverride: battleSeed,
+          },
+          outcome
+        ).catch((err) => {
+          console.error("Dungeon event persist error:", err);
+          setError(getFirebaseErrorMessage(err));
+        });
+
+        if (outcome.dungeonCompleted) {
+          await handleLeaveDungeon();
+          return;
+        }
+
+        if (outcome.floorCleared) {
+          setCurrentFloor((f) => f + 1);
+        }
+        setPhase("floor_event");
+        return;
+      }
+
+      const result = resolution.result;
 
       const summary: BattleResultSummary = {
         victory: result.victory,
@@ -367,6 +494,7 @@ export function DungeonsPage() {
     setError("");
     setPhase("list");
     persistedBattleKeyRef.current = null;
+    persistedEventKeyRef.current = null;
   };
 
   const heirLevel = heir?.level ?? 1;
@@ -443,7 +571,7 @@ export function DungeonsPage() {
           footerHint={
             inParty && !isPartyLeader
               ? "Waiting for the party leader to choose an approach…"
-              : "Choose your approach — combat plays out after the decision"
+              : "Safe paths, camp, and sneak options skip combat — explore and engage trigger fights"
           }
           partyMembers={adventurePartyMembers}
           choicesDisabled={inParty && !isPartyLeader}

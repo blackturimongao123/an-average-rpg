@@ -134,3 +134,9 @@ export function getFloorChoiceModifiers(choiceId?: string): FloorChoiceModifiers
 
   return { monsterDamageMult: 1, rewardMult: 1, heirHealFlat: 0 };
 }
+
+export {
+  choiceTriggersDungeonBattle,
+  resolveDungeonEventOutcome,
+  type DungeonEventOutcome,
+} from "./dungeonChoices.js";

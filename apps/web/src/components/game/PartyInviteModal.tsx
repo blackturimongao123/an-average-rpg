@@ -18,7 +18,7 @@ import { Crown, UserPlus, X } from "lucide-react";
 
 export function PartyInviteModal() {
   const { user } = useAuthStore();
-  const { lineage, setLineage } = useGameStore();
+  const { lineage, setLineage, heir } = useGameStore();
   const [invites, setInvites] = useState<PartyInvite[]>([]);
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -42,18 +42,18 @@ export function PartyInviteModal() {
     return () => unsub();
   }, [user]);
 
-  if (!user || !lineage || invites.length === 0 || lineage.partyId) {
+  if (!user || !lineage || !heir || invites.length === 0 || lineage.partyId) {
     return null;
   }
 
   const activeInvite = invites[0];
 
   async function handleAccept(inviteId: string) {
-    if (!lineage || !user) return;
+    if (!lineage || !user || !heir) return;
     setLoadingId(inviteId);
     setError(null);
     try {
-      const result = await acceptPartyInviteClient(user.uid, lineage, inviteId);
+      const result = await acceptPartyInviteClient(user.uid, lineage, inviteId, heir);
       setLineage({ ...lineage, partyId: result.partyId });
     } catch (err) {
       setError(getPartyErrorMessage(err));

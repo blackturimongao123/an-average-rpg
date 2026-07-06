@@ -7,8 +7,13 @@ import {
 } from "./partyClient";
 import { getFirebaseErrorMessage } from "@/lib/firebaseErrors";
 
-export async function createPlayerParty(lineageId: string, lineage: import("@bloodline/shared/types").Lineage, userId: string) {
-  return createPartyClient(userId, lineage);
+export async function createPlayerParty(
+  lineageId: string,
+  lineage: import("@bloodline/shared/types").Lineage,
+  userId: string,
+  heir?: import("@bloodline/shared/types").Heir
+) {
+  return createPartyClient(userId, lineage, heir);
 }
 
 export async function invitePlayerToParty(
@@ -23,9 +28,10 @@ export async function invitePlayerToParty(
 export async function acceptPlayerPartyInvite(
   userId: string,
   lineage: import("@bloodline/shared/types").Lineage,
-  inviteId: string
+  inviteId: string,
+  heir: import("@bloodline/shared/types").Heir
 ) {
-  return acceptPartyInviteClient(userId, lineage, inviteId);
+  return acceptPartyInviteClient(userId, lineage, inviteId, heir);
 }
 
 export async function declinePlayerPartyInvite(userId: string, inviteId: string) {

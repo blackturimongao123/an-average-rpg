@@ -395,6 +395,16 @@ export interface PartyDungeonBattleSummary {
   choiceLabel?: string;
 }
 
+export interface PartyDungeonEventOutcome {
+  persistKey: string;
+  floor: number;
+  floorChoiceId: string;
+  logText: string;
+  rewards: { gold: number; xp: number; items: string[] };
+  floorCleared: boolean;
+  dungeonCompleted: boolean;
+}
+
 export interface PartyActiveDungeon {
   dungeonId: string;
   dungeonName: string;
@@ -404,8 +414,17 @@ export interface PartyActiveDungeon {
   battleSeed: string | null;
   battleReplay: BattleReplayPayload | null;
   battleSummary: PartyDungeonBattleSummary | null;
+  lastEventOutcome?: PartyDungeonEventOutcome | null;
   runLog: Array<{ text: string; timestampMs: number }>;
   updatedAtMs: number;
+}
+
+export interface PartyMemberProfile {
+  familyName: string;
+  heirName: string;
+  classId: string;
+  subclassId?: string | null;
+  level: number;
 }
 
 export interface Party {
@@ -414,6 +433,7 @@ export interface Party {
   leaderLineageId: string;
   memberUids: string[];
   memberLineageIds: string[];
+  memberProfiles?: PartyMemberProfile[];
   createdAtMs: number;
   activeDungeon?: PartyActiveDungeon | null;
 }
@@ -438,6 +458,7 @@ export interface HeirLookupEntry {
   heirId: string;
   familyName: string;
   classId: string;
+  partyId?: string | null;
   updatedAtMs: number;
 }
 
@@ -516,6 +537,11 @@ export interface TavernEvent {
   requirements: EventRequirements;
   weight: number;
   choices: EventChoice[];
+  /** Background art for adventure UI (GitHub Pages path under /scenes/). */
+  sceneImage?: string;
+  eventType?: MissionEventType;
+  /** Content grouping — many events can share one location/background. */
+  location?: string;
 }
 
 export interface EventRequirements {

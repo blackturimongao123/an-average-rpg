@@ -16,6 +16,25 @@ export function seededRandomChoice<T>(seed: string, items: T[], index: number = 
   return items[idx];
 }
 
+export function weightedSeededRandomChoice<T>(
+  seed: string,
+  items: Array<{ item: T; weight: number }>,
+  index: number = 0
+): T {
+  const totalWeight = items.reduce((sum, entry) => sum + entry.weight, 0);
+  const roll = seededRandom(seed, index) * totalWeight;
+  let cumulative = 0;
+
+  for (const entry of items) {
+    cumulative += entry.weight;
+    if (roll < cumulative) {
+      return entry.item;
+    }
+  }
+
+  return items[items.length - 1].item;
+}
+
 export function generateSeed(lineageId: string, heirId: string, context: string): string {
   const input = `${lineageId}-${heirId}-${context}-${Date.now()}`;
   let hash = 0;

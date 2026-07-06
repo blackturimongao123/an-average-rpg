@@ -10,6 +10,7 @@ import {
 import type { AdvanceMissionResult } from "@/firebase/functions";
 import { bootstrapAbandonMission } from "@/firebase/missionBoardBootstrap";
 import { CampaignView } from "@/features/campaign/CampaignView";
+import { FieldEncountersPanel } from "@/features/tavern/FieldEncountersPanel";
 import { BattleView } from "@/features/battle/BattleView";
 import { getFirebaseErrorMessage } from "@/lib/firebaseErrors";
 import {
@@ -104,6 +105,7 @@ export function TavernPage() {
   const { loading: boardLoading, countdownMs, refreshBoard } = useMissionBoard();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [tavernTab, setTavernTab] = useState<"missions" | "encounters">("missions");
   const [completion, setCompletion] = useState<{
     rewards: { gold: number; xp: number; rankXp: number; items: string[] };
     rankUp: { rank: string; rankXp: number } | null;
@@ -294,7 +296,7 @@ export function TavernPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <div className={tavernTab === "encounters" ? "h-full flex flex-col" : "max-w-5xl mx-auto"}>
       <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
         <div className="flex items-center gap-3">
           <Beer className="w-8 h-8 text-gold" />
@@ -353,6 +355,37 @@ export function TavernPage() {
         </div>
       ) : isBusyOnJob ? null : (
         <div>
+          <div className="flex gap-2 mb-4">
+            <button
+              type="button"
+              onClick={() => setTavernTab("missions")}
+              className={`px-4 py-2 rounded-md text-sm font-medium ${
+                tavernTab === "missions"
+                  ? "bg-primary/20 text-primary"
+                  : "text-muted-foreground hover:bg-secondary"
+              }`}
+            >
+              Mission Board
+            </button>
+            <button
+              type="button"
+              onClick={() => setTavernTab("encounters")}
+              className={`px-4 py-2 rounded-md text-sm font-medium ${
+                tavernTab === "encounters"
+                  ? "bg-primary/20 text-primary"
+                  : "text-muted-foreground hover:bg-secondary"
+              }`}
+            >
+              Field Encounters
+            </button>
+          </div>
+
+          {tavernTab === "encounters" ? (
+            <div className="flex-1 min-h-0">
+              <FieldEncountersPanel />
+            </div>
+          ) : (
+        <div>
           <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
             <div className="flex items-center gap-2">
               <ClipboardList className="w-5 h-5 text-gold" />
@@ -410,6 +443,8 @@ export function TavernPage() {
                 );
               })}
             </div>
+          )}
+        </div>
           )}
         </div>
       )}

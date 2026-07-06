@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import {
   collection,
   doc,
-  getDoc,
   onSnapshot,
   query,
   where,
@@ -75,7 +74,7 @@ export function ProfilePage() {
       return;
     }
 
-    const unsub = onSnapshot(doc(db, "parties", lineage.partyId), async (snap) => {
+    const unsub = onSnapshot(doc(db, "parties", lineage.partyId), (snap) => {
       if (!snap.exists()) {
         setParty(null);
         setMembers([]);
@@ -85,38 +84,18 @@ export function ProfilePage() {
       const partyData = snap.data() as Party;
       setParty(partyData);
 
-      const memberInfos: PartyMemberInfo[] = [];
-      for (let i = 0; i < partyData.memberUids.length; i += 1) {
-        const memberUid = partyData.memberUids[i];
-        const memberLineageId = partyData.memberLineageIds[i];
-        const lineageDoc = await getDoc(doc(db, "lineages", memberLineageId));
-        const lineageInfo = lineageDoc.data();
-        let heirName = "—";
-        let classId = "warrior";
-        let subclassId: string | null = null;
-
-        if (lineageInfo?.activeHeirId) {
-          const heirDoc = await getDoc(
-            doc(db, "lineages", memberLineageId, "heirs", lineageInfo.activeHeirId as string)
-          );
-          if (heirDoc.exists()) {
-            const heirData = heirDoc.data();
-            heirName = (heirData.name as string) ?? "—";
-            classId = (heirData.classId as string) ?? "warrior";
-            subclassId = (heirData.subclassId as string | null) ?? null;
-          }
-        }
-
-        memberInfos.push({
+      const memberInfos: PartyMemberInfo[] = partyData.memberUids.map((memberUid, i) => {
+        const profile = partyData.memberProfiles?.[i];
+        return {
           uid: memberUid,
-          lineageId: memberLineageId,
-          familyName: (lineageInfo?.familyName as string) ?? "Unknown",
-          heirName,
-          classId,
-          subclassId,
+          lineageId: partyData.memberLineageIds[i] ?? "",
+          familyName: profile?.familyName ?? "Unknown",
+          heirName: profile?.heirName ?? "—",
+          classId: profile?.classId ?? "warrior",
+          subclassId: profile?.subclassId ?? null,
           isLeader: memberUid === partyData.leaderUid,
-        });
-      }
+        };
+      });
       setMembers(memberInfos);
     });
 
@@ -155,7 +134,7 @@ export function ProfilePage() {
     setError(null);
     setMessage(null);
     try {
-      const result = await createPlayerParty(activeLineage.id, activeLineage, user.uid);
+      const result = await createPlayerParty(activeLineage.id, activeLineage, user.uid, activeHeir);
       setLineage({ ...activeLineage, partyId: result.partyId });
       setMessage("Party created. You are the party leader.");
     } catch (err) {
@@ -192,7 +171,7 @@ export function ProfilePage() {
     setLoading(true);
     setError(null);
     try {
-      const result = await acceptPlayerPartyInvite(user.uid, activeLineage, inviteId);
+      const result = await acceptPlayerPartyInvite(user.uid, activeLineage, inviteId, activeHeir);
       setLineage({ ...activeLineage, partyId: result.partyId });
       setMessage("Joined party.");
     } catch (err) {

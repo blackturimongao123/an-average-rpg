@@ -171,15 +171,22 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    // Parties — members read; leader/members update roster fields client-side
+    // Parties — signed-in read (invite accept needs party before join); members update
     match /parties/{partyId} {
-      allow read: if signedIn()
-        && request.auth.uid in resource.data.memberUids;
+      allow read: if signedIn();
       allow create: if signedIn()
         && request.resource.data.leaderUid == request.auth.uid
         && request.auth.uid in request.resource.data.memberUids;
       allow update: if signedIn()
-        && request.auth.uid in resource.data.memberUids;
+        && (
+          request.auth.uid in resource.data.memberUids
+          || (
+            request.auth.uid in request.resource.data.memberUids
+            && !(request.auth.uid in resource.data.memberUids)
+            && request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly(['memberUids', 'memberLineageIds', 'memberProfiles'])
+          )
+        );
       allow delete: if signedIn()
         && resource.data.leaderUid == request.auth.uid;
     }

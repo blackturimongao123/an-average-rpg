@@ -25,6 +25,7 @@ export async function registerHeirLookup(
       heirId: heir.id,
       familyName: lineage.familyName,
       classId: heir.classId,
+      partyId: lineage.partyId ?? null,
       updatedAtMs: Date.now(),
     },
     { merge: true }

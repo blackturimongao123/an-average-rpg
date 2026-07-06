@@ -18,7 +18,7 @@ const friendlyMessages: Record<string, string> = {
   "functions/invalid-argument": "Invalid family name or username.",
   "functions/unauthenticated": "You must be signed in first.",
   "permission-denied":
-    "Database access denied. Deploy the latest Firestore rules from the project.",
+    "Database access denied. Firestore rules may need updating — try again after the latest deploy.",
 };
 
 export function getFirebaseErrorMessage(error: unknown): string {
