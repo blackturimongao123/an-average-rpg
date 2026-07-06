@@ -7,7 +7,7 @@ interface BattleFieldProps {
   hpById: Record<string, number>;
   activeActorId: string | null;
   registerUnitRef: (id: string, el: HTMLElement | null) => void;
-  fieldRef?: React.RefObject<HTMLDivElement | null>;
+  fieldRef?: React.Ref<HTMLDivElement>;
 }
 
 export function BattleField({

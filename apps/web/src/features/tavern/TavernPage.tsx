@@ -126,7 +126,7 @@ export function TavernPage() {
       setActiveMission(null);
       setCompletion({
         rewards: response.rewards,
-        rankUp: response.rankUp,
+        rankUp: response.rankUp ?? null,
       });
       updateHeirGold(response.heirGoldAfter!);
       updateHeirXp(response.heirXpAfter!);

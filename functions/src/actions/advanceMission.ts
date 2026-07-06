@@ -24,7 +24,7 @@ import { db } from "../index.js";
 import { generateSeed } from "../utils/helpers.js";
 import { simulateBattle } from "../utils/combat.js";
 import { getMissionTemplate } from "../utils/missions.js";
-import type { Monster } from "../utils/types.js";
+import type { Heir as FunctionsHeir, Monster } from "../utils/types.js";
 
 import dungeonsData from "../../../game-data/dungeons.json";
 
@@ -165,7 +165,7 @@ export const advanceMission = onCall<AdvanceMissionRequest>(
         throw new HttpsError("internal", "Combat encounter not configured");
       }
 
-      const battleResult = simulateBattle(heir, monster, seed);
+      const battleResult = simulateBattle(heir as FunctionsHeir, monster, seed);
       const heirMaxHp = calculateMaxHp(heir.stats.constitution, heir.level);
 
       battleReplay = buildBattleReplayPayload({

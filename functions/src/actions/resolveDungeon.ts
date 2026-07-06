@@ -216,7 +216,8 @@ export const resolveDungeon = onCall<ResolveDungeonRequest>(
     await batch.commit();
 
     const heirMaxHp = calculateMaxHp(battleHeir.stats.constitution, battleHeir.level);
-    const approach = floorData.approach;
+    const approach = (floorData as { approach?: { sceneImage?: string; sceneGradient?: string } })
+      .approach;
     const battleReplay = buildBattleReplayPayload({
       heir: {
         id: heir.id,
