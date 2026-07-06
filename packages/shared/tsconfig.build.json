@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "include": [
+    "src/constants.ts",
+    "src/equipment.ts",
+    "src/types.ts",
+    "src/combat/**/*",
+    "src/skills/**/*",
+    "src/campaign/**/*"
+  ],
+  "exclude": ["node_modules", "dist"]
+}

@@ -2,44 +2,60 @@
   "name": "@bloodline/shared",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
-  "main": "./src/index.ts",
+  "main": "./dist/index.js",
   "types": "./src/index.ts",
   "exports": {
     ".": {
+      "types": "./src/index.ts",
       "import": "./src/index.ts",
-      "types": "./src/index.ts"
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
     },
     "./types": {
+      "types": "./src/types.ts",
       "import": "./src/types.ts",
-      "types": "./src/types.ts"
+      "require": "./dist/types.js",
+      "default": "./dist/types.js"
     },
     "./schemas": {
+      "types": "./src/schemas.ts",
       "import": "./src/schemas.ts",
-      "types": "./src/schemas.ts"
+      "require": "./dist/schemas.js",
+      "default": "./dist/schemas.js"
     },
     "./constants": {
+      "types": "./src/constants.ts",
       "import": "./src/constants.ts",
-      "types": "./src/constants.ts"
+      "require": "./dist/constants.js",
+      "default": "./dist/constants.js"
     },
     "./equipment": {
+      "types": "./src/equipment.ts",
       "import": "./src/equipment.ts",
-      "types": "./src/equipment.ts"
+      "require": "./dist/equipment.js",
+      "default": "./dist/equipment.js"
     },
     "./skills": {
+      "types": "./src/skills/index.ts",
       "import": "./src/skills/index.ts",
-      "types": "./src/skills/index.ts"
+      "require": "./dist/skills/index.js",
+      "default": "./dist/skills/index.js"
     },
     "./combat": {
+      "types": "./src/combat/index.ts",
       "import": "./src/combat/index.ts",
-      "types": "./src/combat/index.ts"
+      "require": "./dist/combat/index.js",
+      "default": "./dist/combat/index.js"
     },
     "./campaign": {
+      "types": "./src/campaign/index.ts",
       "import": "./src/campaign/index.ts",
-      "types": "./src/campaign/index.ts"
+      "require": "./dist/campaign/index.js",
+      "default": "./dist/campaign/index.js"
     }
   },
   "scripts": {
+    "build": "tsc -p tsconfig.build.json",
     "lint": "eslint src --ext .ts",
     "typecheck": "tsc --noEmit"
   },
