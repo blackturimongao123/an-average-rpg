@@ -162,6 +162,14 @@ jobs:
       - name: Deploy Firestore Indexes
         run: firebase deploy --only firestore:indexes --project ${{ env.FIREBASE_PROJECT }} --token "${{ secrets.FIREBASE_TOKEN }}"
 
+      - name: Remove legacy us-central1 functions
+        continue-on-error: true
+        run: |
+          FUNCS="createLineage createHeir killHeir dailyTick resolveTavernQuest resolveDungeon workJobShift depositGold withdrawGold depositItem withdrawItem claimSkill claimUniqueSkill equipItem unequipItem allocateStatPoints upgradeItem purchaseMerchantItem createParty inviteToParty acceptPartyInvite leaveParty abandonMission failMission"
+          for fn in $FUNCS; do
+            firebase functions:delete "$fn" --region us-central1 --project ${{ env.FIREBASE_PROJECT }} --token "${{ secrets.FIREBASE_TOKEN }}" --force 2>/dev/null || true
+          done
+
       - name: Deploy Functions
         run: firebase deploy --only functions --force --project ${{ env.FIREBASE_PROJECT }} --token "${{ secrets.FIREBASE_TOKEN }}"
 
