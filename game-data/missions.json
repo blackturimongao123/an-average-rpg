@@ -83,10 +83,75 @@
       "type": "investigate",
       "rewards": { "gold": 35, "xp": 50, "rankXp": 25, "items": [] },
       "campaign": {
+        "regionName": "The Forsaken Mill",
+        "maxStages": 8,
+        "startingSupplies": 30,
         "steps": [
-          { "text": "The mill wheel creaks though no water flows." },
-          { "text": "Will-o-wisps lead you to a smuggler's stash—not ghosts." },
-          { "text": "You turn evidence over to the guard captain for pay." }
+          {
+            "title": "The Forgotten Shrine",
+            "text": "A crumbling shrine stands half-buried in ivy at the mill's edge. Cold mist coils around broken stone idols, and faint whispers ride the wind.",
+            "eventType": "discovery",
+            "timeCost": "normal",
+            "sceneGradient": "linear-gradient(180deg, #1a2e1a 0%, #0d1520 45%, #1a1208 100%)",
+            "choices": [
+              {
+                "id": "explore_shrine",
+                "label": "Explore the Shrine",
+                "subtitle": "Search for relics and hidden passages",
+                "tags": [
+                  { "label": "High Reward", "tone": "reward" },
+                  { "label": "High Risk", "tone": "risk" }
+                ],
+                "stageCost": 1,
+                "hpDelta": -8,
+                "moraleDelta": 4
+              },
+              {
+                "id": "safe_path",
+                "label": "Take the Safe Path",
+                "subtitle": "Circle the shrine and press toward the mill",
+                "tags": [
+                  { "label": "Low Risk", "tone": "neutral" },
+                  { "label": "Low Reward", "tone": "neutral" }
+                ],
+                "stageCost": 1
+              },
+              {
+                "id": "persuade_spirits",
+                "label": "Attempt Persuasion",
+                "subtitle": "Offer tribute to calm the restless dead",
+                "tags": [{ "label": "Rewards Vary", "tone": "neutral" }],
+                "supplyCost": 5,
+                "stageCost": 1,
+                "moraleDelta": 6
+              },
+              {
+                "id": "set_camp",
+                "label": "Set Camp",
+                "subtitle": "Rest and restore before entering the mill",
+                "tags": [
+                  { "label": "Restore HP", "tone": "reward" },
+                  { "label": "-10 Supplies", "tone": "cost" }
+                ],
+                "supplyCost": 10,
+                "hpDelta": 18,
+                "moraleDelta": 5,
+                "stageCost": 1
+              }
+            ]
+          },
+          {
+            "title": "The Creaking Wheel",
+            "text": "The mill wheel groans though no water flows. Lantern light dances across rotting timber and suspiciously fresh footprints.",
+            "eventType": "hazard",
+            "timeCost": "normal"
+          },
+          {
+            "title": "Smuggler's Stash",
+            "text": "Will-o-wisps lead you not to ghosts, but to a smuggler's cache hidden beneath the floorboards. Coin, contraband, and a ledger of bribes.",
+            "eventType": "discovery",
+            "timeCost": "high"
+          }
         ]
       }
     },

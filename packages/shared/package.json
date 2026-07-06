@@ -33,6 +33,10 @@
     "./combat": {
       "import": "./src/combat/index.ts",
       "types": "./src/combat/index.ts"
+    },
+    "./campaign": {
+      "import": "./src/campaign/index.ts",
+      "types": "./src/campaign/index.ts"
     }
   },
   "scripts": {

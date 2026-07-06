@@ -1,0 +1,383 @@
+.campaign-shell {
+  --campaign-gold: #c9a227;
+  --campaign-gold-dim: #8a6d1a;
+  --campaign-panel: rgba(18, 14, 10, 0.92);
+  --campaign-panel-border: rgba(201, 162, 39, 0.22);
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(ellipse at top, rgba(201, 162, 39, 0.06), transparent 55%),
+    linear-gradient(180deg, #0a0c10 0%, #121018 100%);
+  border: 1px solid var(--campaign-panel-border);
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.campaign-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid var(--campaign-panel-border);
+  background: rgba(10, 8, 6, 0.85);
+}
+
+.campaign-resource {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.campaign-resource strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+.campaign-floor-track {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex: 1;
+  justify-content: center;
+  max-width: 420px;
+}
+
+.campaign-floor-node {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: grid;
+  place-items: center;
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.campaign-floor-node.active {
+  border-color: var(--campaign-gold);
+  color: var(--campaign-gold);
+  box-shadow: 0 0 12px rgba(201, 162, 39, 0.35);
+}
+
+.campaign-floor-node.done {
+  border-color: rgba(201, 162, 39, 0.45);
+  color: rgba(201, 162, 39, 0.8);
+}
+
+.campaign-floor-line {
+  flex: 1;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  max-width: 2rem;
+}
+
+.campaign-body {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr) 260px;
+  flex: 1;
+  min-height: 0;
+}
+
+@media (max-width: 1100px) {
+  .campaign-body {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+  }
+}
+
+.campaign-panel {
+  background: var(--campaign-panel);
+  border-right: 1px solid var(--campaign-panel-border);
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.campaign-panel:last-child {
+  border-right: none;
+  border-left: 1px solid var(--campaign-panel-border);
+}
+
+.campaign-panel-title {
+  font-family: "Cinzel", serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--campaign-gold);
+  margin-bottom: 0.75rem;
+}
+
+.campaign-party-card {
+  display: flex;
+  gap: 0.65rem;
+  padding: 0.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.5rem;
+  background: rgba(0, 0, 0, 0.25);
+  margin-bottom: 0.5rem;
+}
+
+.campaign-bar {
+  height: 0.35rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.campaign-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.campaign-bar.hp > span {
+  background: linear-gradient(90deg, #8b1a1a, #d64545);
+}
+
+.campaign-bar.resource > span {
+  background: linear-gradient(90deg, #1a3a6b, #4a8fd4);
+}
+
+.campaign-scene {
+  position: relative;
+  min-height: 220px;
+  border-radius: 0.65rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 1rem;
+}
+
+.campaign-scene-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 30%, rgba(0, 0, 0, 0.75) 100%);
+}
+
+.campaign-scene-caption {
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: 1rem;
+}
+
+.campaign-event-title {
+  font-family: "Cinzel", serif;
+  font-size: 1.35rem;
+  color: #fff;
+  margin-bottom: 0.35rem;
+}
+
+.campaign-event-text {
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.55;
+  font-size: 0.92rem;
+}
+
+.campaign-choices {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.campaign-choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  width: 100%;
+  text-align: left;
+  padding: 0.85rem 1rem;
+  border-radius: 0.55rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.35);
+  transition: border-color 0.15s, background 0.15s, transform 0.15s;
+}
+
+.campaign-choice:hover:not(:disabled) {
+  border-color: rgba(201, 162, 39, 0.55);
+  background: rgba(201, 162, 39, 0.08);
+  transform: translateY(-1px);
+}
+
+.campaign-choice:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.campaign-choice-label {
+  font-weight: 600;
+  color: #fff;
+  font-size: 0.92rem;
+}
+
+.campaign-choice-sub {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.55);
+  margin-top: 0.15rem;
+}
+
+.campaign-tag {
+  font-size: 0.65rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.campaign-tag.risk {
+  color: #f87171;
+  border-color: rgba(248, 113, 113, 0.35);
+  background: rgba(248, 113, 113, 0.1);
+}
+
+.campaign-tag.reward {
+  color: #86efac;
+  border-color: rgba(134, 239, 172, 0.35);
+  background: rgba(134, 239, 172, 0.1);
+}
+
+.campaign-tag.cost {
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.35);
+  background: rgba(251, 191, 36, 0.1);
+}
+
+.campaign-tag.neutral {
+  color: rgba(255, 255, 255, 0.65);
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.campaign-journey {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1.25rem;
+  border-top: 1px solid var(--campaign-panel-border);
+  background: rgba(10, 8, 6, 0.9);
+}
+
+.campaign-journey-nodes {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex: 1;
+  overflow-x: auto;
+  padding: 0.25rem 0;
+}
+
+.campaign-journey-node {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.45rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.campaign-journey-node.current {
+  border-color: var(--campaign-gold);
+  color: var(--campaign-gold);
+  box-shadow: 0 0 14px rgba(201, 162, 39, 0.3);
+}
+
+.campaign-journey-node.done {
+  color: rgba(201, 162, 39, 0.75);
+  border-color: rgba(201, 162, 39, 0.35);
+}
+
+.campaign-inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.35rem;
+}
+
+.campaign-inv-slot {
+  aspect-ratio: 1;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.35rem;
+  background: rgba(0, 0, 0, 0.25);
+  display: grid;
+  place-items: center;
+}
+
+.campaign-log-item {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 0.35rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.campaign-log-item:last-child {
+  border-bottom: none;
+}
+
+.campaign-next-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.25rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--campaign-gold-dim);
+  background: linear-gradient(180deg, rgba(201, 162, 39, 0.25), rgba(201, 162, 39, 0.12));
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: background 0.15s, box-shadow 0.15s;
+}
+
+.campaign-next-btn:hover:not(:disabled) {
+  background: linear-gradient(180deg, rgba(201, 162, 39, 0.38), rgba(201, 162, 39, 0.18));
+  box-shadow: 0 0 18px rgba(201, 162, 39, 0.25);
+}
+
+.campaign-next-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.campaign-center {
+  padding: 1.25rem;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.campaign-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.campaign-meta-pill {
+  font-size: 0.72rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.campaign-reward-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.campaign-reward-chip {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.35rem;
+  border: 1px solid rgba(201, 162, 39, 0.25);
+  background: rgba(201, 162, 39, 0.08);
+  display: grid;
+  place-items: center;
+}

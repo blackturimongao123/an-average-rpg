@@ -9,6 +9,11 @@ import {
 import type { ActiveMission, AdventurerRank, Heir, MissionBoard } from "@bloodline/shared/types";
 import { applyAdventurerRankXp, MISSION_COOLDOWN_MS, XP_PER_LEVEL } from "@bloodline/shared/constants";
 import {
+  applyChoiceToCampaignState,
+  createInitialCampaignState,
+  getStepChoices,
+} from "@bloodline/shared/campaign";
+import {
   boardNeedsReroll,
   createMissionBoard,
   getMissionTemplate,
@@ -151,6 +156,7 @@ export async function bootstrapAcceptMission(
     currentStep: 0,
     totalSteps: mission.campaign.steps.length,
     startedAtMs: Date.now(),
+    campaignState: createInitialCampaignState(mission),
   };
 
   const updatedSlots = board.slots.map((entry) =>
@@ -170,7 +176,8 @@ export async function bootstrapAcceptMission(
 export async function bootstrapAdvanceMission(
   userId: string,
   lineageId: string,
-  heirId: string
+  heirId: string,
+  choiceId?: string
 ) {
   const lineageRef = doc(db, "lineages", lineageId);
   const heirRef = doc(db, "lineages", lineageId, "heirs", heirId);
@@ -197,6 +204,27 @@ export async function bootstrapAdvanceMission(
     throw new Error("Mission not found");
   }
 
+  const stepIndex = heir.activeMission.currentStep;
+  const step = mission.campaign.steps[stepIndex];
+  const choices = getStepChoices(mission, stepIndex);
+  const choice =
+    choices.find((entry) => entry.id === choiceId) ?? choices[0] ?? null;
+
+  const baseState =
+    heir.activeMission.campaignState ?? createInitialCampaignState(mission);
+  const logText = choice
+    ? `${choice.label} — ${step.text.slice(0, 80)}${step.text.length > 80 ? "…" : ""}`
+    : step.text;
+  const nextCampaignState = choice
+    ? applyChoiceToCampaignState(baseState, choice, step, logText)
+    : {
+        ...baseState,
+        eventLog: [
+          ...baseState.eventLog,
+          { text: logText, timestampMs: Date.now() },
+        ],
+      };
+
   const isFinalStep = heir.activeMission.currentStep >= heir.activeMission.totalSteps - 1;
   if (!isFinalStep) {
     const nextMission: ActiveMission = {
@@ -207,6 +235,7 @@ export async function bootstrapAdvanceMission(
       currentStep: heir.activeMission.currentStep + 1,
       totalSteps: heir.activeMission.totalSteps,
       startedAtMs: heir.activeMission.startedAtMs,
+      campaignState: nextCampaignState,
     };
 
     const batch = writeBatch(db);

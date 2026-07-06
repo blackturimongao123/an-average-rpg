@@ -7,6 +7,8 @@ import {
   acceptPlayerMission,
   advancePlayerMission,
 } from "@/firebase/missionBoard";
+import { bootstrapAbandonMission } from "@/firebase/missionBoardBootstrap";
+import { CampaignView } from "@/features/campaign/CampaignView";
 import { getFirebaseErrorMessage } from "@/lib/firebaseErrors";
 import {
   formatMissionCountdown,
@@ -18,7 +20,7 @@ import {
   DIFFICULTY_RANK_COLORS,
   getRankXpToNextRank,
 } from "@bloodline/shared/constants";
-import type { AdventurerRank } from "@bloodline/shared/types";
+import type { AdventurerRank, MissionCampaignChoice } from "@bloodline/shared/types";
 import {
   Beer,
   ClipboardList,
@@ -27,7 +29,6 @@ import {
   Medal,
   Scroll,
   Star,
-  Swords,
 } from "lucide-react";
 
 import itemsData from "@game-data/items.json";
@@ -131,14 +132,19 @@ export function TavernPage() {
     }
   };
 
-  const handleAdvanceMission = async () => {
+  const handleAdvanceMission = async (choice: MissionCampaignChoice) => {
     if (!lineage || !heir || !user || !heir.activeMission) return;
 
     setLoading(true);
     setError("");
 
     try {
-      const response = await advancePlayerMission(user.uid, lineage.id, heir.id);
+      const response = await advancePlayerMission(
+        user.uid,
+        lineage.id,
+        heir.id,
+        choice.id
+      );
 
       if (response.completed && response.rewards) {
         setActiveMission(null);
@@ -167,6 +173,26 @@ export function TavernPage() {
     }
   };
 
+  const handleAbandonMission = async () => {
+    if (!lineage || !heir || !user) return;
+    if (!window.confirm("Abandon this contract? Rewards will be lost and a cooldown applies.")) {
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    try {
+      await bootstrapAbandonMission(user.uid, lineage.id, heir.id);
+      setActiveMission(null);
+      await refreshBoard();
+    } catch (err: unknown) {
+      setError(getFirebaseErrorMessage(err));
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (!heir) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -177,12 +203,26 @@ export function TavernPage() {
 
   const activeMission = heir.activeMission;
   const activeTemplate = activeMission ? getMissionTemplate(activeMission.missionId) : null;
-  const currentStepText =
-    activeMission && activeTemplate
-      ? activeTemplate.campaign.steps[activeMission.currentStep]?.text
-      : null;
-  const isFinalStep =
-    activeMission && activeMission.currentStep >= activeMission.totalSteps - 1;
+
+  if (activeMission && activeTemplate && !completion) {
+    return (
+      <div className="h-full p-2 md:p-3 overflow-hidden">
+        {error && (
+          <div className="mb-3 p-3 rounded-md bg-destructive/20 text-destructive text-sm">
+            {error}
+          </div>
+        )}
+        <CampaignView
+          heir={heir}
+          activeMission={activeMission}
+          mission={activeTemplate}
+          loading={loading}
+          onChoose={handleAdvanceMission}
+          onAbandon={handleAbandonMission}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-5xl mx-auto">
@@ -240,56 +280,6 @@ export function TavernPage() {
           )}
           <button onClick={() => setCompletion(null)} className="btn-primary mt-6">
             Back to Mission Board
-          </button>
-        </div>
-      ) : activeMission && activeTemplate ? (
-        <div className="card p-6 animate-fade-in border-primary/30">
-          <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
-            <div>
-              <p className="text-sm text-primary mb-1">Active Campaign</p>
-              <h2 className="font-display text-xl font-semibold">{activeMission.missionName}</h2>
-            </div>
-            <DifficultyBadge difficulty={activeMission.difficulty} />
-          </div>
-
-          <p className="text-muted-foreground mb-6">{activeTemplate.description}</p>
-
-          <div className="mb-4">
-            <div className="flex items-center justify-between text-sm mb-2">
-              <span className="text-muted-foreground">Progress</span>
-              <span>
-                Step {activeMission.currentStep + 1} / {activeMission.totalSteps}
-              </span>
-            </div>
-            <div className="w-full h-2 bg-secondary rounded-full overflow-hidden">
-              <div
-                className="h-full bg-primary transition-all"
-                style={{
-                  width: `${((activeMission.currentStep + 1) / activeMission.totalSteps) * 100}%`,
-                }}
-              />
-            </div>
-          </div>
-
-          {currentStepText && (
-            <div className="p-4 rounded-md bg-secondary/40 mb-6">
-              <Scroll className="w-5 h-5 text-gold mb-2" />
-              <p className="leading-relaxed">{currentStepText}</p>
-            </div>
-          )}
-
-          <div className="mb-6">
-            <p className="text-sm font-semibold mb-2">Contract Rewards</p>
-            <RewardList rewards={activeTemplate.rewards} />
-          </div>
-
-          <button
-            onClick={handleAdvanceMission}
-            disabled={loading}
-            className="btn-primary flex items-center gap-2"
-          >
-            <Swords className="w-4 h-4" />
-            {isFinalStep ? "Complete Mission" : "Continue Adventure"}
           </button>
         </div>
       ) : isBusyOnJob ? null : (

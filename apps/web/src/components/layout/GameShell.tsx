@@ -19,9 +19,11 @@ interface GameShellProps {
 export function GameShell({ children }: GameShellProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const isImmersive = location.pathname === "/skills";
   const { user } = useAuthStore();
-  const { setLineage, setHeir, setLoading } = useGameStore();
+  const { setLineage, setHeir, setLoading, heir } = useGameStore();
+  const isImmersive =
+    location.pathname === "/skills" ||
+    (location.pathname === "/tavern" && Boolean(heir?.activeMission));
 
   useJobShiftTimer();
 
@@ -129,8 +131,9 @@ export function GameShell({ children }: GameShellProps) {
 
   if (isImmersive) {
     return (
-      <div className="h-screen w-screen overflow-hidden bg-background">
-        {children}
+      <div className="h-screen w-screen overflow-hidden bg-background flex flex-col">
+        {location.pathname !== "/skills" && <TopBar />}
+        <div className="flex-1 overflow-hidden">{children}</div>
       </div>
     );
   }

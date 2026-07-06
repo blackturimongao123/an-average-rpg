@@ -100,8 +100,53 @@ export interface MissionRewards {
   items: string[];
 }
 
+export type MissionEventType = "discovery" | "combat" | "rest" | "social" | "hazard";
+export type MissionTimeCost = "low" | "normal" | "high";
+
+export interface MissionChoiceTag {
+  label: string;
+  tone: "risk" | "reward" | "neutral" | "cost";
+}
+
+export interface MissionCampaignChoice {
+  id: string;
+  label: string;
+  subtitle: string;
+  tags?: MissionChoiceTag[];
+  supplyCost?: number;
+  moraleDelta?: number;
+  hpDelta?: number;
+  stageCost?: number;
+}
+
 export interface MissionCampaignStep {
   text: string;
+  title?: string;
+  eventType?: MissionEventType;
+  timeCost?: MissionTimeCost;
+  choices?: MissionCampaignChoice[];
+  sceneGradient?: string;
+}
+
+export interface MissionCampaign {
+  regionName?: string;
+  maxStages?: number;
+  startingSupplies?: number;
+  steps: MissionCampaignStep[];
+}
+
+export interface CampaignRunState {
+  supplies: number;
+  maxSupplies: number;
+  morale: number;
+  stagesRemaining: number;
+  maxStages: number;
+  eventLog: Array<{ text: string; timestampMs: number }>;
+  runGold: number;
+  runXp: number;
+  runItems: string[];
+  hpPercent: number;
+  regionName?: string;
 }
 
 export interface MissionTemplate {
@@ -114,9 +159,7 @@ export interface MissionTemplate {
   weight: number;
   type: MissionType;
   rewards: MissionRewards;
-  campaign: {
-    steps: MissionCampaignStep[];
-  };
+  campaign: MissionCampaign;
 }
 
 export type MissionBoardSlotStatus = "available" | "empty";
@@ -143,6 +186,7 @@ export interface ActiveMission {
   currentStep: number;
   totalSteps: number;
   startedAtMs: number;
+  campaignState?: CampaignRunState;
 }
 
 export interface ActiveJobShift {

@@ -24,7 +24,8 @@ export async function acceptPlayerMission(
 export async function advancePlayerMission(
   userId: string,
   lineageId: string,
-  heirId: string
+  heirId: string,
+  choiceId?: string
 ) {
-  return bootstrapAdvanceMission(userId, lineageId, heirId);
+  return bootstrapAdvanceMission(userId, lineageId, heirId, choiceId);
 }

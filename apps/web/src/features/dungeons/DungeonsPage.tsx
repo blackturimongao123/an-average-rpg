@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useGameStore } from "@/stores/gameStore";
 import { BusyActivityBlock, useIsHeirBusyOnJob } from "@/components/game/BusyActivityBlock";
 import { resolveDungeon } from "@/firebase/functions";
+import { getFirebaseErrorMessage } from "@/lib/firebaseErrors";
 import { Castle, Skull, Swords, Coins, Star, ChevronRight } from "lucide-react";
 import type { BattleRound, DungeonData } from "@bloodline/shared/types";
 
@@ -15,6 +16,7 @@ export function DungeonsPage() {
   const [selectedDungeon, setSelectedDungeon] = useState<typeof dungeons[0] | null>(null);
   const [currentFloor, setCurrentFloor] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [battleResult, setBattleResult] = useState<{
     victory: boolean;
     heirDied: boolean;
@@ -26,10 +28,15 @@ export function DungeonsPage() {
   } | null>(null);
 
   const handleEnterFloor = async () => {
-    if (!lineage || !heir || !selectedDungeon) return;
+    if (!heir || !selectedDungeon) return;
+    if (!lineage) {
+      setError("Lineage data is still loading. Try again in a moment.");
+      return;
+    }
 
     setLoading(true);
     setBattleResult(null);
+    setError("");
 
     try {
       const response = await resolveDungeon({
@@ -56,6 +63,12 @@ export function DungeonsPage() {
 
     } catch (err) {
       console.error("Dungeon error:", err);
+      const message = getFirebaseErrorMessage(err);
+      setError(
+        message.includes("not set up") || message.includes("unavailable")
+          ? `${message} Dungeon combat runs on Cloud Functions — deploy the backend (Firebase Blaze plan required).`
+          : message
+      );
     } finally {
       setLoading(false);
     }
@@ -72,7 +85,10 @@ export function DungeonsPage() {
     setSelectedDungeon(null);
     setCurrentFloor(1);
     setBattleResult(null);
+    setError("");
   };
+
+  const heirLevel = heir?.level ?? 1;
 
   if (!heir) {
     return (
@@ -111,6 +127,12 @@ export function DungeonsPage() {
       </div>
 
       {isBusyOnJob && <BusyActivityBlock activityName="dungeon" />}
+
+      {error && (
+        <div className="mb-4 p-4 rounded-md bg-destructive/20 text-destructive text-sm">
+          {error}
+        </div>
+      )}
 
       {!isBusyOnJob && battleResult ? (
         <div className="card p-6 animate-fade-in">
@@ -221,14 +243,28 @@ export function DungeonsPage() {
         </div>
       ) : !isBusyOnJob ? (
         <div className="grid gap-4">
+          {dungeons.length === 0 && (
+            <p className="text-muted-foreground">No dungeons are configured yet.</p>
+          )}
           {dungeons.map((dungeon) => {
-            const canEnter = heir.level >= dungeon.requiredLevel;
-            
+            const canEnter = heirLevel >= dungeon.requiredLevel;
+
             return (
               <button
                 key={dungeon.id}
-                onClick={() => canEnter && setSelectedDungeon(dungeon)}
+                type="button"
+                onClick={() => {
+                  if (canEnter) {
+                    setError("");
+                    setSelectedDungeon(dungeon);
+                  }
+                }}
                 disabled={!canEnter}
+                title={
+                  canEnter
+                    ? undefined
+                    : `Requires level ${dungeon.requiredLevel} (you are level ${heirLevel})`
+                }
                 className={`card p-4 text-left transition-all ${
                   canEnter ? "hover:border-primary/50" : "opacity-50 cursor-not-allowed"
                 }`}
@@ -242,8 +278,13 @@ export function DungeonsPage() {
                         {dungeon.description.slice(0, 80)}...
                       </p>
                       <div className="flex gap-3 mt-2 text-xs">
-                        <span className="px-2 py-0.5 rounded bg-secondary">
+                        <span
+                          className={`px-2 py-0.5 rounded ${
+                            canEnter ? "bg-secondary" : "bg-destructive/20 text-destructive"
+                          }`}
+                        >
                           Level {dungeon.requiredLevel}+
+                          {!canEnter ? ` (need ${dungeon.requiredLevel - heirLevel} more)` : ""}
                         </span>
                         <span className="px-2 py-0.5 rounded bg-secondary capitalize">
                           {dungeon.difficulty || "Normal"}
