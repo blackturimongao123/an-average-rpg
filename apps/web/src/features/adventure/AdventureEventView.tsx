@@ -148,7 +148,7 @@ export function AdventureEventView({
       return {
         backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.55) 100%), url("${step.sceneImage}")`,
         backgroundSize: "cover",
-        backgroundPosition: "center",
+        backgroundPosition: "center 40%",
       };
     }
     return { background: sceneGradient };
@@ -306,13 +306,13 @@ export function AdventureEventView({
                   onClick={() => handleChoice(choice)}
                 >
                   <div className="adventure-choice-icon">
-                    <Icon className="w-4 h-4" />
+                    <Icon className="w-3.5 h-3.5" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="adventure-choice-label">{choice.label}</p>
                     <p className="adventure-choice-sub">{choice.subtitle}</p>
                     {choice.tags && choice.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 mt-2">
+                      <div className="flex flex-wrap gap-1 mt-1">
                         {choice.tags.map((tag) => (
                           <span key={tag.label} className={`adventure-tag ${tag.tone}`}>
                             {tag.label}
