@@ -1,8 +1,8 @@
 import {
   bootstrapAcceptMission,
-  bootstrapAdvanceMission,
   bootstrapGetMissionBoard,
 } from "./missionBoardBootstrap";
+import { advanceMission as advanceMissionCallable, type AdvanceMissionResult } from "./functions";
 
 export async function getPlayerMissionBoard(
   userId: string,
@@ -22,10 +22,11 @@ export async function acceptPlayerMission(
 }
 
 export async function advancePlayerMission(
-  userId: string,
+  _userId: string,
   lineageId: string,
   heirId: string,
   choiceId?: string
-) {
-  return bootstrapAdvanceMission(userId, lineageId, heirId, choiceId);
+): Promise<AdvanceMissionResult> {
+  const response = await advanceMissionCallable({ lineageId, heirId, choiceId });
+  return response.data;
 }

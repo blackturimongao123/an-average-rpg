@@ -21,7 +21,9 @@
             "text": "You descend into the damp cellar, torch in hand. Squeaks echo from the shadows."
           },
           {
-            "text": "A swarm of rats charges. You fight them off with quick strikes."
+            "text": "A swarm of rats charges. You fight them off with quick strikes.",
+            "eventType": "combat",
+            "combatEncounter": { "monsterId": "cellar_rat" }
           },
           {
             "text": "The last rat falls. The innkeeper owes you a drink—and coin."
@@ -110,7 +112,9 @@
             "text": "You spot smoke from a roadside camp."
           },
           {
-            "text": "The bandits scatter after a brief skirmish."
+            "text": "The bandits scatter after a brief skirmish.",
+            "eventType": "combat",
+            "combatEncounter": { "monsterId": "goblin_scout", "levelScale": 1.2 }
           },
           {
             "text": "The guild clerk stamps your contract complete."
@@ -284,7 +288,9 @@
             "text": "Tombstones lean like rotten teeth."
           },
           {
-            "text": "Skeletons rise—you shatter bone and curse alike."
+            "text": "Skeletons rise—you shatter bone and curse alike.",
+            "eventType": "combat",
+            "combatEncounter": { "monsterId": "skeleton_warrior" }
           },
           {
             "text": "The gravekeeper pays from the church coffers."
@@ -344,7 +350,9 @@
             "text": "Wingbeats shake the cliffs as you climb."
           },
           {
-            "text": "The wyvern dives—you dodge and strike its wing."
+            "text": "The wyvern dives—you dodge and strike its wing.",
+            "eventType": "combat",
+            "combatEncounter": { "monsterId": "goblin_elite", "levelScale": 1.5 }
           },
           {
             "text": "It flees the valley. Farmers cheer your name."
@@ -433,7 +441,9 @@
             "text": "Arcane symbols pulse with sickly light."
           },
           {
-            "text": "A lesser demon manifests—you shatter the focus stone."
+            "text": "A lesser demon manifests—you shatter the focus stone.",
+            "eventType": "combat",
+            "combatEncounter": { "monsterId": "goblin_shaman", "levelScale": 2 }
           },
           {
             "text": "The circle collapses. Mages guild pays hazard rates."
@@ -464,7 +474,9 @@
             "text": "Cold drains warmth from the tomb air."
           },
           {
-            "text": "Wraiths guard the sigil—you destroy it in a blaze of faith."
+            "text": "Wraiths guard the sigil—you destroy it in a blaze of faith.",
+            "eventType": "combat",
+            "combatEncounter": { "monsterId": "lich_lord", "levelScale": 0.6 }
           },
           {
             "text": "The lich's influence wanes. Royal coin follows."
@@ -524,7 +536,9 @@
             "text": "The crystal hums with apocalyptic memory."
           },
           {
-            "text": "The echo takes form—you battle across shattered time."
+            "text": "The echo takes form—you battle across shattered time.",
+            "eventType": "combat",
+            "combatEncounter": { "monsterId": "ancient_red_dragon", "levelScale": 0.35 }
           },
           {
             "text": "Silence returns. Legends will speak of this day."

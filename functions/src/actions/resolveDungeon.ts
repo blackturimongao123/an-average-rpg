@@ -2,12 +2,14 @@ import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { FieldValue } from "firebase-admin/firestore";
 import { STAT_POINTS_PER_LEVEL } from "@bloodline/shared/constants";
 import { getFloorChoiceModifiers } from "@bloodline/shared/adventure";
+import { buildBattleReplayPayload, calculateMaxHp } from "@bloodline/shared/combat";
 import { db } from "../index.js";
 import {
   generateSeed,
   seededRandomChoice,
 } from "../utils/helpers.js";
 import { simulateBattle } from "../utils/combat.js";
+import type { BattleReplayPayload } from "@bloodline/shared/types";
 import type { Heir, Lineage, Monster, BattleRound } from "../utils/types.js";
 
 import dungeonsData from "../../../game-data/dungeons.json";
@@ -36,6 +38,8 @@ interface ResolveDungeonResponse {
   floorCleared: boolean;
   dungeonCompleted: boolean;
   battleRounds: BattleRound[];
+  monsterId: string;
+  battleReplay: BattleReplayPayload;
 }
 
 export const resolveDungeon = onCall<ResolveDungeonRequest>(
@@ -211,6 +215,29 @@ export const resolveDungeon = onCall<ResolveDungeonRequest>(
 
     await batch.commit();
 
+    const heirMaxHp = calculateMaxHp(battleHeir.stats.constitution, battleHeir.level);
+    const approach = floorData.approach;
+    const battleReplay = buildBattleReplayPayload({
+      heir: {
+        id: heir.id,
+        name: heir.name,
+        classId: heir.classId,
+        level: battleHeir.level,
+        stats: battleHeir.stats,
+        maxHp: heirMaxHp,
+        startHp: heirMaxHp,
+      },
+      monster: {
+        id: monster.id,
+        name: monster.name,
+        hp: monster.hp,
+      },
+      rounds: battleResult.rounds,
+      victory: battleResult.victory,
+      sceneImage: approach?.sceneImage,
+      sceneGradient: approach?.sceneGradient,
+    });
+
     return {
       battleId,
       victory: battleResult.victory,
@@ -220,6 +247,8 @@ export const resolveDungeon = onCall<ResolveDungeonRequest>(
       floorCleared: battleResult.victory,
       dungeonCompleted: battleResult.victory && floor === dungeon.floors.length,
       battleRounds: battleResult.rounds,
+      monsterId,
+      battleReplay,
     };
   }
 );

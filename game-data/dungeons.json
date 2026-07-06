@@ -895,6 +895,19 @@
   ],
   "monsters": [
     {
+      "id": "cellar_rat",
+      "name": "Cellar Rat",
+      "level": 1,
+      "hp": 18,
+      "damage": 3,
+      "defense": 1,
+      "dexterity": 10,
+      "xpReward": 8,
+      "goldRewardMin": 1,
+      "goldRewardMax": 4,
+      "lootTable": []
+    },
+    {
       "id": "goblin_scout",
       "name": "Goblin Scout",
       "level": 1,

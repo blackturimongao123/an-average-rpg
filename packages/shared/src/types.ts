@@ -127,6 +127,7 @@ export interface MissionCampaignStep {
   choices?: MissionCampaignChoice[];
   sceneGradient?: string;
   sceneImage?: string;
+  combatEncounter?: MissionCombatEncounter;
 }
 
 /** Event step for missions, dungeon floor approach, and shared adventure UI. */
@@ -248,6 +249,29 @@ export interface BattleResult {
   itemIds: string[];
   finalHeirHp: number;
   finalEnemyHp: number;
+}
+
+export interface BattleCombatant {
+  id: string;
+  name: string;
+  side: "ally" | "enemy";
+  maxHp: number;
+  startHp: number;
+  portraitSrc?: string;
+  classId?: string;
+}
+
+export interface BattleReplayPayload {
+  combatants: BattleCombatant[];
+  rounds: BattleRound[];
+  victory: boolean;
+  sceneImage?: string;
+  sceneGradient?: string;
+}
+
+export interface MissionCombatEncounter {
+  monsterId: string;
+  levelScale?: number;
 }
 
 export interface ClassData {

@@ -23,10 +23,12 @@ export function GameShell({ children }: GameShellProps) {
   const { user } = useAuthStore();
   const { setLineage, setHeir, setLoading, heir } = useGameStore();
   const dungeonRunActive = useUIStore((s) => s.dungeonRunActive);
+  const battleReplayActive = useUIStore((s) => s.battleReplayActive);
   const isImmersive =
     location.pathname === "/skills" ||
     (location.pathname === "/tavern" && Boolean(heir?.activeMission)) ||
-    (location.pathname === "/dungeons" && dungeonRunActive);
+    (location.pathname === "/dungeons" && dungeonRunActive) ||
+    battleReplayActive;
 
   useJobShiftTimer();
 

@@ -7,8 +7,10 @@ import {
   acceptPlayerMission,
   advancePlayerMission,
 } from "@/firebase/missionBoard";
+import type { AdvanceMissionResult } from "@/firebase/functions";
 import { bootstrapAbandonMission } from "@/firebase/missionBoardBootstrap";
 import { CampaignView } from "@/features/campaign/CampaignView";
+import { BattleView } from "@/features/battle/BattleView";
 import { getFirebaseErrorMessage } from "@/lib/firebaseErrors";
 import {
   formatMissionCountdown,
@@ -20,7 +22,7 @@ import {
   DIFFICULTY_RANK_COLORS,
   getRankXpToNextRank,
 } from "@bloodline/shared/constants";
-import type { AdventurerRank, MissionCampaignChoice } from "@bloodline/shared/types";
+import type { AdventurerRank, BattleReplayPayload, MissionCampaignChoice } from "@bloodline/shared/types";
 import {
   Beer,
   ClipboardList,
@@ -106,6 +108,41 @@ export function TavernPage() {
     rewards: { gold: number; xp: number; rankXp: number; items: string[] };
     rankUp: { rank: string; rankXp: number } | null;
   } | null>(null);
+  const [missionBattle, setMissionBattle] = useState<{
+    replay: BattleReplayPayload;
+    response: AdvanceMissionResult;
+    choiceLabel?: string;
+  } | null>(null);
+
+  const applyAdvanceResponse = async (response: AdvanceMissionResult) => {
+    if (response.missionFailed) {
+      setActiveMission(null);
+      setError("Your heir was defeated. The contract failed.");
+      await refreshBoard();
+      return;
+    }
+
+    if (response.completed && response.rewards) {
+      setActiveMission(null);
+      setCompletion({
+        rewards: response.rewards,
+        rankUp: response.rankUp,
+      });
+      updateHeirGold(response.heirGoldAfter!);
+      updateHeirXp(response.heirXpAfter!);
+      if (response.leveledUp) {
+        updateHeirLevel(response.heirLevelAfter!);
+      }
+      updateAdventurerRank(
+        normalizeAdventurerRank(response.adventurerRank),
+        response.adventurerRankXp!
+      );
+      response.rewards.items.forEach((itemId) => addItemToInventory(itemId));
+      await refreshBoard();
+    } else if (response.activeMission) {
+      setActiveMission(response.activeMission);
+    }
+  };
 
   const adventurerRank = (lineage?.adventurerRank ?? "F") as AdventurerRank;
   const adventurerRankXp = lineage?.adventurerRankXp ?? 0;
@@ -146,26 +183,31 @@ export function TavernPage() {
         choice.id
       );
 
-      if (response.completed && response.rewards) {
-        setActiveMission(null);
-        setCompletion({
-          rewards: response.rewards,
-          rankUp: response.rankUp,
+      if (response.battleReplay) {
+        setMissionBattle({
+          replay: response.battleReplay,
+          response,
+          choiceLabel: choice.label,
         });
-        updateHeirGold(response.heirGoldAfter!);
-        updateHeirXp(response.heirXpAfter!);
-        if (response.leveledUp) {
-          updateHeirLevel(response.heirLevelAfter!);
-        }
-        updateAdventurerRank(
-          normalizeAdventurerRank(response.adventurerRank),
-          response.adventurerRankXp!
-        );
-        response.rewards.items.forEach((itemId) => addItemToInventory(itemId));
-        await refreshBoard();
-      } else if (response.activeMission) {
-        setActiveMission(response.activeMission);
+        setLoading(false);
+        return;
       }
+
+      await applyAdvanceResponse(response);
+    } catch (err: unknown) {
+      setError(getFirebaseErrorMessage(err));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleMissionBattleContinue = async () => {
+    if (!missionBattle) return;
+    const { response } = missionBattle;
+    setMissionBattle(null);
+    setLoading(true);
+    try {
+      await applyAdvanceResponse(response);
     } catch (err: unknown) {
       setError(getFirebaseErrorMessage(err));
     } finally {
@@ -203,6 +245,37 @@ export function TavernPage() {
 
   const activeMission = heir.activeMission;
   const activeTemplate = activeMission ? getMissionTemplate(activeMission.missionId) : null;
+
+  if (missionBattle && activeMission && activeTemplate) {
+    const enemyName =
+      missionBattle.replay.combatants.find((c) => c.side === "enemy")?.name ?? "Enemy";
+    const victory = missionBattle.replay.victory;
+
+    return (
+      <div className="h-full p-2 md:p-3 overflow-hidden">
+        <BattleView
+          replay={missionBattle.replay}
+          headerLabel={`${activeMission.missionName.toUpperCase()} — Stage ${activeMission.currentStep + 1}`}
+          resultSummary={{
+            victory,
+            monsterFaced: enemyName,
+            choiceLabel: missionBattle.choiceLabel,
+            rewards: missionBattle.response.rewards ?? undefined,
+            heirDied: missionBattle.response.missionFailed,
+          }}
+          continueLabel={
+            missionBattle.response.missionFailed
+              ? "Return to Tavern"
+              : missionBattle.response.completed
+                ? "Collect Rewards"
+                : "Continue Expedition"
+          }
+          onFinished={() => {}}
+          onContinue={handleMissionBattleContinue}
+        />
+      </div>
+    );
+  }
 
   if (activeMission && activeTemplate && !completion) {
     return (

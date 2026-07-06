@@ -33,3 +33,4 @@ export * from "./actions/upgradeItem.js";
 export * from "./actions/purchaseMerchantItem.js";
 export * from "./actions/partyActions.js";
 export * from "./actions/missionActions.js";
+export * from "./actions/advanceMission.js";

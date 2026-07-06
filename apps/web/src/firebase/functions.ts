@@ -1,3 +1,4 @@
+import type { ActiveMission, AdventurerRank, BattleReplayPayload } from "@bloodline/shared/types";
 import { httpsCallable } from "firebase/functions";
 import { functions } from "./config";
 
@@ -50,10 +51,12 @@ export const resolveDungeon = httpsCallable<
     victory: boolean;
     heirDied: boolean;
     monsterFaced: string;
+    monsterId: string;
     rewards: { gold: number; xp: number; items: string[] };
     floorCleared: boolean;
     dungeonCompleted: boolean;
     battleRounds: unknown[];
+    battleReplay: BattleReplayPayload;
   }
 >(functions, "resolveDungeon");
 
@@ -184,3 +187,29 @@ export const failMission = httpsCallable<
   { lineageId: string; heirId: string },
   { missionId: string; cooldownExpiresAtMs: number }
 >(functions, "failMission");
+
+export interface AdvanceMissionResult {
+  completed: boolean;
+  activeMission: ActiveMission | null;
+  battleReplay?: BattleReplayPayload;
+  stepText?: string;
+  rewards?: {
+    gold: number;
+    xp: number;
+    rankXp: number;
+    items: string[];
+  } | null;
+  rankUp?: { rank: AdventurerRank; rankXp: number } | null;
+  heirGoldAfter?: number;
+  heirXpAfter?: number;
+  leveledUp?: boolean;
+  heirLevelAfter?: number;
+  adventurerRank?: AdventurerRank;
+  adventurerRankXp?: number;
+  missionFailed?: boolean;
+}
+
+export const advanceMission = httpsCallable<
+  { lineageId: string; heirId: string; choiceId?: string },
+  AdvanceMissionResult
+>(functions, "advanceMission");
