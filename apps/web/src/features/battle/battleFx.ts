@@ -1,4 +1,6 @@
 export const BATTLE_PACE = {
+  turnCharge: 320,
+  turnReady: 180,
   hitDelay: 350,
   actionResolve: 900,
   deathDelay: 600,

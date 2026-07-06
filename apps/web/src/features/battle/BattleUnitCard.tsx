@@ -32,7 +32,7 @@ export const BattleUnitCard = forwardRef<HTMLDivElement, BattleUnitCardProps>(
     return (
       <div
         ref={(el) => registerRef(combatant.id, el)}
-        className={`battle-unit ${isActive ? "is-active" : ""} ${isDead ? "is-dead" : ""} ${isGaugeReady ? "is-gauge-ready" : ""}`}
+        className={`battle-unit ${isActive ? "is-active is-charging" : ""} ${isDead ? "is-dead" : ""} ${isGaugeReady ? "is-gauge-ready" : ""}`}
         data-side={combatant.side}
         data-unit-id={combatant.id}
       >
