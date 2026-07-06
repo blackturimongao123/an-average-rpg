@@ -120,7 +120,7 @@ REPO=blackturimongao123/an-average-rpg
 gcloud iam service-accounts describe $SA_EMAIL --project=$PROJECT_ID 2>/dev/null \
   || gcloud iam service-accounts create $SA_ID \
        --project=$PROJECT_ID --display-name="GitHub Actions Firebase Deploy"
-for ROLE in roles/firebase.admin roles/cloudfunctions.admin roles/run.admin roles/iam.serviceAccountUser; do
+for ROLE in roles/firebase.admin roles/cloudfunctions.admin roles/run.admin roles/iam.serviceAccountUser roles/cloudscheduler.admin; do
   gcloud projects add-iam-policy-binding $PROJECT_ID \
     --member="serviceAccount:${SA_EMAIL}" --role="$ROLE" --condition=None
 done
@@ -151,6 +151,16 @@ echo "GCP_SERVICE_ACCOUNT=${SA_EMAIL}"
 Paste the two echoed lines into GitHub → Settings → Secrets → Actions.
 
 **Option B — CI token:** Set repository variable `FIREBASE_DEPLOY_AUTH` = `token`, then add secret `FIREBASE_TOKEN` from `firebase login:ci`.
+
+**If `dailyTick` deploy fails with `cloudscheduler.jobs.update`:** the CI service account needs Cloud Scheduler Admin. In Cloud Shell:
+
+```bash
+gcloud projects add-iam-policy-binding an-average-rpg \
+  --member="serviceAccount:github-actions-firebase@an-average-rpg.iam.gserviceaccount.com" \
+  --role="roles/cloudscheduler.admin" --condition=None
+```
+
+Then re-run **Deploy Firebase backend** from Actions. Callable functions (dungeons, tavern, etc.) can still deploy successfully even when only `dailyTick` fails.
 
 ---
 
