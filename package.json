@@ -11,6 +11,7 @@
     "lint": "pnpm -r lint",
     "test": "pnpm -r test",
     "test:rust": "cargo test --workspace",
+    "validate:data": "node scripts/validate-game-data.mjs",
     "firebase:emulators": "firebase emulators:start",
     "firebase:deploy": "firebase deploy",
     "functions:build": "pnpm --filter functions build",
@@ -30,7 +31,7 @@
   "author": "",
   "license": "MIT",
   "engines": {
-    "node": ">=24.0.0",
+    "node": ">=22.0.0 <23",
     "pnpm": ">=9.0.0"
   },
   "packageManager": "pnpm@9.15.0"

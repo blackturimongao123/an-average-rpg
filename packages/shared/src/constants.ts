@@ -1,3 +1,5 @@
+import type { AdventurerRank } from "./types.js";
+
 export const STAT_NAMES: Record<string, string> = {
   strength: "Strength",
   dexterity: "Dexterity",
@@ -141,8 +143,6 @@ export const MAX_HIT_CHANCE = 95;
 export const MAX_CRIT_CHANCE = 50;
 
 export const ADVENTURER_RANKS = ["F", "E", "D", "C", "B", "A", "S", "SS", "SSS"] as const;
-
-export type AdventurerRank = (typeof ADVENTURER_RANKS)[number];
 
 export const MISSION_BOARD_SIZE = 5;
 

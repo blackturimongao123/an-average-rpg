@@ -5,6 +5,7 @@ import { generateSeed, weightedRandomChoice } from "../utils/helpers.js";
 import type { Heir, Lineage, TavernEvent, EventOutcome, BloodlineEffect } from "../utils/types.js";
 
 import eventsData from "../../../game-data/events.json";
+import { addHeirDeathToBatch } from "../utils/death.js";
 
 const events = eventsData.events as TavernEvent[];
 
@@ -65,8 +66,15 @@ export const resolveTavernQuest = onCall<ResolveTavernQuestRequest>(
       throw new HttpsError("permission-denied", "You do not own this lineage");
     }
 
-    if (heir.status !== "alive") {
-      throw new HttpsError("failed-precondition", "Heir is not alive");
+    if (lineage.activeHeirId !== heirId || heir.status !== "alive") {
+      throw new HttpsError("failed-precondition", "Heir is not active");
+    }
+    if (heir.activeMission) {
+      throw new HttpsError("failed-precondition", "Finish the active mission first");
+    }
+    const activeShiftEndsAt = (heir.activeJobShift as { endsAtMs?: number } | null)?.endsAtMs;
+    if (activeShiftEndsAt && activeShiftEndsAt > Date.now()) {
+      throw new HttpsError("failed-precondition", "Heir is working a job shift");
     }
 
     const event = events.find((e) => e.id === eventId);
@@ -141,19 +149,13 @@ export const resolveTavernQuest = onCall<ResolveTavernQuestRequest>(
     }
 
     if (outcome.heirDies) {
-      batch.update(heirRef, {
-        status: "dead",
-        diedAt: FieldValue.serverTimestamp(),
+      await addHeirDeathToBatch({
+        batch,
+        lineageRef,
+        heirRef,
+        lineage,
+        heir,
         deathCause: `event:${eventId}`,
-      });
-
-      batch.update(lineageRef, {
-        activeHeirId: null,
-        generation: FieldValue.increment(1),
-        "publicSummary.deadHeirs": FieldValue.increment(1),
-        "publicSummary.highestGeneration": lineage.generation + 1,
-        "publicSummary.currentClass": null,
-        updatedAt: FieldValue.serverTimestamp(),
       });
     } else {
       batch.update(lineageRef, {

@@ -60,6 +60,7 @@ export async function createPartyClient(
     createdAtMs: Date.now(),
     activeDungeon: null,
     activeMission: null,
+    lastMissionOutcome: null,
   } satisfies Party);
 
   batch.update(doc(db, "lineages", lineage.id), {
@@ -235,6 +236,7 @@ export async function leavePartyClient(
       updates.leaderLineageId = memberLineageIds[0];
       updates.activeDungeon = null;
       updates.activeMission = null;
+      updates.lastMissionOutcome = null;
     }
     batch.update(partyRef, updates);
   }

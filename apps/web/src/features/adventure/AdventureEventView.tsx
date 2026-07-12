@@ -173,7 +173,7 @@ export function AdventureEventView({
   const inventoryPreview = heir.inventory.slice(0, 10);
 
   const handleChoice = (choice: MissionCampaignChoice) => {
-    if (loading) return;
+    if (loading || choice.unavailable) return;
     const supplyBlocked =
       showRunResources &&
       supplies &&
@@ -337,10 +337,11 @@ export function AdventureEventView({
               const Icon = choiceIcon(choice.id);
               const tone = getChoiceCardTone(choice.id);
               const blocked =
-                showRunResources &&
-                supplies &&
-                choice.supplyCost !== undefined &&
-                supplies.current < choice.supplyCost;
+                choice.unavailable ||
+                (showRunResources &&
+                  supplies &&
+                  choice.supplyCost !== undefined &&
+                  supplies.current < choice.supplyCost);
 
               return (
                 <button
@@ -370,7 +371,11 @@ export function AdventureEventView({
                       </div>
                     )}
                     {blocked && (
-                      <p className="text-xs text-red-400 mt-1">Not enough supplies</p>
+                      <p className="text-xs text-red-400 mt-1">
+                        {choice.unavailable
+                          ? "Unavailable"
+                          : "Not enough supplies"}
+                      </p>
                     )}
                   </div>
                 </button>

@@ -44,6 +44,7 @@ export function CampaignView({
     seenRandomEventIds: [],
     seenSecretEventIds: [],
     choiceHistory: [],
+    restUsesCount: 0,
   };
 
   const regionLabel =

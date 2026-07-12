@@ -25,6 +25,7 @@ function rewriteGameDataPaths(dir) {
   }
 }
 
+fs.rmSync(vendorDir, { recursive: true, force: true });
 fs.mkdirSync(vendorDir, { recursive: true });
 fs.cpSync(path.join(sharedDir, "dist"), path.join(vendorDir, "dist"), { recursive: true });
 fs.copyFileSync(path.join(sharedDir, "package.json"), path.join(vendorDir, "package.json"));

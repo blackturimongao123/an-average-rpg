@@ -113,19 +113,15 @@ export const equipItem = onCall<EquipItemRequest>(
     }
 
     if (slot === "main" && isTwoHanded(item)) {
-      if (equipment.secondaryWeapon) {
+      if (equipment.secondaryWeapon && equipment.secondaryWeapon !== currentlyEquipped) {
         inventory = addToInventory(inventory, equipment.secondaryWeapon);
-        equipment.secondaryWeapon = itemId;
-      } else {
-        equipment.secondaryWeapon = itemId;
       }
+      equipment.secondaryWeapon = itemId;
       equipment.mainWeapon = itemId;
     } else if (slot === "main" && equipment.mainWeapon && isTwoHanded(getItemDefinition(equipment.mainWeapon)!)) {
-      inventory = addToInventory(inventory, equipment.mainWeapon);
       equipment.mainWeapon = itemId;
       equipment.secondaryWeapon = null;
     } else if (slot === "secondary" && equipment.mainWeapon && isTwoHanded(getItemDefinition(equipment.mainWeapon)!)) {
-      inventory = addToInventory(inventory, equipment.mainWeapon);
       equipment.mainWeapon = null;
       equipment.secondaryWeapon = itemId;
     } else {

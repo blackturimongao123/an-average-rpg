@@ -123,7 +123,8 @@ service cloud.firestore {
             .hasOnly([
               'activeJobShift', 'gold', 'jobRecords', 'xp', 'level', 'inventory',
               'status', 'diedAt', 'deathCause', 'activeMission', 'subclassId', 'subclassTier',
-              'unspentStatPoints', 'missionCooldowns', 'itemInstances'
+              'unspentStatPoints', 'missionCooldowns', 'itemInstances', 'completedMissionIds',
+              'appliedPartyMissionOutcomeIds', 'seenUniqueMissionEventIds'
             ]);
         allow delete: if false;
       }
@@ -154,7 +155,7 @@ service cloud.firestore {
       match /missionBoard/{docId} {
         allow read: if signedIn()
           && get(/databases/$(database)/documents/lineages/$(lineageId)).data.ownerUid == request.auth.uid;
-        allow create, update: if ownsLineage(lineageId);
+        allow create, update: if false;
         allow delete: if false;
       }
     }

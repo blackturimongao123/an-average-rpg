@@ -1,21 +1,22 @@
+import { lazy, Suspense, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuthStore } from "./stores/authStore";
 import { GameShell } from "./components/layout/GameShell";
-import { LoginPage } from "./features/auth/LoginPage";
-import { HeirCreationPage } from "./features/heir/HeirCreationPage";
-import { TavernPage } from "./features/tavern/TavernPage";
-import { DungeonsPage } from "./features/dungeons/DungeonsPage";
-import { JobsPage } from "./features/jobs/JobsPage";
-import { BankPage } from "./features/bank/BankPage";
-import { BloodlinePage } from "./features/bloodline/BloodlinePage";
-import { SkillsPage } from "./features/skills/SkillsPage";
-import { CharacterPage } from "./features/character/CharacterPage";
-import { MerchantPage } from "./features/merchant/MerchantPage";
-import { ProfilePage } from "./features/profile/ProfilePage";
-import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase/config";
 import { useAppVersionRefresh } from "./hooks/useAppVersionRefresh";
+
+const LoginPage = lazy(() => import("./features/auth/LoginPage").then((m) => ({ default: m.LoginPage })));
+const HeirCreationPage = lazy(() => import("./features/heir/HeirCreationPage").then((m) => ({ default: m.HeirCreationPage })));
+const TavernPage = lazy(() => import("./features/tavern/TavernPage").then((m) => ({ default: m.TavernPage })));
+const DungeonsPage = lazy(() => import("./features/dungeons/DungeonsPage").then((m) => ({ default: m.DungeonsPage })));
+const JobsPage = lazy(() => import("./features/jobs/JobsPage").then((m) => ({ default: m.JobsPage })));
+const BankPage = lazy(() => import("./features/bank/BankPage").then((m) => ({ default: m.BankPage })));
+const BloodlinePage = lazy(() => import("./features/bloodline/BloodlinePage").then((m) => ({ default: m.BloodlinePage })));
+const SkillsPage = lazy(() => import("./features/skills/SkillsPage").then((m) => ({ default: m.SkillsPage })));
+const CharacterPage = lazy(() => import("./features/character/CharacterPage").then((m) => ({ default: m.CharacterPage })));
+const MerchantPage = lazy(() => import("./features/merchant/MerchantPage").then((m) => ({ default: m.MerchantPage })));
+const ProfilePage = lazy(() => import("./features/profile/ProfilePage").then((m) => ({ default: m.ProfilePage })));
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuthStore();
@@ -50,6 +51,7 @@ export default function App() {
   }, [setUser, setLoading]);
 
   return (
+    <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center">Loading…</div>}>
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route
@@ -75,5 +77,6 @@ export default function App() {
         }
       />
     </Routes>
+    </Suspense>
   );
 }

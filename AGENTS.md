@@ -19,7 +19,7 @@ Before coding:
 5. Never expose or commit secrets (.env, credentials)
 6. When done → git add . && git commit && git push (triggers deploy on main)
 
-Live site: GitHub Pages (peaceiris → gh-pages). Firebase project: an-average-rpg.
+Live site: GitHub Pages (GitHub Actions Pages deployment). Firebase project: an-average-rpg.
 Verify deploy via sidebar footer: MVP vX.Y.Z must match APP_VERSION in repo.
 ```
 
@@ -171,7 +171,7 @@ Then re-run **Deploy Firebase backend** from Actions. Callable functions (dungeo
 3. That version must match `APP_VERSION` in `apps/web/src/constants/version.ts`.
 4. If stale, hard-refresh or wait for CDN — compare version before debugging code.
 
-**Pages setting:** Deploy from branch `gh-pages`, folder `/`.
+**Pages setting:** Build and deployment source is **GitHub Actions**.
 
 ---
 

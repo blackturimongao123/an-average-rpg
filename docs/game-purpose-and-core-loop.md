@@ -128,7 +128,7 @@ Rank (F → SSS) gates **which contracts can appear** and signals player prestig
 
 ## Classes, stats & build identity
 
-- **Classes:** Warrior, Rogue, Mage, Cleric (and subclasses over time).
+- **Classes:** Warrior, Rogue, Mage, Priest, Ranger (and subclasses over time).
 - **Stats:** strength, dexterity, intelligence, constitution, luck, charisma, faith, **infamy** (gates some content).
 - **Items:** weapons, armor, consumables — with **bankable**, **soulbound**, and **heirloom** flags.
 

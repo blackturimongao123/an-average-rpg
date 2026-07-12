@@ -1,6 +1,5 @@
 import { resolveTavernQuest } from "./functions";
-import { bootstrapTavernQuest } from "./tavernBootstrap";
-import { getFirebaseErrorMessage, isFunctionsUnavailable } from "@/lib/firebaseErrors";
+import { getFirebaseErrorMessage } from "@/lib/firebaseErrors";
 
 export async function resolvePlayerTavernQuest(
   userId: string,
@@ -18,14 +17,7 @@ export async function resolvePlayerTavernQuest(
     });
     return response.data;
   } catch (error) {
-    if (isFunctionsUnavailable(error)) {
-      try {
-        return await bootstrapTavernQuest(userId, lineageId, heirId, eventId, choiceId);
-      } catch (bootstrapError) {
-        throw new Error(getFirebaseErrorMessage(bootstrapError));
-      }
-    }
-
+    void userId;
     throw new Error(getFirebaseErrorMessage(error));
   }
 }

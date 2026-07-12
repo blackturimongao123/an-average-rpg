@@ -29,6 +29,7 @@ export function createInitialCampaignState(mission: MissionTemplate): CampaignRu
     seenRandomEventIds: [],
     seenSecretEventIds: [],
     choiceHistory: [],
+    restUsesCount: 0,
   };
 }
 

@@ -12,7 +12,7 @@ You are not one hero. You are a cursed family line. Death is progression - each 
 - **Styling**: Tailwind CSS + Radix UI
 - **State**: Zustand + TanStack Query
 - **Backend**: Firebase (Auth, Firestore, Functions, Storage)
-- **Game Logic**: Rust (compiled to WASM for browser)
+- **Game Logic**: Shared TypeScript engine used by Firebase Functions and browser replays
 - **Desktop**: Tauri (planned)
 
 ## Project Structure
@@ -35,7 +35,7 @@ an-average-rpg/
 
 ### Prerequisites
 
-- Node.js 20+
+- Node.js 22
 - pnpm 9+
 - Rust (for game-core development)
 - Firebase CLI
@@ -75,10 +75,10 @@ Copy `apps/web/.env.example` to `apps/web/.env.local` and fill in your Firebase 
 
 ## Game Features (MVP 1)
 
-- **4 Classes**: Fighter, Rogue, Mage, Cleric
+- **5 Classes**: Warrior, Rogue, Mage, Priest, Ranger
 - **4 Jobs**: Guard, Scribe, Blacksmith, Gravekeeper
 - **10 Tavern Events**: Branching story encounters
-- **3 Dungeons**: Goblin Caves, Undead Crypt, Dragon's Lair
+- **Dungeons**: Planned key- and quest-gated expeditions
 - **20 Skills**: Web-shaped skill tree with lockouts
 - **Bank System**: Store gold and items across generations
 - **Death & Inheritance**: Full roguelite progression

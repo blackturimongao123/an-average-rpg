@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useGameStore } from "@/stores/gameStore";
 import { BusyActivityBlock, useIsHeirBusyOnJob } from "@/components/game/BusyActivityBlock";
 import { useAuthStore } from "@/stores/authStore";
@@ -6,9 +6,10 @@ import { useMissionBoard } from "@/hooks/useMissionBoard";
 import {
   acceptPlayerMission,
   advancePlayerMission,
+  persistPlayerMissionAdvance,
 } from "@/firebase/missionBoard";
 import type { AdvanceMissionResult } from "@/firebase/functions";
-import { bootstrapAbandonMission } from "@/firebase/missionBoardBootstrap";
+import { abandonMission } from "@/firebase/functions";
 import { CampaignView } from "@/features/campaign/CampaignView";
 import { FieldEncountersPanel } from "@/features/tavern/FieldEncountersPanel";
 import { BattleView } from "@/features/battle/BattleView";
@@ -37,10 +38,12 @@ import {
 } from "lucide-react";
 import { usePartyMembers } from "@/hooks/usePartyMembers";
 import type { AdventurePartyMember } from "@/features/adventure/AdventureEventView";
+import { buildPartyReplayAllies } from "@/lib/partyBattle";
 import {
   clearPartyMission,
+  clearPartyMissionOutcome,
   clearPartyMissionPendingBattle,
-  setPartyMissionOutcome,
+  finalizePartyMission,
   setPartyMissionPendingBattle,
   syncPartyMissionState,
 } from "@/firebase/partyMissionClient";
@@ -126,7 +129,9 @@ export function TavernPage() {
     replay: BattleReplayPayload;
     response: AdvanceMissionResult;
     choiceLabel?: string;
+    choiceId?: string;
   } | null>(null);
+  const dismissedOutcomeAtMsRef = useRef(0);
 
   const inParty = Boolean(lineage?.partyId && party);
   const isPartyLeader = inParty && party?.leaderUid === user?.uid;
@@ -144,6 +149,11 @@ export function TavernPage() {
     }));
   }, [inParty, members, lineage?.id]);
 
+  const partyReplayAllies = useMemo(() => {
+    if (!heir || !inParty || members.length <= 1) return undefined;
+    return buildPartyReplayAllies(heir, members);
+  }, [heir, inParty, members]);
+
   useEffect(() => {
     if (!inParty || !partyMission?.pendingBattle || isPartyLeader) return;
     const pending = partyMission.pendingBattle;
@@ -156,8 +166,8 @@ export function TavernPage() {
         activeMission: heir?.activeMission ?? null,
         missionFailed: pending.missionFailed,
         stepText: "",
-        rewards: null,
-        rankUp: null,
+        rewards: pending.completed ? party?.lastMissionOutcome?.rewards ?? null : null,
+        rankUp: pending.completed ? party?.lastMissionOutcome?.rankUp ?? null : null,
       },
       choiceLabel: pending.choiceLabel,
     });
@@ -167,18 +177,42 @@ export function TavernPage() {
     partyMission?.pendingBattle?.updatedAtMs,
     heir?.activeMission,
     missionBattle?.replay,
+    party?.lastMissionOutcome,
   ]);
+
+  useEffect(() => {
+    const outcome = party?.lastMissionOutcome;
+    if (!outcome || !inParty || isPartyLeader) return;
+    if (outcome.updatedAtMs <= dismissedOutcomeAtMsRef.current) return;
+
+    setMissionBattle(null);
+    setActiveMission(null);
+
+    if (outcome.missionFailed) {
+      setCompletion(null);
+      setError("Your heir was defeated. The contract failed.");
+      return;
+    }
+
+    if (outcome.completed && outcome.rewards) {
+      setCompletion({
+        rewards: outcome.rewards,
+        rankUp: outcome.rankUp ?? null,
+      });
+      setError("");
+    }
+  }, [party?.lastMissionOutcome?.updatedAtMs, inParty, isPartyLeader, setActiveMission]);
 
   const applyAdvanceResponse = async (response: AdvanceMissionResult) => {
     if (response.missionFailed) {
       setActiveMission(null);
+      setMissionBattle(null);
       setError("Your heir was defeated. The contract failed.");
       if (inParty && lineage?.partyId && isPartyLeader) {
-        await setPartyMissionOutcome(lineage.partyId, {
+        await finalizePartyMission(lineage.partyId, {
           completed: false,
           missionFailed: true,
         });
-        await clearPartyMission(lineage.partyId);
       }
       await refreshBoard();
       return;
@@ -186,6 +220,7 @@ export function TavernPage() {
 
     if (response.completed && response.rewards) {
       setActiveMission(null);
+      setMissionBattle(null);
       setCompletion({
         rewards: response.rewards,
         rankUp: response.rankUp ?? null,
@@ -201,13 +236,13 @@ export function TavernPage() {
       );
       response.rewards.items.forEach((itemId) => addItemToInventory(itemId));
       if (inParty && lineage?.partyId && isPartyLeader) {
-        await setPartyMissionOutcome(lineage.partyId, {
+        await finalizePartyMission(lineage.partyId, {
           completed: true,
           rewards: response.rewards,
           adventurerRank: normalizeAdventurerRank(response.adventurerRank),
           adventurerRankXp: response.adventurerRankXp,
+          rankUp: response.rankUp ?? null,
         });
-        await clearPartyMission(lineage.partyId);
       }
       await refreshBoard();
     } else if (response.activeMission) {
@@ -257,7 +292,7 @@ export function TavernPage() {
     }
   };
 
-  const handleAdvanceMission = (choice: MissionCampaignChoice) => {
+  const handleAdvanceMission = async (choice: MissionCampaignChoice) => {
     if (!lineage || !heir || !user || !heir.activeMission) return;
 
     if (inParty && !isPartyLeader) {
@@ -266,13 +301,15 @@ export function TavernPage() {
     }
 
     setError("");
+    setLoading(true);
 
     try {
-      const response = advancePlayerMission(
+      const response = await advancePlayerMission(
         user.uid,
         lineage,
         heir,
-        choice.id
+        choice.id,
+        partyReplayAllies
       );
 
       if (response.battleReplay) {
@@ -280,6 +317,7 @@ export function TavernPage() {
           replay: response.battleReplay,
           response,
           choiceLabel: choice.label,
+          choiceId: choice.id,
         });
         if (inParty && lineage.partyId) {
           void setPartyMissionPendingBattle(lineage.partyId, {
@@ -289,34 +327,54 @@ export function TavernPage() {
             completed: response.completed,
           });
         }
+        setLoading(false);
         return;
       }
 
-      void applyAdvanceResponse(response);
-    } catch (err: unknown) {
-      setError(getFirebaseErrorMessage(err));
-    }
-  };
-
-  const handleMissionBattleContinue = async () => {
-    if (!missionBattle) return;
-    if (inParty && !isPartyLeader) {
-      setMissionBattle(null);
-      return;
-    }
-    const { response } = missionBattle;
-    setMissionBattle(null);
-    if (inParty && lineage?.partyId && isPartyLeader) {
-      await clearPartyMissionPendingBattle(lineage.partyId);
-    }
-    setLoading(true);
-    try {
       await applyAdvanceResponse(response);
     } catch (err: unknown) {
       setError(getFirebaseErrorMessage(err));
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleMissionBattleContinue = async () => {
+    if (!missionBattle || !lineage || !heir || !user) return;
+    if (inParty && !isPartyLeader) {
+      setMissionBattle(null);
+      return;
+    }
+    const { response, choiceId } = missionBattle;
+    setMissionBattle(null);
+    if (inParty && lineage.partyId && isPartyLeader) {
+      await clearPartyMissionPendingBattle(lineage.partyId);
+    }
+    setLoading(true);
+    try {
+      await persistPlayerMissionAdvance(user.uid, lineage, heir, choiceId, response);
+      await applyAdvanceResponse(response);
+    } catch (err: unknown) {
+      setError(getFirebaseErrorMessage(err));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDismissCompletion = async () => {
+    if (party?.lastMissionOutcome) {
+      dismissedOutcomeAtMsRef.current = party.lastMissionOutcome.updatedAtMs;
+    }
+    setCompletion(null);
+    setError("");
+    if (isPartyLeader && lineage?.partyId) {
+      try {
+        await clearPartyMissionOutcome(lineage.partyId);
+      } catch (err: unknown) {
+        console.error("Clear party mission outcome error:", err);
+      }
+    }
+    await refreshBoard();
   };
 
   const handleAbandonMission = async () => {
@@ -333,7 +391,7 @@ export function TavernPage() {
     setError("");
 
     try {
-      await bootstrapAbandonMission(user.uid, lineage.id, heir.id);
+      await abandonMission({ lineageId: lineage.id, heirId: heir.id });
       if (inParty && lineage.partyId) {
         await clearPartyMission(lineage.partyId);
       }
@@ -355,9 +413,10 @@ export function TavernPage() {
   }
 
   const activeMission = heir.activeMission;
-  const activeTemplate = activeMission ? getMissionTemplate(activeMission.missionId) : null;
+  const missionId = activeMission?.missionId ?? partyMission?.missionId;
+  const activeTemplate = missionId ? getMissionTemplate(missionId) : null;
 
-  if (missionBattle && activeMission && activeTemplate) {
+  if (missionBattle && activeTemplate) {
     const enemyName =
       missionBattle.replay.combatants.find((c) => c.side === "enemy")?.name ?? "Enemy";
     const victory = missionBattle.replay.victory;
@@ -366,7 +425,7 @@ export function TavernPage() {
       <div className="h-full p-2 md:p-3 overflow-hidden">
         <BattleView
           replay={missionBattle.replay}
-          headerLabel={`${activeMission.missionName.toUpperCase()} — Stage ${activeMission.currentStep + 1}`}
+          headerLabel={`${(activeMission?.missionName ?? activeTemplate.name).toUpperCase()} — Stage ${(activeMission?.currentStep ?? partyMission?.currentStep ?? 0) + 1}`}
           resultSummary={{
             victory,
             monsterFaced: enemyName,
@@ -376,9 +435,9 @@ export function TavernPage() {
           }}
           continueLabel={
             missionBattle.response.missionFailed
-              ? "Return to Tavern"
+              ? "Ok"
               : missionBattle.response.completed
-                ? "Collect Rewards"
+                ? "Ok"
                 : "Continue Expedition"
           }
           onFinished={() => {}}
@@ -471,8 +530,8 @@ export function TavernPage() {
               </p>
             </div>
           )}
-          <button onClick={() => setCompletion(null)} className="btn-primary mt-6">
-            Back to Mission Board
+          <button onClick={() => void handleDismissCompletion()} className="btn-primary mt-6">
+            Ok
           </button>
         </div>
       ) : isBusyOnJob ? null : (

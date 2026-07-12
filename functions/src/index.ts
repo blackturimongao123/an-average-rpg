@@ -20,11 +20,8 @@ db.settings({ ignoreUndefinedProperties: true });
 
 export * from "./actions/createLineage.js";
 export * from "./actions/createHeir.js";
-export * from "./actions/killHeir.js";
 export * from "./actions/dailyTick.js";
 export * from "./actions/resolveTavernQuest.js";
-export * from "./actions/resolveDungeon.js";
-export * from "./actions/workJobShift.js";
 export * from "./actions/bankOperations.js";
 export * from "./actions/claimSkill.js";
 export * from "./actions/equipItem.js";
@@ -33,4 +30,5 @@ export * from "./actions/upgradeItem.js";
 export * from "./actions/purchaseMerchantItem.js";
 export * from "./actions/partyActions.js";
 export * from "./actions/missionActions.js";
+export * from "./actions/missionBoardActions.js";
 export * from "./actions/advanceMission.js";

@@ -50,7 +50,7 @@ Design new features with this split in mind: **long-term power** belongs on the 
 |----------|------|
 | **Character** | Stats, class, equipment, current heir overview |
 | **Tavern** | Branching story events — choices can grant gold, XP, items, effects, or **death** |
-| **Dungeons** | Floor-based combat with monsters/bosses; rewards and death risk |
+| **Dungeons** | Planned key- and quest-gated expeditions; not player-facing yet |
 | **Jobs** | Timed work shifts — salary, job XP, promotions, occasional events; **blocks other activities while on shift** |
 | **Bank** | Deposit/withdraw gold; store **bankable** items across generations |
 | **Skills** | Web-shaped skill trees with `requires` / `blocks` / point costs |
@@ -68,7 +68,7 @@ Skill nodes can **grant effects**, **block** other nodes, and have **job require
 
 ## Classes, stats & items
 
-- **Classes:** Warrior, Rogue, Mage, Cleric — each with main stat, starting gear, and class ability.
+- **Classes:** Warrior, Rogue, Mage, Priest, Ranger — each with main stat, starting gear, and class ability.
 - **Stats:** strength, dexterity, intelligence, constitution, luck, charisma, faith, **infamy** (used for some event requirements).
 - **Items:** weapons, armor, accessories, consumables — with rarity and flags:
   - `isBankable` — can go in the family bank

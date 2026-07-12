@@ -64,6 +64,10 @@ export interface Heir {
   missionCooldowns?: Record<string, number>;
   /** Mission template IDs this heir has completed at least once. */
   completedMissionIds?: string[];
+  /** Durable receipts preventing party outcomes from being applied more than once. */
+  appliedPartyMissionOutcomeIds?: string[];
+  /** Unique mission interludes already experienced by this heir. */
+  seenUniqueMissionEventIds?: string[];
   seed: string;
   createdAt?: Date;
   diedAt?: Date | null;
@@ -84,6 +88,7 @@ export interface Lineage {
   merchantBoard?: MerchantBoard;
   createdAt?: Date;
   updatedAt?: Date;
+  lastDailyTickDate?: string;
   publicSummary: {
     highestGeneration: number;
     deadHeirs: number;
@@ -119,6 +124,8 @@ export interface MissionCampaignChoice {
   moraleDelta?: number;
   hpDelta?: number;
   stageCost?: number;
+  /** UI-only: choice cannot be selected (e.g. Rest exhausted). */
+  unavailable?: boolean;
 }
 
 export interface MissionCampaignStep {
@@ -310,6 +317,8 @@ export interface CampaignRunState {
   seenUniqueInterludeIds?: string[];
   choiceHistory?: string[];
   interlude?: MissionCampaignInterlude;
+  /** Times Rest was used this contract (max 2). */
+  restUsesCount?: number;
 }
 
 export interface MissionTemplate {
@@ -352,6 +361,8 @@ export interface ActiveMission {
   totalSteps: number;
   startedAtMs: number;
   campaignState?: CampaignRunState;
+  /** Monotonic optimistic-concurrency token for mission advancement. */
+  revision?: number;
 }
 
 export interface ActiveJobShift {
@@ -393,6 +404,8 @@ export interface BattleRound {
   healing?: number;
   actorHpAfter: number;
   targetHpAfter: number;
+  /** Explicit target when multiple combatants share a side (party co-op). */
+  targetId?: string;
   actorGaugeAfter?: number;
   isCrit: boolean;
   isMiss: boolean;
@@ -593,6 +606,7 @@ export interface PartyMissionOutcome {
   rewards?: MissionRewards | null;
   adventurerRank?: AdventurerRank;
   adventurerRankXp?: number;
+  rankUp?: { rank: AdventurerRank; rankXp: number } | null;
   updatedAtMs: number;
 }
 
@@ -605,6 +619,7 @@ export interface PartyActiveMission {
   totalSteps: number;
   startedAtMs: number;
   campaignState?: CampaignRunState;
+  revision?: number;
   leaderUid: string;
   leaderLineageId: string;
   leaderHeirId: string;
@@ -631,6 +646,8 @@ export interface Party {
   createdAtMs: number;
   activeDungeon?: PartyActiveDungeon | null;
   activeMission?: PartyActiveMission | null;
+  /** Set when a party mission ends; cleared after the leader dismisses the reward screen. */
+  lastMissionOutcome?: PartyMissionOutcome | null;
 }
 
 export interface PartyInvite {

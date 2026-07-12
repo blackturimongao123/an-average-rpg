@@ -46,6 +46,7 @@ export function GameShell({ children }: GameShellProps) {
     if (!user) return;
 
     setLoading(true);
+    let unsubscribeHeir: (() => void) | null = null;
 
     const lineagesQuery = query(
       collection(db, "lineages"),
@@ -53,6 +54,9 @@ export function GameShell({ children }: GameShellProps) {
     );
 
     const unsubscribeLineage = onSnapshot(lineagesQuery, (snapshot) => {
+      unsubscribeHeir?.();
+      unsubscribeHeir = null;
+
       if (snapshot.empty) {
         setLineage(null);
         setHeir(null);
@@ -86,7 +90,7 @@ export function GameShell({ children }: GameShellProps) {
       if (lineageData.activeHeirId) {
         const heirRef = doc(db, "lineages", lineageDoc.id, "heirs", lineageData.activeHeirId);
         
-        const unsubscribeHeir = onSnapshot(heirRef, (heirDoc) => {
+        unsubscribeHeir = onSnapshot(heirRef, (heirDoc) => {
           if (heirDoc.exists()) {
             const heirData = heirDoc.data();
             const rawMission = heirData.activeMission as ActiveMission | null | undefined;
@@ -129,6 +133,9 @@ export function GameShell({ children }: GameShellProps) {
               unspentStatPoints: heirData.unspentStatPoints ?? 0,
               itemInstances: heirData.itemInstances ?? {},
               missionCooldowns: heirData.missionCooldowns ?? {},
+              completedMissionIds: heirData.completedMissionIds ?? [],
+              appliedPartyMissionOutcomeIds: heirData.appliedPartyMissionOutcomeIds ?? [],
+              seenUniqueMissionEventIds: heirData.seenUniqueMissionEventIds ?? [],
               seed: heirData.seed,
             });
 
@@ -142,7 +149,6 @@ export function GameShell({ children }: GameShellProps) {
           setLoading(false);
         });
 
-        return () => unsubscribeHeir();
       } else {
         setHeir(null);
         setLoading(false);
@@ -150,7 +156,10 @@ export function GameShell({ children }: GameShellProps) {
       }
     });
 
-    return () => unsubscribeLineage();
+    return () => {
+      unsubscribeHeir?.();
+      unsubscribeLineage();
+    };
   }, [user, setLineage, setHeir, setLoading, navigate]);
 
   useEffect(() => {

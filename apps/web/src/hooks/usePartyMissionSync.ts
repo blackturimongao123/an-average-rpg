@@ -27,12 +27,13 @@ export function usePartyMissionSync() {
 
     const partyMission = party.activeMission ?? null;
     const isLeader = party.leaderUid === user.uid;
+    const partyOutcome = party.lastMissionOutcome ?? null;
 
-    if (partyMission?.outcome) {
-      const outcomeAt = partyMission.outcome.updatedAtMs;
+    if (partyOutcome) {
+      const outcomeAt = partyOutcome.updatedAtMs;
       if (appliedOutcomeAtMsRef.current !== outcomeAt && !isLeader) {
         appliedOutcomeAtMsRef.current = outcomeAt;
-        void applyPartyMissionOutcomeToHeir(lineage, heir, partyMission.outcome).catch((err) => {
+        void applyPartyMissionOutcomeToHeir(lineage, heir, partyOutcome).catch((err) => {
           console.error("Party mission outcome sync error:", err);
         });
       }
@@ -91,7 +92,7 @@ export function usePartyMissionSync() {
     user,
     party?.activeMission?.updatedAtMs,
     party?.activeMission?.currentStep,
-    party?.activeMission?.outcome?.updatedAtMs,
+    party?.lastMissionOutcome?.updatedAtMs,
     party?.leaderUid,
     lineage?.partyId,
   ]);

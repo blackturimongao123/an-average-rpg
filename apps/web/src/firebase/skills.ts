@@ -1,6 +1,6 @@
 import { claimSkill as claimSkillFunction } from "./functions";
-import { bootstrapAdvanceSubclass, bootstrapClaimSkill } from "./skillBootstrap";
-import { getFirebaseErrorMessage, isFunctionsUnavailable } from "@/lib/firebaseErrors";
+import { bootstrapAdvanceSubclass } from "./skillBootstrap";
+import { getFirebaseErrorMessage } from "@/lib/firebaseErrors";
 
 export async function claimPlayerSkill(
   userId: string,
@@ -12,14 +12,7 @@ export async function claimPlayerSkill(
     const response = await claimSkillFunction({ lineageId, heirId, skillId });
     return response.data;
   } catch (error) {
-    if (isFunctionsUnavailable(error)) {
-      try {
-        return await bootstrapClaimSkill(userId, lineageId, heirId, skillId);
-      } catch (bootstrapError) {
-        throw new Error(getFirebaseErrorMessage(bootstrapError));
-      }
-    }
-
+    void userId;
     throw new Error(getFirebaseErrorMessage(error));
   }
 }

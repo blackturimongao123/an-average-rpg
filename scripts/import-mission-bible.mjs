@@ -2,7 +2,7 @@
  * Import mission & interlude content from docs/an_average_rpg_event_mission_bible.md
  *
  * Usage:
- *   node scripts/import-mission-bible.mjs              # Phase 1: F+E missions + all interludes
+ *   node scripts/import-mission-bible.mjs              # Shipped set: F through C + all interludes
  *   node scripts/import-mission-bible.mjs --ranks F,E  # explicit rank filter
  *   node scripts/import-mission-bible.mjs --audit-only   # list missing Part III spines
  */
@@ -701,7 +701,7 @@ function main() {
     ? ranksArg.split("=")[1]?.split(",").map((r) => r.trim().toUpperCase()) ?? ["F", "E"]
     : args.includes("--all-ranks")
       ? null
-      : ["F", "E"];
+      : ["F", "E", "D", "C"];
 
   const bible = readFileSync(BIBLE_PATH, "utf8");
   const partISplit = bible.indexOf("# Part II");

@@ -1,7 +1,5 @@
 import { createLineage, createHeir } from "./functions";
-import { bootstrapLineage } from "./lineageBootstrap";
-import { bootstrapHeir } from "./heirBootstrap";
-import { getFirebaseErrorMessage, isFunctionsUnavailable } from "@/lib/firebaseErrors";
+import { getFirebaseErrorMessage } from "@/lib/firebaseErrors";
 
 export async function createPlayerBloodline(
   userId: string,
@@ -12,14 +10,7 @@ export async function createPlayerBloodline(
     const response = await createLineage({ familyName, username });
     return response.data;
   } catch (error) {
-    if (isFunctionsUnavailable(error)) {
-      try {
-        return await bootstrapLineage(userId, familyName, username);
-      } catch (bootstrapError) {
-        throw new Error(getFirebaseErrorMessage(bootstrapError));
-      }
-    }
-
+    void userId;
     throw new Error(getFirebaseErrorMessage(error));
   }
 }
@@ -34,14 +25,7 @@ export async function createPlayerHeir(
     const response = await createHeir({ lineageId, classId, name });
     return { heirId: response.data.heirId };
   } catch (error) {
-    if (isFunctionsUnavailable(error)) {
-      try {
-        return await bootstrapHeir(userId, lineageId, classId, name);
-      } catch (bootstrapError) {
-        throw new Error(getFirebaseErrorMessage(bootstrapError));
-      }
-    }
-
+    void userId;
     throw new Error(getFirebaseErrorMessage(error));
   }
 }

@@ -28,7 +28,8 @@ export function getChoiceCardTone(choiceId: string): ChoiceCardTone {
   if (id.includes("persuade") || id.includes("bribe") || id.includes("force") || id.includes("spirit")) {
     return "social";
   }
-  if (id.includes("camp") || id.includes("rest")) return "rest";
+  if (id.includes("camp") || id.includes("rest") || id === "mission_rest") return "rest";
+  if (id.includes("scavenge") || id === "mission_scavenge") return "explore";
   if (id.includes("engage") || id.includes("ambush") || id.includes("push") || id.includes("fight")) {
     return "combat";
   }

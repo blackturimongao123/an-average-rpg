@@ -11,6 +11,7 @@ export const dailyTick = onSchedule(
   },
   async () => {
     console.log("Running daily tick...");
+    const dateKey = new Date().toISOString().slice(0, 10);
 
     const lineagesSnapshot = await db.collection("lineages").get();
 
@@ -19,7 +20,7 @@ export const dailyTick = onSchedule(
 
     for (const lineageDoc of lineagesSnapshot.docs) {
       try {
-        await processLineageDailyTick(lineageDoc.id);
+        await processLineageDailyTick(lineageDoc.id, dateKey);
         processed++;
       } catch (error) {
         console.error(`Error processing lineage ${lineageDoc.id}:`, error);
@@ -31,13 +32,15 @@ export const dailyTick = onSchedule(
   }
 );
 
-async function processLineageDailyTick(lineageId: string): Promise<void> {
+async function processLineageDailyTick(lineageId: string, dateKey: string): Promise<void> {
   const lineageRef = db.collection("lineages").doc(lineageId);
   const lineageDoc = await lineageRef.get();
 
   if (!lineageDoc.exists) return;
 
   const lineage = lineageDoc.data() as Lineage;
+
+  if (lineage.lastDailyTickDate === dateKey) return;
 
   if (!lineage.activeHeirId) return;
 
@@ -49,8 +52,6 @@ async function processLineageDailyTick(lineageId: string): Promise<void> {
   const heir = heirDoc.data() as Heir;
 
   if (heir.status !== "alive") return;
-
-  const batch = db.batch();
 
   const effectsSnapshot = await lineageRef.collection("effects").get();
 
@@ -71,15 +72,19 @@ async function processLineageDailyTick(lineageId: string): Promise<void> {
 
   const totalGoldGained = dailyGoldBonus + jobSalary;
 
-  if (totalGoldGained > 0) {
-    batch.update(heirRef, {
-      gold: FieldValue.increment(totalGoldGained),
+  await db.runTransaction(async (transaction) => {
+    const freshLineageDoc = await transaction.get(lineageRef);
+    if (!freshLineageDoc.exists) return;
+    const freshLineage = freshLineageDoc.data() as Lineage;
+    if (freshLineage.lastDailyTickDate === dateKey) return;
+    if (freshLineage.activeHeirId !== lineage.activeHeirId) return;
+
+    if (totalGoldGained > 0) {
+      transaction.update(heirRef, { gold: FieldValue.increment(totalGoldGained) });
+    }
+    transaction.update(lineageRef, {
+      lastDailyTickDate: dateKey,
+      updatedAt: FieldValue.serverTimestamp(),
     });
-  }
-
-  batch.update(lineageRef, {
-    updatedAt: FieldValue.serverTimestamp(),
   });
-
-  await batch.commit();
 }

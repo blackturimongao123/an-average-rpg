@@ -268,6 +268,7 @@ export function simulateGaugeCombat(
   items: CombatItemDef[],
   rand: RandomFn,
   options?: {
+    startingHpPercent?: number;
     xpReward?: number;
     goldMin?: number;
     goldMax?: number;
@@ -289,10 +290,17 @@ export function simulateGaugeCombat(
   const heirMaxHp = calculateMaxHp(stats.constitution, heirInput.level);
   const actives = getOwnedActives(combatData, heirInput.skillIds, heirInput.classId);
 
+  const startingHp = Math.max(
+    1,
+    Math.min(
+      heirMaxHp,
+      Math.round(heirMaxHp * ((options?.startingHpPercent ?? 100) / 100))
+    )
+  );
   const heir: Fighter = {
     id: heirInput.id,
     isHeir: true,
-    hp: heirMaxHp,
+    hp: startingHp,
     maxHp: heirMaxHp,
     speed: heirSpeed,
     gauge: 0,
@@ -398,8 +406,12 @@ export function simulateGaugeCombat(
         heir.hp = Math.min(heir.maxHp, heir.hp + totalHealing);
       }
 
+      const heirDamageFactor = combatData.heirDamageFactor ?? 1;
       const baseDamage = Math.floor(
-        (actor.weaponDamage + actor.scalingStat) * (resolved.damagePercent / 100) * getDamageMultiplier(heir, heirInput.skillIds)
+        (actor.weaponDamage + actor.scalingStat) *
+          (resolved.damagePercent / 100) *
+          getDamageMultiplier(heir, heirInput.skillIds) *
+          heirDamageFactor
       );
 
       const critBonus = getCritBonus(heir, monster, heirInput.skillIds, actives, resolved.bonusCrit);

@@ -105,6 +105,7 @@ export interface Lineage {
   merchantBoard?: MerchantBoard;
   createdAt: Timestamp | FieldValue;
   updatedAt: Timestamp | FieldValue;
+  lastDailyTickDate?: string;
   publicSummary: {
     highestGeneration: number;
     deadHeirs: number;

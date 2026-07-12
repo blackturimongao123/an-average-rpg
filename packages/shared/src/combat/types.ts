@@ -46,6 +46,8 @@ export interface MainAbilityModifierDef {
 
 export interface CombatData {
   gaugeThreshold: number;
+  /** Multiplier on heir outgoing damage (tune early-game lethality vs monsters). */
+  heirDamageFactor?: number;
   mainAbilities: Record<string, MainAbilityDef>;
   mainAbilityModifiers: MainAbilityModifierDef[];
   activeAbilities: ActiveAbilityDef[];

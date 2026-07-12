@@ -54,8 +54,10 @@ function buildFinalGauges(
 
 function getTargetIdForActor(
   combatants: BattleCombatant[],
-  actorId: string
+  actorId: string,
+  targetIdOverride?: string
 ): string | null {
+  if (targetIdOverride) return targetIdOverride;
   const actor = combatants.find((c) => c.id === actorId);
   if (!actor) return null;
   const targetSide = actor.side === "ally" ? "enemy" : "ally";
@@ -103,7 +105,7 @@ export function useBattleReplay({
 
   const formatLogLine = useCallback((round: BattleRound, combatantList: BattleCombatant[]) => {
     const actorName = combatantList.find((c) => c.id === round.actor)?.name ?? round.actor;
-    const targetId = getTargetIdForActor(combatantList, round.actor);
+    const targetId = getTargetIdForActor(combatantList, round.actor, round.targetId);
     const targetName = targetId
       ? (combatantList.find((c) => c.id === targetId)?.name ?? "target")
       : "target";
@@ -131,14 +133,14 @@ export function useBattleReplay({
       const lastAsActor = [...rounds].reverse().find((r) => r.actor === c.id);
       const lastAsTarget = [...rounds]
         .reverse()
-        .find((r) => getTargetIdForActor(fighters, r.actor) === c.id);
+        .find((r) => getTargetIdForActor(fighters, r.actor, r.targetId) === c.id);
       if (lastAsActor) next[c.id] = lastAsActor.actorHpAfter;
       else if (lastAsTarget) next[c.id] = lastAsTarget.targetHpAfter;
       else next[c.id] = c.startHp;
     }
     if (last) {
       next[last.actor] = last.actorHpAfter;
-      const tid = getTargetIdForActor(fighters, last.actor);
+      const tid = getTargetIdForActor(fighters, last.actor, last.targetId);
       if (tid) next[tid] = last.targetHpAfter;
     }
     setHpById(next);
@@ -218,7 +220,7 @@ export function useBattleReplay({
         roundIndex: number,
         currentHp: Record<string, number>
       ): Promise<Record<string, number>> => {
-        const targetId = getTargetIdForActor(fighters, round.actor);
+        const targetId = getTargetIdForActor(fighters, round.actor, round.targetId);
         const actorEl = unitRefsRef.current.current.get(round.actor) ?? null;
         const targetEl = targetId
           ? unitRefsRef.current.current.get(targetId) ?? null
@@ -332,7 +334,7 @@ export function useBattleReplay({
             currentHp = await playActionRound(actionRound, i, currentHp);
 
             if (
-              getTargetIdForActor(fighters, actionRound.actor) &&
+              getTargetIdForActor(fighters, actionRound.actor, actionRound.targetId) &&
               actionRound.targetHpAfter <= 0
             ) {
               i = rounds.length;

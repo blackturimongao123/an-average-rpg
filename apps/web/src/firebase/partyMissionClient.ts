@@ -1,5 +1,6 @@
-import { doc, serverTimestamp, updateDoc, writeBatch } from "firebase/firestore";
+import { doc, runTransaction, serverTimestamp, updateDoc } from "firebase/firestore";
 import {
+  applyAdventurerRankXp,
   MISSION_COOLDOWN_MS,
   XP_PER_LEVEL,
 } from "@bloodline/shared/constants";
@@ -27,6 +28,7 @@ export function activeMissionFromParty(partyMission: PartyActiveMission): Active
     totalSteps: partyMission.totalSteps,
     startedAtMs: partyMission.startedAtMs,
     campaignState: partyMission.campaignState,
+    revision: partyMission.revision ?? 0,
   };
 }
 
@@ -100,6 +102,24 @@ export async function setPartyMissionOutcome(
   });
 }
 
+/** End a party mission: clear shared run state and broadcast outcome to all members. */
+export async function finalizePartyMission(
+  partyId: string,
+  outcome: Omit<PartyMissionOutcome, "updatedAtMs">
+): Promise<void> {
+  await updateDoc(doc(db, "parties", partyId), {
+    activeMission: null,
+    lastMissionOutcome: firestoreSafe({
+      ...outcome,
+      updatedAtMs: Date.now(),
+    }),
+  });
+}
+
+export async function clearPartyMissionOutcome(partyId: string): Promise<void> {
+  await updateDoc(doc(db, "parties", partyId), { lastMissionOutcome: null });
+}
+
 export async function clearPartyMission(partyId: string): Promise<void> {
   await updateDoc(doc(db, "parties", partyId), { activeMission: null });
 }
@@ -111,66 +131,78 @@ export async function applyPartyMissionOutcomeToHeir(
 ): Promise<void> {
   const lineageRef = doc(db, "lineages", lineage.id);
   const heirRef = doc(db, "lineages", lineage.id, "heirs", heir.id);
-  const batch = writeBatch(db);
+  const receiptId = `party-mission:${outcome.updatedAtMs}`;
 
-  if (outcome.missionFailed) {
-    const missionId = heir.activeMission?.missionId;
-    batch.update(heirRef, {
-      activeMission: null,
-      ...(missionId
-        ? {
-            missionCooldowns: {
-              ...(heir.missionCooldowns ?? {}),
-              [missionId]: Date.now() + MISSION_COOLDOWN_MS,
-            },
-          }
-        : {}),
-    });
-    batch.update(lineageRef, { updatedAt: serverTimestamp() });
-    await batch.commit();
-    return;
-  }
-
-  if (outcome.completed && outcome.rewards) {
-    const xpForNextLevel = XP_PER_LEVEL(heir.level);
-    const newGold = heir.gold + outcome.rewards.gold;
-    const newXp = heir.xp + outcome.rewards.xp;
-    const leveledUp = newXp >= xpForNextLevel;
-    const finalXp = leveledUp ? newXp - xpForNextLevel : newXp;
-    const finalLevel = leveledUp ? heir.level + 1 : heir.level;
-    const missionId = heir.activeMission?.missionId;
-
-    batch.update(heirRef, {
-      gold: newGold,
-      xp: finalXp,
-      level: finalLevel,
-      inventory: [...heir.inventory, ...outcome.rewards.items],
-      activeMission: null,
-      ...(missionId
-        ? {
-            completedMissionIds: [
-              ...new Set([...(heir.completedMissionIds ?? []), missionId]),
-            ],
-          }
-        : {}),
-    });
-
-    if (outcome.adventurerRank !== undefined && outcome.adventurerRankXp !== undefined) {
-      batch.update(lineageRef, {
-        adventurerRank: outcome.adventurerRank,
-        adventurerRankXp: outcome.adventurerRankXp,
-        updatedAt: serverTimestamp(),
-      });
-    } else {
-      batch.update(lineageRef, { updatedAt: serverTimestamp() });
+  await runTransaction(db, async (transaction) => {
+    const [lineageSnapshot, heirSnapshot] = await Promise.all([
+      transaction.get(lineageRef),
+      transaction.get(heirRef),
+    ]);
+    if (!lineageSnapshot.exists() || !heirSnapshot.exists()) {
+      throw new Error("Lineage or heir no longer exists");
     }
 
-    await batch.commit();
-    return;
-  }
+    const currentLineage = { id: lineageSnapshot.id, ...lineageSnapshot.data() } as Lineage;
+    const currentHeir = { id: heirSnapshot.id, ...heirSnapshot.data() } as Heir;
+    const receipts = currentHeir.appliedPartyMissionOutcomeIds ?? [];
+    if (receipts.includes(receiptId)) return;
 
-  batch.update(heirRef, { activeMission: null });
-  await batch.commit();
+    const missionId = currentHeir.activeMission?.missionId;
+    const commonHeirUpdate: Record<string, unknown> = {
+      activeMission: null,
+      appliedPartyMissionOutcomeIds: [...receipts, receiptId].slice(-50),
+    };
+
+    if (outcome.missionFailed) {
+      transaction.update(heirRef, {
+        ...commonHeirUpdate,
+        ...(missionId
+          ? {
+              missionCooldowns: {
+                ...(currentHeir.missionCooldowns ?? {}),
+                [missionId]: Date.now() + MISSION_COOLDOWN_MS,
+              },
+            }
+          : {}),
+      });
+      transaction.update(lineageRef, { updatedAt: serverTimestamp() });
+      return;
+    }
+
+    if (outcome.completed && outcome.rewards) {
+      const xpForNextLevel = XP_PER_LEVEL(currentHeir.level);
+      const newXp = currentHeir.xp + outcome.rewards.xp;
+      const leveledUp = newXp >= xpForNextLevel;
+      transaction.update(heirRef, {
+        ...commonHeirUpdate,
+        gold: currentHeir.gold + outcome.rewards.gold,
+        xp: leveledUp ? newXp - xpForNextLevel : newXp,
+        level: leveledUp ? currentHeir.level + 1 : currentHeir.level,
+        inventory: [...currentHeir.inventory, ...outcome.rewards.items],
+        ...(missionId
+          ? {
+              completedMissionIds: [
+                ...new Set([...(currentHeir.completedMissionIds ?? []), missionId]),
+              ],
+            }
+          : {}),
+      });
+
+      const rankResult = applyAdventurerRankXp(
+        currentLineage.adventurerRank ?? "F",
+        currentLineage.adventurerRankXp ?? 0,
+        outcome.rewards.rankXp
+      );
+      transaction.update(lineageRef, {
+        adventurerRank: rankResult.rank,
+        adventurerRankXp: rankResult.rankXp,
+        updatedAt: serverTimestamp(),
+      });
+      return;
+    }
+
+    transaction.update(heirRef, commonHeirUpdate);
+  });
 }
 
 export async function syncHeirActiveMissionFromParty(

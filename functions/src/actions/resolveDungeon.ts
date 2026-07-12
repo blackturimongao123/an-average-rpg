@@ -11,6 +11,7 @@ import {
 import { simulateBattle, getBattleReplaySpeeds } from "../utils/combat.js";
 import type { BattleReplayPayload } from "@bloodline/shared/types";
 import type { Heir, Lineage, Monster, BattleRound } from "../utils/types.js";
+import { addHeirDeathToBatch } from "../utils/death.js";
 
 import dungeonsData from "../../../game-data/dungeons.json";
 
@@ -193,19 +194,13 @@ export const resolveDungeon = onCall<ResolveDungeonRequest>(
     }
 
     if (battleResult.heirDied) {
-      batch.update(heirRef, {
-        status: "dead",
-        diedAt: FieldValue.serverTimestamp(),
+      await addHeirDeathToBatch({
+        batch,
+        lineageRef,
+        heirRef,
+        lineage,
+        heir,
         deathCause: `dungeon:${dungeonId}:floor${floor}:${monsterId}`,
-      });
-
-      batch.update(lineageRef, {
-        activeHeirId: null,
-        generation: FieldValue.increment(1),
-        "publicSummary.deadHeirs": FieldValue.increment(1),
-        "publicSummary.highestGeneration": lineage.generation + 1,
-        "publicSummary.currentClass": null,
-        updatedAt: FieldValue.serverTimestamp(),
       });
     } else {
       batch.update(lineageRef, {

@@ -40,18 +40,6 @@ export async function fetchLiveAppVersion(): Promise<string | null> {
   }
 }
 
-async function clearBrowserCaches(): Promise<void> {
-  if ("caches" in window) {
-    const keys = await caches.keys();
-    await Promise.all(keys.map((key) => caches.delete(key)));
-  }
-
-  if ("serviceWorker" in navigator) {
-    const registrations = await navigator.serviceWorker.getRegistrations();
-    await Promise.all(registrations.map((registration) => registration.unregister()));
-  }
-}
-
 function reloadWithCacheBust(): void {
   const url = new URL(window.location.href);
   url.searchParams.set("_v", String(Date.now()));
@@ -80,7 +68,6 @@ export async function checkAndRefreshIfStale(): Promise<boolean> {
   }
 
   sessionStorage.setItem(REFRESH_ATTEMPT_KEY, live);
-  await clearBrowserCaches();
   reloadWithCacheBust();
   return true;
 }

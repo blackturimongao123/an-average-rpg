@@ -33,7 +33,12 @@ export function getBattleReplaySpeeds(heir: Heir, monster: Monster) {
   };
 }
 
-export function simulateBattle(heir: Heir, monster: Monster, seed: string): BattleResult {
+export function simulateBattle(
+  heir: Heir,
+  monster: Monster,
+  seed: string,
+  startingHpPercent = 100
+): BattleResult {
   const equipment = migrateEquipment(heir.equipment as unknown as Record<string, unknown>);
 
   const rand: RandomFn = (index) => seededRandom(seed, index);
@@ -63,6 +68,7 @@ export function simulateBattle(heir: Heir, monster: Monster, seed: string): Batt
     combatItems,
     rand,
     {
+      startingHpPercent,
       xpReward: monster.xpReward,
       goldMin: monster.goldRewardMin,
       goldMax: monster.goldRewardMax,

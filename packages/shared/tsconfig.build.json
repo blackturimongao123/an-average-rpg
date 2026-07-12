@@ -6,14 +6,6 @@
     "outDir": "./dist",
     "rootDir": "./src"
   },
-  "include": [
-    "src/constants.ts",
-    "src/equipment.ts",
-    "src/types.ts",
-    "src/combat/**/*",
-    "src/skills/**/*",
-    "src/campaign/**/*",
-    "src/adventure/**/*"
-  ],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }

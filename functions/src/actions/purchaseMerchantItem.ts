@@ -56,7 +56,14 @@ export const purchaseMerchantItem = onCall<PurchaseMerchantItemRequest>(
     let merchantBoard = ensureMerchantBoard(lineageId, lineage.merchantBoard, nowMs);
     const slot = merchantBoard.slots.find((entry) => entry.slotIndex === slotIndex);
 
-    if (!slot || slot.status !== "available" || !slot.itemId || slot.price === null) {
+    if (
+      !slot ||
+      slot.status !== "available" ||
+      !slot.itemId ||
+      slot.price === null ||
+      !Number.isFinite(slot.price) ||
+      slot.price < 0
+    ) {
       throw new HttpsError("failed-precondition", "That item is no longer available");
     }
 

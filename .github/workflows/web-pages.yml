@@ -48,7 +48,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 22
           cache: pnpm
 
       - name: Install dependencies
@@ -79,6 +79,12 @@ jobs:
             exit 1
           fi
 
+      - name: Validate game data
+        run: pnpm validate:data
+
+      - name: Test shared game rules
+        run: pnpm --filter @bloodline/shared test
+
       - name: Build web app
         run: pnpm --filter web build
 
@@ -94,6 +100,7 @@ jobs:
           test -f apps/web/dist/index.html
           test -d apps/web/dist/assets
           grep -q "app-version\" content=\"${{ steps.version.outputs.value }}\"" apps/web/dist/index.html
+          cp apps/web/dist/index.html apps/web/dist/404.html
           touch apps/web/dist/.nojekyll
           echo "Dist size:"
           du -sh apps/web/dist

@@ -1,5 +1,6 @@
 {
   "gaugeThreshold": 100,
+  "heirDamageFactor": 0.1,
   "mainAbilities": {
     "warrior": {
       "id": "sword_strike",

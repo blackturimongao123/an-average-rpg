@@ -1,4 +1,10 @@
-import type { ActiveMission, AdventurerRank, BattleReplayPayload } from "@bloodline/shared/types";
+import type {
+  ActiveMission,
+  AdventurerRank,
+  BattleReplayPayload,
+  MissionBoard,
+  MissionTemplate,
+} from "@bloodline/shared/types";
 import { httpsCallable } from "firebase/functions";
 import { functions } from "./config";
 
@@ -95,7 +101,13 @@ export const withdrawItem = httpsCallable<
 
 export const claimSkill = httpsCallable<
   { lineageId: string; heirId: string; skillId: string },
-  { skillId: string; skillName: string; skillPointsRemaining: number }
+  {
+    skillId: string;
+    skillName: string;
+    skillPointsRemaining: number;
+    subclassId?: string | null;
+    subclassTier?: number;
+  }
 >(functions, "claimSkill");
 
 export const claimUniqueSkill = httpsCallable<
@@ -178,6 +190,16 @@ export const leaveParty = httpsCallable<
   { left: boolean }
 >(functions, "leaveParty");
 
+export const getMissionBoard = httpsCallable<
+  { lineageId: string; heirId: string },
+  { board: MissionBoard; adventurerRank: AdventurerRank; adventurerRankXp: number }
+>(functions, "getMissionBoard");
+
+export const acceptMission = httpsCallable<
+  { lineageId: string; heirId: string; slotIndex: number },
+  { activeMission: ActiveMission; mission: MissionTemplate; board: MissionBoard }
+>(functions, "acceptMission");
+
 export const abandonMission = httpsCallable<
   { lineageId: string; heirId: string },
   { missionId: string; cooldownExpiresAtMs: number }
@@ -210,6 +232,6 @@ export interface AdvanceMissionResult {
 }
 
 export const advanceMission = httpsCallable<
-  { lineageId: string; heirId: string; choiceId?: string },
+  { lineageId: string; heirId: string; choiceId?: string; expectedRevision?: number },
   AdvanceMissionResult
 >(functions, "advanceMission");

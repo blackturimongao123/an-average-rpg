@@ -38,48 +38,35 @@ export const depositGold = onCall<DepositGoldRequest>(
     const lineageRef = db.collection("lineages").doc(lineageId);
     const heirRef = lineageRef.collection("heirs").doc(heirId);
 
-    const [lineageDoc, heirDoc] = await Promise.all([
-      lineageRef.get(),
-      heirRef.get(),
-    ]);
+    return db.runTransaction(async (transaction) => {
+      const [lineageDoc, heirDoc] = await Promise.all([
+        transaction.get(lineageRef),
+        transaction.get(heirRef),
+      ]);
+      if (!lineageDoc.exists || !heirDoc.exists) {
+        throw new HttpsError("not-found", "Lineage or heir not found");
+      }
+      const lineage = lineageDoc.data() as Lineage;
+      const heir = heirDoc.data() as Heir;
+      if (lineage.ownerUid !== uid || heir.ownerUid !== uid) {
+        throw new HttpsError("permission-denied", "You do not own this heir");
+      }
+      if (lineage.activeHeirId !== heirId || heir.status !== "alive") {
+        throw new HttpsError("failed-precondition", "Heir is not active");
+      }
+      if (heir.gold < amount) {
+        throw new HttpsError("failed-precondition", "Insufficient gold");
+      }
 
-    if (!lineageDoc.exists || !heirDoc.exists) {
-      throw new HttpsError("not-found", "Lineage or heir not found");
-    }
-
-    const lineage = lineageDoc.data() as Lineage;
-    const heir = heirDoc.data() as Heir;
-
-    if (lineage.ownerUid !== uid) {
-      throw new HttpsError("permission-denied", "You do not own this lineage");
-    }
-
-    if (heir.status !== "alive") {
-      throw new HttpsError("failed-precondition", "Heir is not alive");
-    }
-
-    if (heir.gold < amount) {
-      throw new HttpsError("failed-precondition", "Insufficient gold");
-    }
-
-    const batch = db.batch();
-
-    batch.update(heirRef, {
-      gold: FieldValue.increment(-amount),
+      const heirGoldAfter = heir.gold - amount;
+      const bankGoldAfter = lineage.bankGold + amount;
+      transaction.update(heirRef, { gold: heirGoldAfter });
+      transaction.update(lineageRef, {
+        bankGold: bankGoldAfter,
+        updatedAt: FieldValue.serverTimestamp(),
+      });
+      return { deposited: amount, heirGoldAfter, bankGoldAfter };
     });
-
-    batch.update(lineageRef, {
-      bankGold: FieldValue.increment(amount),
-      updatedAt: FieldValue.serverTimestamp(),
-    });
-
-    await batch.commit();
-
-    return {
-      deposited: amount,
-      heirGoldAfter: heir.gold - amount,
-      bankGoldAfter: lineage.bankGold + amount,
-    };
   }
 );
 
@@ -117,48 +104,35 @@ export const withdrawGold = onCall<WithdrawGoldRequest>(
     const lineageRef = db.collection("lineages").doc(lineageId);
     const heirRef = lineageRef.collection("heirs").doc(heirId);
 
-    const [lineageDoc, heirDoc] = await Promise.all([
-      lineageRef.get(),
-      heirRef.get(),
-    ]);
+    return db.runTransaction(async (transaction) => {
+      const [lineageDoc, heirDoc] = await Promise.all([
+        transaction.get(lineageRef),
+        transaction.get(heirRef),
+      ]);
+      if (!lineageDoc.exists || !heirDoc.exists) {
+        throw new HttpsError("not-found", "Lineage or heir not found");
+      }
+      const lineage = lineageDoc.data() as Lineage;
+      const heir = heirDoc.data() as Heir;
+      if (lineage.ownerUid !== uid || heir.ownerUid !== uid) {
+        throw new HttpsError("permission-denied", "You do not own this heir");
+      }
+      if (lineage.activeHeirId !== heirId || heir.status !== "alive") {
+        throw new HttpsError("failed-precondition", "Heir is not active");
+      }
+      if (lineage.bankGold < amount) {
+        throw new HttpsError("failed-precondition", "Insufficient gold in bank");
+      }
 
-    if (!lineageDoc.exists || !heirDoc.exists) {
-      throw new HttpsError("not-found", "Lineage or heir not found");
-    }
-
-    const lineage = lineageDoc.data() as Lineage;
-    const heir = heirDoc.data() as Heir;
-
-    if (lineage.ownerUid !== uid) {
-      throw new HttpsError("permission-denied", "You do not own this lineage");
-    }
-
-    if (heir.status !== "alive") {
-      throw new HttpsError("failed-precondition", "Heir is not alive");
-    }
-
-    if (lineage.bankGold < amount) {
-      throw new HttpsError("failed-precondition", "Insufficient gold in bank");
-    }
-
-    const batch = db.batch();
-
-    batch.update(heirRef, {
-      gold: FieldValue.increment(amount),
+      const heirGoldAfter = heir.gold + amount;
+      const bankGoldAfter = lineage.bankGold - amount;
+      transaction.update(heirRef, { gold: heirGoldAfter });
+      transaction.update(lineageRef, {
+        bankGold: bankGoldAfter,
+        updatedAt: FieldValue.serverTimestamp(),
+      });
+      return { withdrawn: amount, heirGoldAfter, bankGoldAfter };
     });
-
-    batch.update(lineageRef, {
-      bankGold: FieldValue.increment(-amount),
-      updatedAt: FieldValue.serverTimestamp(),
-    });
-
-    await batch.commit();
-
-    return {
-      withdrawn: amount,
-      heirGoldAfter: heir.gold + amount,
-      bankGoldAfter: lineage.bankGold - amount,
-    };
   }
 );
 

@@ -45,7 +45,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 22
           cache: pnpm
 
       - name: Authenticate to Google Cloud (Workload Identity)
@@ -76,6 +76,12 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Validate game data
+        run: pnpm validate:data
+
+      - name: Test shared game rules
+        run: pnpm --filter @bloodline/shared test
 
       - name: Build shared package
         run: pnpm --filter @bloodline/shared build

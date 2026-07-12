@@ -116,10 +116,10 @@ export const ClaimSkillRequestSchema = z.object({
   skillId: z.string(),
 });
 
-export type Stats = z.infer<typeof StatsSchema>;
-export type Equipment = z.infer<typeof EquipmentSchema>;
-export type JobRecord = z.infer<typeof JobRecordSchema>;
-export type Heir = z.infer<typeof HeirSchema>;
-export type Lineage = z.infer<typeof LineageSchema>;
+export type StatsSchemaValue = z.infer<typeof StatsSchema>;
+export type EquipmentSchemaValue = z.infer<typeof EquipmentSchema>;
+export type JobRecordSchemaValue = z.infer<typeof JobRecordSchema>;
+export type HeirSchemaValue = z.infer<typeof HeirSchema>;
+export type LineageSchemaValue = z.infer<typeof LineageSchema>;
 export type CreateLineageRequest = z.infer<typeof CreateLineageRequestSchema>;
 export type CreateHeirRequest = z.infer<typeof CreateHeirRequestSchema>;

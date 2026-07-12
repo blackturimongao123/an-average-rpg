@@ -24,7 +24,8 @@ import { db } from "../index.js";
 import { generateSeed, seededRandom } from "../utils/helpers.js";
 import { simulateBattle, getBattleReplaySpeeds } from "../utils/combat.js";
 import { getMissionTemplate } from "../utils/missions.js";
-import type { Heir as FunctionsHeir, Monster } from "../utils/types.js";
+import type { Heir as FunctionsHeir, Lineage as FunctionsLineage, Monster } from "../utils/types.js";
+import { addHeirDeathToBatch } from "../utils/death.js";
 
 import dungeonsData from "../../../game-data/dungeons.json";
 import interludesData from "../../../game-data/mission-interludes.json";
@@ -43,6 +44,7 @@ interface AdvanceMissionRequest {
   lineageId: string;
   heirId: string;
   choiceId?: string;
+  expectedRevision?: number;
 }
 
 interface AdvanceMissionResponse {
@@ -97,7 +99,7 @@ export const advanceMission = onCall<AdvanceMissionRequest>(
       throw new HttpsError("unauthenticated", "Must be signed in");
     }
 
-    const { lineageId, heirId, choiceId } = request.data;
+    const { lineageId, heirId, choiceId, expectedRevision = 0 } = request.data;
     if (!lineageId || !heirId) {
       throw new HttpsError("invalid-argument", "Missing required fields");
     }
@@ -117,8 +119,11 @@ export const advanceMission = onCall<AdvanceMissionRequest>(
     if (lineage.ownerUid !== uid) {
       throw new HttpsError("permission-denied", "You do not own this lineage");
     }
-    if (heir.status !== "alive") {
-      throw new HttpsError("failed-precondition", "Heir is not alive");
+    if (lineage.activeHeirId !== heirId || heir.status !== "alive") {
+      throw new HttpsError("failed-precondition", "Heir is not active");
+    }
+    if (heir.activeJobShift && heir.activeJobShift.endsAtMs > Date.now()) {
+      throw new HttpsError("failed-precondition", "Heir is working a job shift");
     }
     if (!heir.activeMission) {
       throw new HttpsError("failed-precondition", "No active mission");
@@ -134,17 +139,48 @@ export const advanceMission = onCall<AdvanceMissionRequest>(
       heirId,
       `mission-${mission.id}-interlude-${heir.activeMission.currentStep}`
     );
-    const advanceResult = advanceMissionCampaign({
-      mission,
-      activeMission: heir.activeMission,
-      lineage,
-      heir,
-      adventurerRank: normalizeAdventurerRank(lineage.adventurerRank),
-      choiceId,
-      interludeChanceRoll: seededRandom(interludeSeed, 0),
-      interludePickRoll: seededRandom(interludeSeed, 1),
-      interludePools: MISSION_INTERLUDE_POOLS,
+    const scavengeSeed = generateSeed(
+      lineageId,
+      heirId,
+      `mission-${mission.id}-scavenge-${heir.activeMission.currentStep}-${choiceId ?? "none"}`
+    );
+    let advanceResult: ReturnType<typeof advanceMissionCampaign>;
+    try {
+      advanceResult = advanceMissionCampaign({
+        mission,
+        activeMission: heir.activeMission,
+        lineage,
+        heir,
+        adventurerRank: normalizeAdventurerRank(lineage.adventurerRank),
+        choiceId,
+        interludeChanceRoll: seededRandom(interludeSeed, 0),
+        interludePickRoll: seededRandom(interludeSeed, 1),
+        scavengeRoll: seededRandom(scavengeSeed, 0),
+        scavengePickRoll: seededRandom(scavengeSeed, 1),
+        interludePools: MISSION_INTERLUDE_POOLS,
+      });
+    } catch (error) {
+      throw new HttpsError(
+        "failed-precondition",
+        error instanceof Error ? error.message : "Mission choice could not be resolved"
+      );
+    }
+
+    const reservedRevision = await db.runTransaction(async (transaction) => {
+      const freshHeirDoc = await transaction.get(heirRef);
+      const freshHeir = freshHeirDoc.data() as Heir | undefined;
+      if (!freshHeir?.activeMission) {
+        throw new HttpsError("failed-precondition", "No active mission");
+      }
+      const currentRevision = freshHeir.activeMission.revision ?? 0;
+      if (currentRevision !== expectedRevision) {
+        throw new HttpsError("aborted", "Mission state changed; refresh and try again");
+      }
+      const nextRevision = currentRevision + 1;
+      transaction.update(heirRef, { "activeMission.revision": nextRevision });
+      return nextRevision;
     });
+    heir.activeMission = { ...heir.activeMission, revision: reservedRevision };
 
     let nextCampaignState = advanceResult.nextCampaignState;
     let battleReplay: BattleReplayPayload | undefined;
@@ -161,7 +197,13 @@ export const advanceMission = onCall<AdvanceMissionRequest>(
         throw new HttpsError("internal", "Combat encounter not configured");
       }
 
-      const battleResult = simulateBattle(heir as unknown as FunctionsHeir, monster, seed);
+      const battleStartHpPercent = nextCampaignState.hpPercent;
+      const battleResult = simulateBattle(
+        heir as unknown as FunctionsHeir,
+        monster,
+        seed,
+        battleStartHpPercent
+      );
       const heirMaxHp = calculateMaxHp(heir.stats.constitution, heir.level);
       const { heirSpeed, monsterSpeed, gaugeThreshold } = getBattleReplaySpeeds(
         heir as unknown as FunctionsHeir,
@@ -177,7 +219,7 @@ export const advanceMission = onCall<AdvanceMissionRequest>(
           stats: heir.stats,
           speed: heirSpeed,
           maxHp: heirMaxHp,
-          startHp: heirMaxHp,
+          startHp: Math.max(1, Math.round(heirMaxHp * (battleStartHpPercent / 100))),
         },
         monster: {
           id: monster.id,
@@ -213,16 +255,27 @@ export const advanceMission = onCall<AdvanceMissionRequest>(
       if (!battleResult.victory || battleResult.heirDied) {
         const missionId = heir.activeMission.missionId;
         const cooldownExpiresAtMs = Date.now() + MISSION_COOLDOWN_MS;
-        const missionCooldowns = {
-          ...(heir.missionCooldowns ?? {}),
-          [missionId]: cooldownExpiresAtMs,
-        };
-
-        await heirRef.update({
-          activeMission: null,
-          missionCooldowns,
-        });
-        await lineageRef.update({ updatedAt: FieldValue.serverTimestamp() });
+        const batch = db.batch();
+        if (battleResult.heirDied) {
+          await addHeirDeathToBatch({
+            batch,
+            lineageRef,
+            heirRef,
+            lineage: lineage as unknown as FunctionsLineage,
+            heir: heir as unknown as FunctionsHeir,
+            deathCause: `mission:${mission.id}:${advanceResult.resolvedFixedStepIndex}:${monster.id}`,
+          });
+        } else {
+          batch.update(heirRef, {
+            activeMission: null,
+            missionCooldowns: {
+              ...(heir.missionCooldowns ?? {}),
+              [missionId]: cooldownExpiresAtMs,
+            },
+          });
+          batch.update(lineageRef, { updatedAt: FieldValue.serverTimestamp() });
+        }
+        await batch.commit();
 
         return {
           completed: false,
@@ -236,13 +289,43 @@ export const advanceMission = onCall<AdvanceMissionRequest>(
       }
     }
 
+    if (!advanceResult.completed && nextCampaignState.stagesRemaining <= 0) {
+      const missionId = heir.activeMission.missionId;
+      const cooldownExpiresAtMs = Date.now() + MISSION_COOLDOWN_MS;
+      await heirRef.update({
+        activeMission: null,
+        missionCooldowns: {
+          ...(heir.missionCooldowns ?? {}),
+          [missionId]: cooldownExpiresAtMs,
+        },
+      });
+      await lineageRef.update({ updatedAt: FieldValue.serverTimestamp() });
+      return {
+        completed: false,
+        activeMission: null,
+        battleReplay,
+        missionFailed: true,
+        stepText: "The contract ran out of time.",
+        rewards: null,
+        rankUp: null,
+      };
+    }
+
     if (!advanceResult.completed && advanceResult.nextActiveMission) {
       const nextMission: ActiveMission = {
         ...advanceResult.nextActiveMission,
         campaignState: nextCampaignState,
       };
 
-      await heirRef.update({ activeMission: nextMission });
+      await heirRef.update({
+        activeMission: nextMission,
+        seenUniqueMissionEventIds: [
+          ...new Set([
+            ...(heir.seenUniqueMissionEventIds ?? []),
+            ...(nextCampaignState.seenUniqueInterludeIds ?? []),
+          ]),
+        ],
+      });
 
       const nextDisplay = activeMissionToAdventure(mission, nextMission);
       return {
@@ -257,13 +340,17 @@ export const advanceMission = onCall<AdvanceMissionRequest>(
 
     if (advanceResult.completed) {
       const rewards = mission.rewards;
+      const runState = advanceResult.nextCampaignState;
+      const bonusGold = runState.runGold ?? 0;
+      const bonusXp = runState.runXp ?? 0;
+      const bonusItems = runState.runItems ?? [];
       const xpForNextLevel = XP_PER_LEVEL(heir.level);
-      const newGold = heir.gold + rewards.gold;
-      const newXp = heir.xp + rewards.xp;
+      const newGold = heir.gold + rewards.gold + bonusGold;
+      const newXp = heir.xp + rewards.xp + bonusXp;
       const leveledUp = newXp >= xpForNextLevel;
       const finalXp = leveledUp ? newXp - xpForNextLevel : newXp;
       const finalLevel = leveledUp ? heir.level + 1 : heir.level;
-      const newInventory = [...heir.inventory, ...rewards.items];
+      const newInventory = [...heir.inventory, ...rewards.items, ...bonusItems];
 
       const rankResult = applyAdventurerRankXp(
         normalizeAdventurerRank(lineage.adventurerRank),
@@ -283,6 +370,12 @@ export const advanceMission = onCall<AdvanceMissionRequest>(
             heir.activeMission!.missionId,
           ]),
         ],
+        seenUniqueMissionEventIds: [
+          ...new Set([
+            ...(heir.seenUniqueMissionEventIds ?? []),
+            ...(runState.seenUniqueInterludeIds ?? []),
+          ]),
+        ],
       });
       await lineageRef.update({
         adventurerRank: rankResult.rank,
@@ -295,7 +388,12 @@ export const advanceMission = onCall<AdvanceMissionRequest>(
         activeMission: null,
         battleReplay,
         stepText: mission.campaign.steps[mission.campaign.steps.length - 1].text,
-        rewards,
+        rewards: {
+          ...rewards,
+          gold: rewards.gold + bonusGold,
+          xp: rewards.xp + bonusXp,
+          items: [...rewards.items, ...bonusItems],
+        },
         rankUp: rankResult.rankedUp
           ? { rank: rankResult.rank, rankXp: rankResult.rankXp }
           : null,

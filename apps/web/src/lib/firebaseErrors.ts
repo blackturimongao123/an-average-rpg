@@ -9,11 +9,11 @@ const friendlyMessages: Record<string, string> = {
   "auth/unauthorized-domain":
     "This site is not authorized for sign-in. Add it in Firebase Auth → Settings → Authorized domains.",
   "functions/not-found":
-    "Game server is not set up yet. Using direct save — make sure Firestore rules are deployed.",
+    "Game server is not available yet. Check that the latest Firebase deployment completed.",
   "functions/unavailable":
-    "Game server is temporarily unavailable. Trying direct save instead.",
+    "Game server is temporarily unavailable. Please try again in a moment.",
   "functions/internal":
-    "Game server is not set up yet. Trying direct save instead.",
+    "The game server could not complete that action. Please try again.",
   "functions/already-exists": "You already have a bloodline.",
   "functions/invalid-argument": "Invalid family name or username.",
   "functions/unauthenticated": "You must be signed in first.",

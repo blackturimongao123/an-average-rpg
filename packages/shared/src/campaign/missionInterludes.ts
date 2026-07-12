@@ -15,6 +15,7 @@ import type {
   MissionUniqueEvent,
 } from "../types.js";
 import { getChoicesForStep, inferEventType, stageCostForTimeCost } from "./adventureHelpers.js";
+import { mergeMissionStepChoices } from "./missionStandardChoices.js";
 import type { MissionInterludePools } from "./missionInterludeEligibility.js";
 import {
   filterEligibleRandomEvents,
@@ -26,7 +27,7 @@ import {
 export interface MissionInterludeContext {
   state: CampaignRunState;
   lineage: Pick<Lineage, "generation" | "publicSummary">;
-  heir: Pick<Heir, "level" | "stats" | "classId" | "generation" | "completedMissionIds">;
+  heir: Pick<Heir, "level" | "stats" | "classId" | "generation" | "completedMissionIds" | "seenUniqueMissionEventIds">;
   adventurerRank: AdventurerRank;
   completedFixedStepIndex: number;
   pools: MissionInterludePools;
@@ -161,21 +162,37 @@ function toEligibilityContext(ctx: MissionInterludeContext, mission: MissionTemp
 
 function pickUniqueInterlude(
   mission: MissionTemplate,
-  ctx: MissionInterludeContext
+  ctx: MissionInterludeContext,
+  pickRoll: number
 ): MissionCampaignInterlude | null {
   const uniques = filterEligibleUniqueEvents(ctx.pools, toEligibilityContext(ctx, mission));
   const tone = mission.campaign.tone;
-
+  const eligible: MissionUniqueEvent[] = [];
   for (const unique of uniques) {
+    if ((ctx.heir.seenUniqueMissionEventIds ?? []).includes(unique.id)) {
+      continue;
+    }
     if (countSeen(ctx.state.seenUniqueInterludeIds, unique.id, unique.maxPerRun ?? 1)) {
       continue;
     }
     const step = uniqueEventToStep(unique, mission);
     if (!toneAllowsCombat(tone, step)) continue;
-    return { kind: "unique", eventId: unique.id, step };
+    eligible.push(unique);
   }
+  if (eligible.length === 0) return null;
 
-  return null;
+  const totalWeight = eligible.reduce((sum, event) => sum + Math.max(0, event.weight), 0);
+  let threshold = pickRoll * totalWeight;
+  const selected =
+    eligible.find((event) => {
+      threshold -= Math.max(0, event.weight);
+      return threshold <= 0;
+    }) ?? eligible[eligible.length - 1]!;
+  return {
+    kind: "unique",
+    eventId: selected.id,
+    step: uniqueEventToStep(selected, mission),
+  };
 }
 
 function pickSecretInterlude(
@@ -253,7 +270,7 @@ export function tryRollMissionInterlude(
 ): MissionCampaignInterlude | null {
   const secret = pickSecretInterlude(mission, ctx);
   if (secret) return secret;
-  const unique = pickUniqueInterlude(mission, ctx);
+  const unique = pickUniqueInterlude(mission, ctx, pickRoll);
   if (unique) return unique;
   return pickRandomInterlude(mission, ctx, chanceRoll, pickRoll);
 }
@@ -337,9 +354,10 @@ export function getActiveMissionStep(
 
   if (state?.interlude) {
     const step = state.interlude.step;
+    const runState = state;
     return {
       step,
-      choices: getChoicesForStep(mission, step),
+      choices: mergeMissionStepChoices(getChoicesForStep(mission, step), runState),
       title: step.title ?? (state.interlude.kind === "secret" ? "Hidden Event" : state.interlude.kind === "unique" ? "Unique Event" : "Detour"),
       isInterlude: true,
       fixedStepIndex,
@@ -357,9 +375,28 @@ export function getActiveMissionStep(
     };
   }
 
+  const plotChoices = getChoicesForStep(mission, step);
+  const isFinalFixedStep = fixedStepIndex >= mission.campaign.steps.length - 1;
   return {
     step,
-    choices: getChoicesForStep(mission, step),
+    choices: isFinalFixedStep
+      ? plotChoices
+      : mergeMissionStepChoices(
+        plotChoices,
+        state ?? {
+        supplies: 30,
+        maxSupplies: 30,
+        morale: 78,
+        stagesRemaining: 1,
+        maxStages: 1,
+        eventLog: [],
+        runGold: 0,
+        runXp: 0,
+        runItems: [],
+        hpPercent: 100,
+        restUsesCount: 0,
+        }
+      ),
     title: step.title ?? mission.name,
     isInterlude: false,
     fixedStepIndex,
