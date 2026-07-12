@@ -5,6 +5,7 @@ import type {
   MissionTemplate,
 } from "../types.js";
 import { stageCostForTimeCost } from "./adventureHelpers.js";
+import { createMissionObjectiveProgress } from "./missionObjectives.js";
 
 export function createInitialCampaignState(mission: MissionTemplate): CampaignRunState {
   const maxStages = mission.campaign.maxStages ?? mission.campaign.steps.length + 2;
@@ -30,6 +31,7 @@ export function createInitialCampaignState(mission: MissionTemplate): CampaignRu
     seenSecretEventIds: [],
     choiceHistory: [],
     restUsesCount: 0,
+    objectiveProgress: createMissionObjectiveProgress(mission),
   };
 }
 

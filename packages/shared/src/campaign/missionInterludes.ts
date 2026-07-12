@@ -16,6 +16,7 @@ import type {
 } from "../types.js";
 import { getChoicesForStep, inferEventType, stageCostForTimeCost } from "./adventureHelpers.js";
 import { mergeMissionStepChoices } from "./missionStandardChoices.js";
+import { canExtractFromMission, MISSION_EXTRACT_CHOICE_ID } from "./missionObjectives.js";
 import type { MissionInterludePools } from "./missionInterludeEligibility.js";
 import {
   filterEligibleRandomEvents,
@@ -376,27 +377,38 @@ export function getActiveMissionStep(
   }
 
   const plotChoices = getChoicesForStep(mission, step);
+  const extractionChoices: MissionCampaignChoice[] = state && canExtractFromMission(mission, state)
+    ? [{
+        id: MISSION_EXTRACT_CHOICE_ID,
+        label: "Leave Safely",
+        subtitle: "Extract now with the rewards secured",
+        stageCost: 0,
+      }]
+    : [];
   const isFinalFixedStep = fixedStepIndex >= mission.campaign.steps.length - 1;
   return {
     step,
     choices: isFinalFixedStep
-      ? plotChoices
-      : mergeMissionStepChoices(
-        plotChoices,
-        state ?? {
-        supplies: 30,
-        maxSupplies: 30,
-        morale: 78,
-        stagesRemaining: 1,
-        maxStages: 1,
-        eventLog: [],
-        runGold: 0,
-        runXp: 0,
-        runItems: [],
-        hpPercent: 100,
-        restUsesCount: 0,
-        }
-      ),
+      ? [...plotChoices, ...extractionChoices]
+      : [
+          ...mergeMissionStepChoices(
+            plotChoices,
+            state ?? {
+              supplies: 30,
+              maxSupplies: 30,
+              morale: 78,
+              stagesRemaining: 1,
+              maxStages: 1,
+              eventLog: [],
+              runGold: 0,
+              runXp: 0,
+              runItems: [],
+              hpPercent: 100,
+              restUsesCount: 0,
+            }
+          ),
+          ...extractionChoices,
+        ],
     title: step.title ?? mission.name,
     isInterlude: false,
     fixedStepIndex,

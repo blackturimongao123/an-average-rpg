@@ -31,6 +31,11 @@ import {
   resolveScavengeOutcome,
   restUsesRemaining,
 } from "./missionStandardChoices.js";
+import {
+  advanceMissionObjectives,
+  canExtractFromMission,
+  MISSION_EXTRACT_CHOICE_ID,
+} from "./missionObjectives.js";
 
 export interface AdvanceMissionCampaignInput {
   mission: MissionTemplate;
@@ -65,6 +70,33 @@ export function advanceMissionCampaign(
   const baseState =
     activeMission.campaignState ?? createInitialCampaignState(mission);
 
+  if (choiceId === MISSION_EXTRACT_CHOICE_ID) {
+    if (!canExtractFromMission(mission, baseState)) {
+      throw new Error("The main objective must be completed before leaving safely");
+    }
+    return {
+      nextActiveMission: null,
+      nextCampaignState: {
+        ...baseState,
+        eventLog: [
+          ...baseState.eventLog,
+          { text: "Left the mission safely.", timestampMs: Date.now() },
+        ],
+      },
+      resolvedStep: getActiveMissionStep(mission, activeMission).step,
+      resolvedIsInterlude: false,
+      resolvedFixedStepIndex: activeMission.currentStep,
+      combatRequired: false,
+      completed: true,
+      choice: {
+        id: MISSION_EXTRACT_CHOICE_ID,
+        label: "Leave Safely",
+        subtitle: "Extract now with the rewards secured",
+        stageCost: 0,
+      },
+    };
+  }
+
   const display = getActiveMissionStep(mission, activeMission);
   const { step, choices, isInterlude, fixedStepIndex } = display;
   const choice = choices.find((entry) => entry.id === choiceId) ?? null;
@@ -95,6 +127,8 @@ export function advanceMissionCampaign(
     logText,
     applyChoiceToCampaignState
   );
+  nextCampaignState = advanceMissionObjectives(nextCampaignState, step.objectiveProgress);
+  nextCampaignState = advanceMissionObjectives(nextCampaignState, choice.objectiveProgress);
 
   let resolvedStep: MissionCampaignStep = step;
   let combatRequired = stepTriggersCombat(step);

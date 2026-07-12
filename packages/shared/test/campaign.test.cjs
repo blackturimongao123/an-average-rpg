@@ -2,6 +2,10 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const {
   advanceMissionCampaign,
+  advanceMissionObjective,
+  advanceMissionObjectives,
+  areMainMissionObjectivesComplete,
+  canExtractFromMission,
   createInitialCampaignState,
   rollMissionBoard,
 } = require("../dist/campaign/index.js");
@@ -89,4 +93,61 @@ test("mission board rolls deterministically for the same hour", () => {
   const first = rollMissionBoard([mission], lineage.id, "F", 1, context, 3_600_000);
   const second = rollMissionBoard([mission], lineage.id, "F", 1, context, 3_600_000);
   assert.deepEqual(first, second);
+});
+
+test("objective missions cannot extract until every main objective is complete", () => {
+  const objectiveMission = {
+    ...mission,
+    campaign: {
+      ...mission.campaign,
+      maxStages: 12,
+      objectives: [
+        { id: "goblins", label: "Kill 5 Goblins", kind: "main", target: 5 },
+        { id: "king", label: "Defeat the Goblin King", kind: "hidden", target: 1, hiddenUntilDiscovered: true },
+      ],
+    },
+  };
+  const initial = createInitialCampaignState(objectiveMission);
+  assert.equal(initial.stagesRemaining, 12);
+  assert.equal(canExtractFromMission(objectiveMission, initial), false);
+  assert.equal(initial.objectiveProgress[1].discovered, false);
+
+  const completed = advanceMissionObjective(initial, "goblins", 5);
+  assert.equal(areMainMissionObjectivesComplete(objectiveMission, completed), true);
+  assert.equal(canExtractFromMission(objectiveMission, completed), true);
+});
+
+test("safe extraction completes an objective mission without consuming another stage", () => {
+  const objectiveMission = {
+    ...mission,
+    campaign: {
+      ...mission.campaign,
+      objectives: [{ id: "goal", label: "Finish the goal", kind: "main", target: 1 }],
+    },
+  };
+  const state = advanceMissionObjective(createInitialCampaignState(objectiveMission), "goal");
+  const result = advanceMissionCampaign({
+    ...input("mission_extract"),
+    mission: objectiveMission,
+    activeMission: {
+      ...input("mission_extract").activeMission,
+      campaignState: state,
+    },
+  });
+  assert.equal(result.completed, true);
+  assert.equal(result.nextCampaignState.stagesRemaining, state.stagesRemaining);
+});
+
+test("mission content can advance objectives declaratively", () => {
+  const objectiveMission = {
+    ...mission,
+    campaign: {
+      ...mission.campaign,
+      objectives: [{ id: "goblins", label: "Kill 5 Goblins", kind: "main", target: 5 }],
+    },
+  };
+  const state = createInitialCampaignState(objectiveMission);
+  const advanced = advanceMissionObjectives(state, { goblins: 2 });
+  assert.equal(advanced.objectiveProgress[0].current, 2);
+  assert.equal(advanced.objectiveProgress[0].completed, false);
 });

@@ -7,6 +7,7 @@ import {
 } from "@bloodline/shared/constants";
 import {
   advanceMissionCampaign,
+  areMainMissionObjectivesComplete,
   createInitialCampaignState,
 } from "@bloodline/shared/campaign";
 import { activeMissionToAdventure } from "@bloodline/shared/adventure";
@@ -290,25 +291,44 @@ export const advanceMission = onCall<AdvanceMissionRequest>(
     }
 
     if (!advanceResult.completed && nextCampaignState.stagesRemaining <= 0) {
-      const missionId = heir.activeMission.missionId;
-      const cooldownExpiresAtMs = Date.now() + MISSION_COOLDOWN_MS;
-      await heirRef.update({
-        activeMission: null,
-        missionCooldowns: {
-          ...(heir.missionCooldowns ?? {}),
-          [missionId]: cooldownExpiresAtMs,
-        },
-      });
-      await lineageRef.update({ updatedAt: FieldValue.serverTimestamp() });
-      return {
-        completed: false,
-        activeMission: null,
-        battleReplay,
-        missionFailed: true,
-        stepText: "The contract ran out of time.",
-        rewards: null,
-        rankUp: null,
-      };
+      if (areMainMissionObjectivesComplete(mission, nextCampaignState)) {
+        nextCampaignState = {
+          ...nextCampaignState,
+          eventLog: [
+            ...nextCampaignState.eventLog,
+            {
+              text: "The stage limit was reached after completing the main objective. Forced extraction succeeded.",
+              timestampMs: Date.now(),
+            },
+          ],
+        };
+        advanceResult = {
+          ...advanceResult,
+          completed: true,
+          nextActiveMission: null,
+          nextCampaignState,
+        };
+      } else {
+        const missionId = heir.activeMission.missionId;
+        const cooldownExpiresAtMs = Date.now() + MISSION_COOLDOWN_MS;
+        await heirRef.update({
+          activeMission: null,
+          missionCooldowns: {
+            ...(heir.missionCooldowns ?? {}),
+            [missionId]: cooldownExpiresAtMs,
+          },
+        });
+        await lineageRef.update({ updatedAt: FieldValue.serverTimestamp() });
+        return {
+          completed: false,
+          activeMission: null,
+          battleReplay,
+          missionFailed: true,
+          stepText: "The contract ran out of time.",
+          rewards: null,
+          rankUp: null,
+        };
+      }
     }
 
     if (!advanceResult.completed && advanceResult.nextActiveMission) {

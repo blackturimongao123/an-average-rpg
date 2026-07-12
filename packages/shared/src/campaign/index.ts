@@ -17,6 +17,14 @@ export {
   type AdvanceMissionCampaignOutput,
 } from "./missionAdvance.js";
 export {
+  advanceMissionObjective,
+  advanceMissionObjectives,
+  areMainMissionObjectivesComplete,
+  canExtractFromMission,
+  createMissionObjectiveProgress,
+  MISSION_EXTRACT_CHOICE_ID,
+} from "./missionObjectives.js";
+export {
   appendChoiceHistory,
   checkSecretConditions,
   clearMissionInterlude,

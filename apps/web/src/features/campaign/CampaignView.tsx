@@ -51,9 +51,40 @@ export function CampaignView({
     campaignState.regionName ?? mission.campaign.regionName ?? mission.name.toUpperCase();
   const isFinalStep =
     !isInterlude && activeMission.currentStep >= activeMission.totalSteps - 1;
+  const objectives = (mission.campaign.objectives ?? []).flatMap((objective) => {
+    const progress = campaignState.objectiveProgress?.find(
+      (entry) => entry.objectiveId === objective.id
+    );
+    if (objective.hiddenUntilDiscovered && !progress?.discovered) return [];
+    return [{ objective, progress }];
+  });
 
   return (
-    <AdventureEventView
+    <div className="space-y-3">
+      {objectives.length > 0 && (
+        <section className="rounded-lg border border-amber-900/40 bg-stone-950/70 p-3">
+          <div className="mb-2 flex items-center justify-between text-xs uppercase tracking-wider text-stone-400">
+            <span>Objectives</span>
+            <span>{campaignState.maxStages - campaignState.stagesRemaining} / {campaignState.maxStages} stages used</span>
+          </div>
+          <div className="space-y-1.5">
+            {objectives.map(({ objective, progress }) => (
+              <div key={objective.id} className="flex items-center justify-between text-sm">
+                <span className={progress?.completed ? "text-emerald-300" : "text-stone-200"}>
+                  {progress?.completed ? "✓ " : ""}{objective.label}
+                  {objective.kind !== "main" && (
+                    <span className="ml-2 text-xs text-stone-500">{objective.kind}</span>
+                  )}
+                </span>
+                <span className="text-stone-400">
+                  {progress?.current ?? 0}/{progress?.target ?? objective.target}
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+      <AdventureEventView
       heir={heir}
       eventTitle={title}
       regionLabel={regionLabel}
@@ -83,6 +114,7 @@ export function CampaignView({
       partyMembers={partyMembers}
       choicesDisabled={choicesDisabled}
       leaderHint={leaderHint}
-    />
+      />
+    </div>
   );
 }

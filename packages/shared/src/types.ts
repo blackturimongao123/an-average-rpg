@@ -124,6 +124,8 @@ export interface MissionCampaignChoice {
   moraleDelta?: number;
   hpDelta?: number;
   stageCost?: number;
+  /** Objective increments applied when this choice resolves successfully. */
+  objectiveProgress?: Record<string, number>;
   /** UI-only: choice cannot be selected (e.g. Rest exhausted). */
   unavailable?: boolean;
 }
@@ -137,6 +139,8 @@ export interface MissionCampaignStep {
   sceneGradient?: string;
   sceneImage?: string;
   combatEncounter?: MissionCombatEncounter;
+  /** Objective increments applied when this event resolves successfully. */
+  objectiveProgress?: Record<string, number>;
   /** Plot beat — always plays in order. Omitted = fixed. */
   kind?: "fixed";
 }
@@ -298,6 +302,26 @@ export interface MissionCampaign {
   secretEvents?: MissionSecretEvent[];
   /** 0–1 chance to roll randomPool after each non-final fixed step. Default 0.35 when pool exists. */
   randomEventChance?: number;
+  /** Objective-driven missions only succeed after every main objective is complete. */
+  objectives?: MissionObjective[];
+}
+
+export type MissionObjectiveKind = "main" | "bonus" | "hidden";
+
+export interface MissionObjective {
+  id: string;
+  label: string;
+  kind: MissionObjectiveKind;
+  target: number;
+  hiddenUntilDiscovered?: boolean;
+}
+
+export interface MissionObjectiveProgress {
+  objectiveId: string;
+  current: number;
+  target: number;
+  completed: boolean;
+  discovered: boolean;
 }
 
 export interface CampaignRunState {
@@ -319,6 +343,7 @@ export interface CampaignRunState {
   interlude?: MissionCampaignInterlude;
   /** Times Rest was used this contract (max 2). */
   restUsesCount?: number;
+  objectiveProgress?: MissionObjectiveProgress[];
 }
 
 export interface MissionTemplate {
