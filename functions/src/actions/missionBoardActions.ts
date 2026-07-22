@@ -12,6 +12,7 @@ import { getMissionTemplate, getMissionTemplates } from "../utils/missions.js";
 interface MissionBoardRequest {
   lineageId: string;
   heirId: string;
+  warmup?: boolean;
 }
 
 interface AcceptMissionRequest extends MissionBoardRequest {
@@ -38,6 +39,7 @@ export const getMissionBoard = onCall<MissionBoardRequest>(
   { cors: true },
   async (request) => {
     if (!request.auth) throw new HttpsError("unauthenticated", "Must be signed in");
+    if (request.data.warmup) return { warmed: true };
     const { lineageId, heirId } = request.data;
     if (!lineageId || !heirId) throw new HttpsError("invalid-argument", "Missing required fields");
 
@@ -81,6 +83,7 @@ export const acceptMission = onCall<AcceptMissionRequest>(
   { cors: true },
   async (request) => {
     if (!request.auth) throw new HttpsError("unauthenticated", "Must be signed in");
+    if (request.data.warmup) return { warmed: true };
     const { lineageId, heirId, slotIndex } = request.data;
     if (!lineageId || !heirId || !Number.isInteger(slotIndex)) {
       throw new HttpsError("invalid-argument", "Invalid mission slot");

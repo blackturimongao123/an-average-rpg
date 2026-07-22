@@ -23,6 +23,7 @@ import {
 import { abandonPlayerMission, failPlayerMission, getMissionActionErrorMessage } from "@/firebase/missionActions";
 import type { Party, PartyInvite } from "@bloodline/shared/types";
 import { Settings, User, Users, UserPlus, LogOut, Crown, UserMinus } from "lucide-react";
+import { useFunctionWarmup } from "@/hooks/useFunctionWarmup";
 
 interface PartyMemberInfo {
   uid: string;
@@ -49,6 +50,10 @@ export function ProfilePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  useFunctionWarmup(
+    ["kickPartyMember", "transferPartyLeadership"],
+    tab === "party" && Boolean(lineage?.partyId)
+  );
 
   useEffect(() => {
     if (!user) return;

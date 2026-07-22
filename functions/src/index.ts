@@ -7,7 +7,8 @@ import { FIREBASE_FUNCTIONS_REGION } from "@bloodline/shared/constants";
 // exhausts regional quota on new Blaze projects (europe-west1).
 setGlobalOptions({
   region: FIREBASE_FUNCTIONS_REGION,
-  memory: "128MiB",
+  // 128 MiB receives very little Gen-1 CPU and made cold starts dominate every click.
+  memory: "256MiB",
   cpu: "gcf_gen1",
   maxInstances: 1,
   minInstances: 0,

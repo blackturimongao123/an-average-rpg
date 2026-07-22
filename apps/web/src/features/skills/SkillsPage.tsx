@@ -20,6 +20,7 @@ import {
   resolveClaimableSkillId,
 } from "@/features/skill-tree/skillTreeBridge";
 import type { ResolvedSkillNode } from "@/features/skill-tree/skillTreeTypes";
+import { useFunctionWarmup } from "@/hooks/useFunctionWarmup";
 
 export function SkillsPage() {
   const [searchParams] = useSearchParams();
@@ -37,6 +38,7 @@ export function SkillsPage() {
   );
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  useFunctionWarmup(["claimSkill"]);
 
   const ownedForTab = useMemo(() => {
     if (!heir || !lineage) return [];

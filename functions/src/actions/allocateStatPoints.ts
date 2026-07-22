@@ -18,6 +18,7 @@ interface AllocateStatPointsRequest {
   heirId: string;
   stat: keyof Stats;
   amount?: number;
+  warmup?: boolean;
 }
 
 interface AllocateStatPointsResponse {
@@ -30,6 +31,12 @@ export const allocateStatPoints = onCall<AllocateStatPointsRequest>(
   async (request): Promise<AllocateStatPointsResponse> => {
     if (!request.auth) {
       throw new HttpsError("unauthenticated", "Must be signed in");
+    }
+    if (request.data.warmup) {
+      return {
+        stats: {} as Stats,
+        unspentStatPoints: 0,
+      };
     }
 
     const { lineageId, heirId, stat, amount = 1 } = request.data;

@@ -26,6 +26,7 @@ import type { ClassData, SkillNode, Stats } from "@bloodline/shared/types";
 import { Link } from "react-router-dom";
 import { allocateStatPoints } from "@/firebase/functions";
 import { getFirebaseErrorMessage } from "@/lib/firebaseErrors";
+import { useFunctionWarmup } from "@/hooks/useFunctionWarmup";
 
 import classesData from "@game-data/classes.json";
 import skillsData from "@game-data/skills.json";
@@ -49,6 +50,7 @@ function formatClassName(classId: string): string {
 
 export function CharacterPage() {
   const { lineage, heir, setHeir } = useGameStore();
+  useFunctionWarmup(["allocateStatPoints"]);
 
   if (!lineage) {
     return (

@@ -329,12 +329,14 @@ export const leaveParty = onCall<LeavePartyRequest>(
 interface KickPartyMemberRequest {
   lineageId: string;
   targetUid: string;
+  warmup?: boolean;
 }
 
 export const kickPartyMember = onCall<KickPartyMemberRequest>(
   { cors: true },
   async (request): Promise<{ kicked: boolean }> => {
     if (!request.auth) throw new HttpsError("unauthenticated", "Must be signed in");
+    if (request.data.warmup) return { kicked: false };
     const { lineageId, targetUid } = request.data;
     if (!lineageId || !targetUid) {
       throw new HttpsError("invalid-argument", "Missing required fields");
@@ -383,12 +385,14 @@ export const kickPartyMember = onCall<KickPartyMemberRequest>(
 interface TransferPartyLeadershipRequest {
   lineageId: string;
   targetUid: string;
+  warmup?: boolean;
 }
 
 export const transferPartyLeadership = onCall<TransferPartyLeadershipRequest>(
   { cors: true },
   async (request): Promise<{ transferred: boolean }> => {
     if (!request.auth) throw new HttpsError("unauthenticated", "Must be signed in");
+    if (request.data.warmup) return { transferred: false };
     const { lineageId, targetUid } = request.data;
     if (!lineageId || !targetUid) {
       throw new HttpsError("invalid-argument", "Missing required fields");

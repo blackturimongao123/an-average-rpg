@@ -37,6 +37,7 @@ import {
   Users,
 } from "lucide-react";
 import { usePartyMembers } from "@/hooks/usePartyMembers";
+import { useFunctionWarmup } from "@/hooks/useFunctionWarmup";
 import type { AdventurePartyMember } from "@/features/adventure/AdventureEventView";
 import { buildPartyReplayAllies } from "@/lib/partyBattle";
 import {
@@ -132,6 +133,7 @@ export function TavernPage() {
     choiceId?: string;
   } | null>(null);
   const dismissedOutcomeAtMsRef = useRef(0);
+  useFunctionWarmup(["acceptMission", "advanceMission"]);
 
   const inParty = Boolean(lineage?.partyId && party);
   const isPartyLeader = inParty && party?.leaderUid === user?.uid;
