@@ -67,6 +67,10 @@ function reportSaveError(context: string, error: unknown) {
   console.error(`Failed to save ${context}`, error);
 }
 
+function firestoreSafe<T>(value: T): T {
+  return JSON.parse(JSON.stringify(value)) as T;
+}
+
 export function getPlayerMissionBoard(
   userId: string,
   lineage: Lineage,
@@ -125,10 +129,12 @@ export function acceptPlayerMission(
 
   const batch = writeBatch(db);
   batch.set(doc(db, "lineages", lineage.id, "missionBoard", "current"), nextBoard);
-  batch.update(doc(db, "lineages", lineage.id, "heirs", heir.id), { activeMission });
+  batch.update(doc(db, "lineages", lineage.id, "heirs", heir.id), {
+    activeMission: firestoreSafe(activeMission),
+  });
   if (lineage.partyId) {
     batch.update(doc(db, "parties", lineage.partyId), {
-      activeMission: {
+      activeMission: firestoreSafe({
         ...activeMission,
         leaderUid: userId,
         leaderLineageId: lineage.id,
@@ -136,7 +142,7 @@ export function acceptPlayerMission(
         updatedAtMs: Date.now(),
         pendingBattle: null,
         outcome: null,
-      },
+      }),
     });
   }
   void batch.commit().catch((error) => reportSaveError("accepted mission", error));
@@ -253,7 +259,7 @@ export async function advancePlayerMission(
       campaignState: nextCampaignState,
     };
     void updateDoc(doc(db, "lineages", lineage.id, "heirs", heir.id), {
-      activeMission: nextMission,
+      activeMission: firestoreSafe(nextMission),
       seenUniqueMissionEventIds: [...new Set([...(heir.seenUniqueMissionEventIds ?? []), ...(nextCampaignState.seenUniqueInterludeIds ?? [])])],
     }).catch((error) => reportSaveError("mission progress", error));
     return { completed: false, activeMission: nextMission, battleReplay, stepText: activeMissionToAdventure(mission, nextMission).step.text, rewards: null, rankUp: null };
