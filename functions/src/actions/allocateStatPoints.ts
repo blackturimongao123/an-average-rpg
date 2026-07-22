@@ -49,36 +49,38 @@ export const allocateStatPoints = onCall<AllocateStatPointsRequest>(
     const lineageRef = db.collection("lineages").doc(lineageId);
     const heirRef = lineageRef.collection("heirs").doc(heirId);
 
-    const [lineageDoc, heirDoc] = await Promise.all([lineageRef.get(), heirRef.get()]);
-    if (!lineageDoc.exists || !heirDoc.exists) {
-      throw new HttpsError("not-found", "Lineage or heir not found");
-    }
+    return db.runTransaction(async (tx) => {
+      const [lineageDoc, heirDoc] = await Promise.all([
+        tx.get(lineageRef),
+        tx.get(heirRef),
+      ]);
+      if (!lineageDoc.exists || !heirDoc.exists) {
+        throw new HttpsError("not-found", "Lineage or heir not found");
+      }
 
-    const lineage = lineageDoc.data() as Lineage;
-    const heir = heirDoc.data() as Heir;
+      const lineage = lineageDoc.data() as Lineage;
+      const heir = heirDoc.data() as Heir;
+      if (lineage.ownerUid !== uid) {
+        throw new HttpsError("permission-denied", "You do not own this lineage");
+      }
+      if (heir.status !== "alive") {
+        throw new HttpsError("failed-precondition", "Heir is not alive");
+      }
 
-    if (lineage.ownerUid !== uid) {
-      throw new HttpsError("permission-denied", "You do not own this lineage");
-    }
-    if (heir.status !== "alive") {
-      throw new HttpsError("failed-precondition", "Heir is not alive");
-    }
+      const unspent = heir.unspentStatPoints ?? 0;
+      if (unspent < amount) {
+        throw new HttpsError("failed-precondition", "Not enough unspent stat points");
+      }
 
-    const unspent = heir.unspentStatPoints ?? 0;
-    if (unspent < amount) {
-      throw new HttpsError("failed-precondition", "Not enough unspent stat points");
-    }
+      const stats: Stats = {
+        ...heir.stats,
+        [stat]: (heir.stats[stat] ?? 0) + amount,
+      };
+      const unspentStatPoints = unspent - amount;
 
-    const stats: Stats = {
-      ...heir.stats,
-      [stat]: heir.stats[stat] + amount,
-    };
-
-    const unspentStatPoints = unspent - amount;
-
-    await heirRef.update({ stats, unspentStatPoints });
-    await lineageRef.update({ updatedAt: FieldValue.serverTimestamp() });
-
-    return { stats, unspentStatPoints };
+      tx.update(heirRef, { stats, unspentStatPoints });
+      tx.update(lineageRef, { updatedAt: FieldValue.serverTimestamp() });
+      return { stats, unspentStatPoints };
+    });
   }
 );

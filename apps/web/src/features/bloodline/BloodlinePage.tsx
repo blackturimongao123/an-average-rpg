@@ -1,5 +1,6 @@
 import { useGameStore } from "@/stores/gameStore";
 import { GitBranch, Skull, Crown, Heart, Star, Shield } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export function BloodlinePage() {
   const { lineage, heir } = useGameStore();
@@ -14,12 +15,17 @@ export function BloodlinePage() {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="flex items-center gap-3 mb-6">
+      <div className="flex items-center justify-between gap-3 mb-6">
+        <div className="flex items-center gap-3">
         <GitBranch className="w-8 h-8 text-gold" />
         <div>
           <h1 className="font-display text-2xl font-bold">House {lineage.familyName}</h1>
           <p className="text-muted-foreground">Your bloodline's legacy</p>
         </div>
+        </div>
+        <Link to="/skills?tab=bloodline" className="btn-primary text-sm">
+          Open Bloodline Tree
+        </Link>
       </div>
 
       <div className="grid gap-6 md:grid-cols-3 mb-8">

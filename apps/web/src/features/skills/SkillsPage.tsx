@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { ArrowLeft, Crown, Skull } from "lucide-react";
 import { useAuthStore } from "@/stores/authStore";
 import { useGameStore } from "@/stores/gameStore";
@@ -22,6 +22,7 @@ import {
 import type { ResolvedSkillNode } from "@/features/skill-tree/skillTreeTypes";
 
 export function SkillsPage() {
+  const [searchParams] = useSearchParams();
   const { user } = useAuthStore();
   const {
     lineage,
@@ -31,7 +32,9 @@ export function SkillsPage() {
     setHeirSubclass,
   } = useGameStore();
 
-  const [activeTab, setActiveTab] = useState<"character" | "bloodline">("character");
+  const [activeTab, setActiveTab] = useState<"character" | "bloodline">(
+    searchParams.get("tab") === "bloodline" ? "bloodline" : "character"
+  );
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
@@ -183,13 +186,26 @@ export function SkillsPage() {
     </div>
   ) : null;
 
+  const displayedNodes = activeTab === "bloodline"
+    ? treeData.nodes.filter((node) => {
+        if (playerState.unlockedNodeIds.includes(node.id)) return true;
+        return getClaimStatus({ ...node, state: "locked" }).canClaim;
+      })
+    : treeData.nodes;
+  const displayedNodeIds = new Set(displayedNodes.map((node) => node.id));
+  const displayedEdges = activeTab === "bloodline"
+    ? treeData.edges.filter(
+        (edge) => displayedNodeIds.has(edge.from) && displayedNodeIds.has(edge.to)
+      )
+    : treeData.edges;
+
   return (
     <div className="h-full w-full relative">
       <SkillTreeCanvas
         key={`${activeTab}-${heir.classId}`}
         branches={treeData.branches}
-        nodes={treeData.nodes}
-        edges={treeData.edges}
+        nodes={displayedNodes}
+        edges={displayedEdges}
         playerState={playerState}
         skillPoints={skillPoints}
         title={treeData.title}

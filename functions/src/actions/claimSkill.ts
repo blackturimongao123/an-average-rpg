@@ -50,7 +50,13 @@ export const claimSkill = onCall<ClaimSkillRequest>(
     }
 
     const lineage = lineageDoc.data() as Lineage;
-    const heir = heirDoc.data() as Heir;
+    const rawHeir = heirDoc.data() as Heir;
+    const heir: Heir = {
+      ...rawHeir,
+      skillIds: rawHeir.skillIds ?? [],
+      effectIds: rawHeir.effectIds ?? [],
+      jobRecords: rawHeir.jobRecords ?? {},
+    };
 
     if (lineage.ownerUid !== uid) {
       throw new HttpsError("permission-denied", "You do not own this lineage");
@@ -67,7 +73,7 @@ export const claimSkill = onCall<ClaimSkillRequest>(
 
     const treeScope = skill.treeScope ?? "character";
     const ownedSkillIds =
-      treeScope === "bloodline" ? lineage.bloodlineSkillIds ?? [] : heir.skillIds;
+      treeScope === "bloodline" ? lineage.bloodlineSkillIds ?? [] : heir.skillIds ?? [];
 
     if (ownedSkillIds.includes(skillId)) {
       throw new HttpsError("failed-precondition", "Skill already owned");

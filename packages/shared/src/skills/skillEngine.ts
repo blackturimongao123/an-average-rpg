@@ -571,7 +571,9 @@ export function canClaimSkill(
   }
 
   for (const requiredSkillId of skill.requires) {
-    if (!ownedSkillIds.includes(requiredSkillId)) {
+    const isImplicitBloodlineRoot =
+      treeScope === "bloodline" && requiredSkillId === "bloodline_root";
+    if (!ownedSkillIds.includes(requiredSkillId) && !isImplicitBloodlineRoot) {
       const requiredSkill = deps.getSkillById(requiredSkillId);
       return {
         canClaim: false,

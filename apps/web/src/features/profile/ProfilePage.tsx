@@ -16,11 +16,13 @@ import {
   declinePlayerPartyInvite,
   getPartyErrorMessage,
   invitePlayerToParty,
+  kickPlayerFromParty,
   leavePlayerParty,
+  makePlayerPartyLeader,
 } from "@/firebase/party";
 import { abandonPlayerMission, failPlayerMission, getMissionActionErrorMessage } from "@/firebase/missionActions";
 import type { Party, PartyInvite } from "@bloodline/shared/types";
-import { Settings, User, Users, UserPlus, LogOut, Crown } from "lucide-react";
+import { Settings, User, Users, UserPlus, LogOut, Crown, UserMinus } from "lucide-react";
 
 interface PartyMemberInfo {
   uid: string;
@@ -203,6 +205,34 @@ export function ProfilePage() {
       setParty(null);
       setMembers([]);
       setMessage("Left the party.");
+    } catch (err) {
+      setError(getPartyErrorMessage(err));
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleKickMember(member: PartyMemberInfo) {
+    setLoading(true);
+    setError(null);
+    setMessage(null);
+    try {
+      await kickPlayerFromParty(activeLineage.id, member.uid);
+      setMessage(`${member.heirName} was removed from the party.`);
+    } catch (err) {
+      setError(getPartyErrorMessage(err));
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleMakeLeader(member: PartyMemberInfo) {
+    setLoading(true);
+    setError(null);
+    setMessage(null);
+    try {
+      await makePlayerPartyLeader(activeLineage.id, member.uid);
+      setMessage(`${member.heirName} is now the party leader.`);
     } catch (err) {
       setError(getPartyErrorMessage(err));
     } finally {
@@ -467,6 +497,28 @@ export function ProfilePage() {
                       </p>
                       <p className="text-sm text-muted-foreground">House {member.familyName}</p>
                     </div>
+                    {isLeader && !member.isLeader && (
+                      <div className="flex items-center gap-3">
+                        <button
+                          type="button"
+                          disabled={loading}
+                          onClick={() => void handleMakeLeader(member)}
+                          className="flex items-center gap-1 text-xs text-gold hover:underline disabled:opacity-50"
+                        >
+                          <Crown className="w-3.5 h-3.5" />
+                          Make Leader
+                        </button>
+                        <button
+                          type="button"
+                          disabled={loading}
+                          onClick={() => void handleKickMember(member)}
+                          className="flex items-center gap-1 text-xs text-red-400 hover:underline disabled:opacity-50"
+                        >
+                          <UserMinus className="w-3.5 h-3.5" />
+                          Kick
+                        </button>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

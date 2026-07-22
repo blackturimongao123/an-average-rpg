@@ -5,6 +5,7 @@ import { generateId } from "../utils/helpers.js";
 import type { Lineage } from "../utils/types.js";
 
 const MAX_PARTY_SIZE = 4;
+const PARTY_OFFLINE_TIMEOUT_MS = 90_000;
 
 interface CreatePartyRequest {
   lineageId: string;
@@ -52,6 +53,7 @@ export const createParty = onCall<CreatePartyRequest>(
       leaderLineageId: lineageId,
       memberUids: [uid],
       memberLineageIds: [lineageId],
+      memberLastSeenAtMs: { [uid]: nowMs },
       createdAtMs: nowMs,
     });
     batch.update(lineageRef, {
@@ -220,7 +222,14 @@ export const acceptPartyInvite = onCall<AcceptPartyInviteRequest>(
       memberUids.push(uid);
       memberLineageIds.push(lineageId);
 
-      tx.update(partyRef, { memberUids, memberLineageIds });
+      tx.update(partyRef, {
+        memberUids,
+        memberLineageIds,
+        memberLastSeenAtMs: {
+          ...(party.memberLastSeenAtMs ?? {}),
+          [uid]: Date.now(),
+        },
+      });
       tx.update(lineageRef, {
         partyId: invite.partyId,
         updatedAt: FieldValue.serverTimestamp(),
@@ -281,16 +290,28 @@ export const leaveParty = onCall<LeavePartyRequest>(
       }
 
       const party = partyDoc.data()!;
-      let memberUids = (party.memberUids as string[]).filter((id) => id !== uid);
-      let memberLineageIds = (party.memberLineageIds as string[]).filter((id) => id !== lineageId);
+      const memberIndex = (party.memberUids as string[]).indexOf(uid);
+      const memberUids = (party.memberUids as string[]).filter((_: string, index: number) => index !== memberIndex);
+      const memberLineageIds = (party.memberLineageIds as string[]).filter((_: string, index: number) => index !== memberIndex);
+      const memberProfiles = (party.memberProfiles ?? []).filter((_: unknown, index: number) => index !== memberIndex);
+      const memberLastSeenAtMs = { ...(party.memberLastSeenAtMs ?? {}) };
+      delete memberLastSeenAtMs[uid];
 
       if (memberUids.length === 0) {
         tx.delete(partyRef);
       } else {
-        const updates: Record<string, unknown> = { memberUids, memberLineageIds };
+        const updates: Record<string, unknown> = {
+          memberUids,
+          memberLineageIds,
+          memberProfiles,
+          memberLastSeenAtMs,
+        };
         if (party.leaderUid === uid) {
           updates.leaderUid = memberUids[0];
           updates.leaderLineageId = memberLineageIds[0];
+          updates.activeDungeon = null;
+          updates.activeMission = null;
+          updates.lastMissionOutcome = null;
         }
         tx.update(partyRef, updates);
       }
@@ -302,5 +323,183 @@ export const leaveParty = onCall<LeavePartyRequest>(
     });
 
     return { left: true };
+  }
+);
+
+interface KickPartyMemberRequest {
+  lineageId: string;
+  targetUid: string;
+}
+
+export const kickPartyMember = onCall<KickPartyMemberRequest>(
+  { cors: true },
+  async (request): Promise<{ kicked: boolean }> => {
+    if (!request.auth) throw new HttpsError("unauthenticated", "Must be signed in");
+    const { lineageId, targetUid } = request.data;
+    if (!lineageId || !targetUid) {
+      throw new HttpsError("invalid-argument", "Missing required fields");
+    }
+    const uid = request.auth.uid;
+    if (uid === targetUid) {
+      throw new HttpsError("invalid-argument", "Use Leave to leave your own party");
+    }
+
+    const lineageRef = db.collection("lineages").doc(lineageId);
+    await db.runTransaction(async (tx) => {
+      const lineageDoc = await tx.get(lineageRef);
+      const lineage = lineageDoc.data() as Lineage | undefined;
+      if (!lineageDoc.exists || !lineage) throw new HttpsError("not-found", "Lineage not found");
+      if (lineage.ownerUid !== uid) throw new HttpsError("permission-denied", "You do not own this lineage");
+      if (!lineage.partyId) throw new HttpsError("failed-precondition", "Not in a party");
+
+      const partyRef = db.collection("parties").doc(lineage.partyId);
+      const partyDoc = await tx.get(partyRef);
+      if (!partyDoc.exists) throw new HttpsError("not-found", "Party not found");
+      const party = partyDoc.data()!;
+      if (party.leaderUid !== uid) {
+        throw new HttpsError("permission-denied", "Only the party leader can remove members");
+      }
+
+      const index = (party.memberUids as string[]).indexOf(targetUid);
+      if (index < 0) throw new HttpsError("not-found", "Party member not found");
+      const targetLineageId = (party.memberLineageIds as string[])[index];
+      const targetLineageRef = db.collection("lineages").doc(targetLineageId);
+      const targetLineageDoc = await tx.get(targetLineageRef);
+
+      const memberUids = (party.memberUids as string[]).filter((_: string, i: number) => i !== index);
+      const memberLineageIds = (party.memberLineageIds as string[]).filter((_: string, i: number) => i !== index);
+      const memberProfiles = (party.memberProfiles ?? []).filter((_: unknown, i: number) => i !== index);
+      const memberLastSeenAtMs = { ...(party.memberLastSeenAtMs ?? {}) };
+      delete memberLastSeenAtMs[targetUid];
+      tx.update(partyRef, { memberUids, memberLineageIds, memberProfiles, memberLastSeenAtMs });
+      if (targetLineageDoc.exists && targetLineageDoc.data()?.partyId === lineage.partyId) {
+        tx.update(targetLineageRef, { partyId: null, updatedAt: FieldValue.serverTimestamp() });
+      }
+    });
+    return { kicked: true };
+  }
+);
+
+interface TransferPartyLeadershipRequest {
+  lineageId: string;
+  targetUid: string;
+}
+
+export const transferPartyLeadership = onCall<TransferPartyLeadershipRequest>(
+  { cors: true },
+  async (request): Promise<{ transferred: boolean }> => {
+    if (!request.auth) throw new HttpsError("unauthenticated", "Must be signed in");
+    const { lineageId, targetUid } = request.data;
+    if (!lineageId || !targetUid) {
+      throw new HttpsError("invalid-argument", "Missing required fields");
+    }
+    const uid = request.auth.uid;
+    if (uid === targetUid) {
+      throw new HttpsError("invalid-argument", "You are already the party leader");
+    }
+
+    const lineageRef = db.collection("lineages").doc(lineageId);
+    await db.runTransaction(async (tx) => {
+      const lineageDoc = await tx.get(lineageRef);
+      const lineage = lineageDoc.data() as Lineage | undefined;
+      if (!lineageDoc.exists || !lineage) throw new HttpsError("not-found", "Lineage not found");
+      if (lineage.ownerUid !== uid) throw new HttpsError("permission-denied", "You do not own this lineage");
+      if (!lineage.partyId) throw new HttpsError("failed-precondition", "Not in a party");
+
+      const partyRef = db.collection("parties").doc(lineage.partyId);
+      const partyDoc = await tx.get(partyRef);
+      if (!partyDoc.exists) throw new HttpsError("not-found", "Party not found");
+      const party = partyDoc.data()!;
+      if (party.leaderUid !== uid) {
+        throw new HttpsError("permission-denied", "Only the party leader can transfer leadership");
+      }
+      const targetIndex = (party.memberUids as string[]).indexOf(targetUid);
+      if (targetIndex < 0) throw new HttpsError("not-found", "Party member not found");
+
+      tx.update(partyRef, {
+        leaderUid: targetUid,
+        leaderLineageId: (party.memberLineageIds as string[])[targetIndex],
+      });
+    });
+    return { transferred: true };
+  }
+);
+
+interface HeartbeatPartyRequest {
+  lineageId: string;
+}
+
+export const heartbeatParty = onCall<HeartbeatPartyRequest>(
+  { cors: true },
+  async (request): Promise<{ active: boolean; removedUids: string[] }> => {
+    if (!request.auth) throw new HttpsError("unauthenticated", "Must be signed in");
+    const { lineageId } = request.data;
+    if (!lineageId) throw new HttpsError("invalid-argument", "Missing lineageId");
+    const uid = request.auth.uid;
+    const lineageRef = db.collection("lineages").doc(lineageId);
+
+    return db.runTransaction(async (tx) => {
+      const lineageDoc = await tx.get(lineageRef);
+      const lineage = lineageDoc.data() as Lineage | undefined;
+      if (!lineageDoc.exists || !lineage) throw new HttpsError("not-found", "Lineage not found");
+      if (lineage.ownerUid !== uid) throw new HttpsError("permission-denied", "You do not own this lineage");
+      if (!lineage.partyId) return { active: false, removedUids: [] };
+
+      const partyRef = db.collection("parties").doc(lineage.partyId);
+      const partyDoc = await tx.get(partyRef);
+      if (!partyDoc.exists) {
+        tx.update(lineageRef, { partyId: null, updatedAt: FieldValue.serverTimestamp() });
+        return { active: false, removedUids: [] };
+      }
+
+      const party = partyDoc.data()!;
+      const memberUids = party.memberUids as string[];
+      if (!memberUids.includes(uid)) {
+        tx.update(lineageRef, { partyId: null, updatedAt: FieldValue.serverTimestamp() });
+        return { active: false, removedUids: [] };
+      }
+
+      const nowMs = Date.now();
+      const seen: Record<string, number> = { ...(party.memberLastSeenAtMs ?? {}) };
+      for (const memberUid of memberUids) seen[memberUid] ??= nowMs;
+      seen[uid] = nowMs;
+      const removedUids = memberUids.filter(
+        (memberUid) => memberUid !== uid && nowMs - seen[memberUid] > PARTY_OFFLINE_TIMEOUT_MS
+      );
+      const removedIndexes = new Set(removedUids.map((memberUid) => memberUids.indexOf(memberUid)));
+      const removedLineageRefs = [...removedIndexes].map((index) =>
+        db.collection("lineages").doc((party.memberLineageIds as string[])[index])
+      );
+      const removedLineageDocs = await Promise.all(removedLineageRefs.map((ref) => tx.get(ref)));
+
+      const keptUids = memberUids.filter((_: string, index: number) => !removedIndexes.has(index));
+      const keptLineageIds = (party.memberLineageIds as string[]).filter((_: string, index: number) => !removedIndexes.has(index));
+      const keptProfiles = (party.memberProfiles ?? []).filter((_: unknown, index: number) => !removedIndexes.has(index));
+      for (const removedUid of removedUids) delete seen[removedUid];
+
+      const updates: Record<string, unknown> = {
+        memberUids: keptUids,
+        memberLineageIds: keptLineageIds,
+        memberProfiles: keptProfiles,
+        memberLastSeenAtMs: seen,
+      };
+      if (!keptUids.includes(party.leaderUid)) {
+        updates.leaderUid = keptUids[0];
+        updates.leaderLineageId = keptLineageIds[0];
+        updates.activeDungeon = null;
+        updates.activeMission = null;
+        updates.lastMissionOutcome = null;
+      }
+      tx.update(partyRef, updates);
+      removedLineageDocs.forEach((doc, index) => {
+        if (doc.exists && doc.data()?.partyId === lineage.partyId) {
+          tx.update(removedLineageRefs[index], {
+            partyId: null,
+            updatedAt: FieldValue.serverTimestamp(),
+          });
+        }
+      });
+      return { active: true, removedUids };
+    });
   }
 );

@@ -24,14 +24,24 @@ import {
 } from "lucide-react";
 import type { ClassData, SkillNode, Stats } from "@bloodline/shared/types";
 import { Link } from "react-router-dom";
-import { useState } from "react";
 import { allocateStatPoints } from "@/firebase/functions";
+import { getFirebaseErrorMessage } from "@/lib/firebaseErrors";
 
 import classesData from "@game-data/classes.json";
 import skillsData from "@game-data/skills.json";
 
 const classes = classesData.classes as ClassData[];
 const skills = skillsData.skills as SkillNode[];
+const STAT_ORDER: Array<keyof Stats> = [
+  "strength",
+  "dexterity",
+  "intelligence",
+  "constitution",
+  "luck",
+  "charisma",
+  "faith",
+  "infamy",
+];
 
 function formatClassName(classId: string): string {
   return classes.find((entry) => entry.id === classId)?.name ?? capitalize(classId);
@@ -39,7 +49,6 @@ function formatClassName(classId: string): string {
 
 export function CharacterPage() {
   const { lineage, heir, setHeir } = useGameStore();
-  const [statBusy, setStatBusy] = useState(false);
 
   if (!lineage) {
     return (
@@ -68,22 +77,30 @@ export function CharacterPage() {
   const unspent = activeHeir.unspentStatPoints ?? 0;
 
   async function addStat(stat: keyof Stats) {
-    if (!lineage || unspent <= 0) return;
-    setStatBusy(true);
+    const latestHeir = useGameStore.getState().heir;
+    if (!lineage || !latestHeir || (latestHeir.unspentStatPoints ?? 0) <= 0) return;
+    setHeir({
+      ...latestHeir,
+      stats: { ...latestHeir.stats, [stat]: latestHeir.stats[stat] + 1 },
+      unspentStatPoints: (latestHeir.unspentStatPoints ?? 0) - 1,
+    });
     try {
-      const result = await allocateStatPoints({
+      await allocateStatPoints({
         lineageId: lineage.id,
-        heirId: activeHeir.id,
+        heirId: latestHeir.id,
         stat,
         amount: 1,
       });
-      setHeir({
-        ...activeHeir,
-        stats: result.data.stats as unknown as Stats,
-        unspentStatPoints: result.data.unspentStatPoints,
-      });
-    } finally {
-      setStatBusy(false);
+    } catch (error) {
+      const current = useGameStore.getState().heir;
+      if (current?.id === latestHeir.id) {
+        setHeir({
+          ...current,
+          stats: { ...current.stats, [stat]: Math.max(latestHeir.stats[stat], current.stats[stat] - 1) },
+          unspentStatPoints: (current.unspentStatPoints ?? 0) + 1,
+        });
+      }
+      window.alert(getFirebaseErrorMessage(error));
     }
   }
 
@@ -170,7 +187,7 @@ export function CharacterPage() {
             )}
           </h2>
           <div className="grid grid-cols-2 gap-3">
-            {Object.entries(heir.stats).map(([stat, value]) => (
+            {STAT_ORDER.map((stat) => (
               <div
                 key={stat}
                 className="flex items-center justify-between p-3 rounded-md bg-secondary/50"
@@ -179,12 +196,11 @@ export function CharacterPage() {
                   {formatStatName(stat)}
                 </span>
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold">{value}</span>
+                  <span className="font-semibold">{heir.stats[stat]}</span>
                   {unspent > 0 && stat !== "infamy" && (
                     <button
                       type="button"
-                      disabled={statBusy}
-                      onClick={() => void addStat(stat as keyof typeof heir.stats)}
+                      onClick={() => void addStat(stat)}
                       className="p-1 rounded hover:bg-primary/20 text-primary"
                       title={`Add 1 ${formatStatName(stat)}`}
                     >

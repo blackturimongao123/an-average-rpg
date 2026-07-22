@@ -12,6 +12,7 @@ import { migrateEquipment } from "@bloodline/shared/equipment";
 import type { ActiveMission, MerchantBoard } from "@bloodline/shared/types";
 import { PartyInviteModal } from "@/components/game/PartyInviteModal";
 import { registerHeirLookup } from "@/firebase/heirLookup";
+import { sendPartyHeartbeat } from "@/firebase/party";
 import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
 import { JobShiftBanner } from "./JobShiftBanner";
@@ -35,6 +36,18 @@ export function GameShell({ children }: GameShellProps) {
 
   useJobShiftTimer();
   usePartyMissionSync();
+
+  useEffect(() => {
+    if (!user || !lineage?.partyId) return;
+    const heartbeat = () => {
+      void sendPartyHeartbeat(lineage.id).catch(() => {
+        // The lineage subscription remains authoritative if presence briefly fails.
+      });
+    };
+    heartbeat();
+    const intervalId = window.setInterval(heartbeat, 30_000);
+    return () => window.clearInterval(intervalId);
+  }, [user, lineage?.id, lineage?.partyId]);
 
   useEffect(() => {
     if (!hasResolvableActiveMission(heir?.activeMission)) return;

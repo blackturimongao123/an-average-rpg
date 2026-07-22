@@ -668,6 +668,8 @@ export interface Party {
   memberUids: string[];
   memberLineageIds: string[];
   memberProfiles?: PartyMemberProfile[];
+  /** Server-maintained in-game presence timestamps keyed by account UID. */
+  memberLastSeenAtMs?: Record<string, number>;
   createdAtMs: number;
   activeDungeon?: PartyActiveDungeon | null;
   activeMission?: PartyActiveMission | null;

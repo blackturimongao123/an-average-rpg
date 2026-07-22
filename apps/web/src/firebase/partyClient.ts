@@ -57,6 +57,7 @@ export async function createPartyClient(
     memberUids: [userId],
     memberLineageIds: [lineage.id],
     memberProfiles: heir ? [buildMemberProfile(lineage, heir)] : [],
+    memberLastSeenAtMs: { [userId]: Date.now() },
     createdAtMs: Date.now(),
     activeDungeon: null,
     activeMission: null,
@@ -172,6 +173,10 @@ export async function acceptPartyInviteClient(
     memberUids: [...party.memberUids, userId],
     memberLineageIds: [...party.memberLineageIds, lineage.id],
     memberProfiles: [...(party.memberProfiles ?? []), buildMemberProfile(lineage, heir)],
+    memberLastSeenAtMs: {
+      ...(party.memberLastSeenAtMs ?? {}),
+      [userId]: Date.now(),
+    },
   });
   batch.update(doc(db, "lineages", lineage.id), {
     partyId: invite.partyId,
@@ -226,11 +231,18 @@ export async function leavePartyClient(
   const memberLineageIds = party.memberLineageIds.filter((id) => id !== lineage.id);
   const memberIndex = party.memberUids.indexOf(userId);
   const memberProfiles = (party.memberProfiles ?? []).filter((_, i) => i !== memberIndex);
+  const memberLastSeenAtMs = { ...(party.memberLastSeenAtMs ?? {}) };
+  delete memberLastSeenAtMs[userId];
 
   if (memberUids.length === 0) {
     batch.delete(partyRef);
   } else {
-    const updates: Record<string, unknown> = { memberUids, memberLineageIds, memberProfiles };
+    const updates: Record<string, unknown> = {
+      memberUids,
+      memberLineageIds,
+      memberProfiles,
+      memberLastSeenAtMs,
+    };
     if (party.leaderUid === userId) {
       updates.leaderUid = memberUids[0];
       updates.leaderLineageId = memberLineageIds[0];

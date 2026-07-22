@@ -190,6 +190,21 @@ export const leaveParty = httpsCallable<
   { left: boolean }
 >(functions, "leaveParty");
 
+export const kickPartyMember = httpsCallable<
+  { lineageId: string; targetUid: string },
+  { kicked: boolean }
+>(functions, "kickPartyMember");
+
+export const transferPartyLeadership = httpsCallable<
+  { lineageId: string; targetUid: string },
+  { transferred: boolean }
+>(functions, "transferPartyLeadership");
+
+export const heartbeatParty = httpsCallable<
+  { lineageId: string },
+  { active: boolean; removedUids: string[] }
+>(functions, "heartbeatParty");
+
 export const getMissionBoard = httpsCallable<
   { lineageId: string; heirId: string },
   { board: MissionBoard; adventurerRank: AdventurerRank; adventurerRankXp: number }
