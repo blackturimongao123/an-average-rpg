@@ -46,7 +46,6 @@ export function ProfilePage() {
   const [members, setMembers] = useState<PartyMemberInfo[]>([]);
   const [invites, setInvites] = useState<PartyInvite[]>([]);
   const [inviteHeirName, setInviteHeirName] = useState("");
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -130,86 +129,69 @@ export function ProfilePage() {
   const activeLineage = lineage;
   const activeHeir = heir;
 
-  async function handleCreateParty() {
+  function handleCreateParty() {
     if (!user) return;
-    setLoading(true);
     setError(null);
     setMessage(null);
     try {
-      const result = await createPlayerParty(activeLineage.id, activeLineage, user.uid, activeHeir);
+      const result = createPlayerParty(activeLineage.id, activeLineage, user.uid, activeHeir);
       setLineage({ ...activeLineage, partyId: result.partyId });
       setMessage("Party created. You are the party leader.");
     } catch (err) {
       setError(getPartyErrorMessage(err));
-    } finally {
-      setLoading(false);
     }
   }
 
-  async function handleInvite() {
+  function handleInvite() {
     if (!inviteHeirName.trim() || !user) return;
-    setLoading(true);
     setError(null);
-    setMessage(null);
-    try {
-      const result = await invitePlayerToParty(
+    const targetName = inviteHeirName.trim();
+    setInviteHeirName("");
+    setMessage(`Sending invite to ${targetName}…`);
+    void invitePlayerToParty(
         activeLineage,
         activeHeir,
         user.uid,
-        inviteHeirName.trim()
-      );
+        targetName
+      ).then((result) => {
       setLineage({ ...activeLineage, partyId: result.partyId });
-      setInviteHeirName("");
-      setMessage(`Invite sent to ${inviteHeirName.trim()}.`);
-    } catch (err) {
+      setMessage(`Invite sent to ${targetName}.`);
+    }).catch((err) => {
       setError(getPartyErrorMessage(err));
-    } finally {
-      setLoading(false);
-    }
+    });
   }
 
-  async function handleAcceptInvite(inviteId: string) {
+  function handleAcceptInvite(inviteId: string) {
     if (!user) return;
-    setLoading(true);
     setError(null);
-    try {
-      const result = await acceptPlayerPartyInvite(user.uid, activeLineage, inviteId, activeHeir);
-      setLineage({ ...activeLineage, partyId: result.partyId });
-      setMessage("Joined party.");
-    } catch (err) {
+    const invite = invites.find((entry) => entry.id === inviteId);
+    if (!invite) return;
+    setInvites((current) => current.filter((entry) => entry.id !== inviteId));
+    setLineage({ ...activeLineage, partyId: invite.partyId });
+    setMessage("Joined party.");
+    void acceptPlayerPartyInvite(user.uid, activeLineage, inviteId, activeHeir).catch((err) => {
       setError(getPartyErrorMessage(err));
-    } finally {
-      setLoading(false);
-    }
+    });
   }
 
-  async function handleDeclineInvite(inviteId: string) {
+  function handleDeclineInvite(inviteId: string) {
     if (!user) return;
-    setLoading(true);
-    try {
-      await declinePlayerPartyInvite(user.uid, inviteId);
-    } catch (err) {
+    setInvites((current) => current.filter((entry) => entry.id !== inviteId));
+    void declinePlayerPartyInvite(user.uid, inviteId).catch((err) => {
       setError(getPartyErrorMessage(err));
-    } finally {
-      setLoading(false);
-    }
+    });
   }
 
-  async function handleLeaveParty() {
+  function handleLeaveParty() {
     if (!user) return;
-    setLoading(true);
     setError(null);
-    try {
-      await leavePlayerParty(user.uid, activeLineage);
-      setLineage({ ...activeLineage, partyId: null });
-      setParty(null);
-      setMembers([]);
-      setMessage("Left the party.");
-    } catch (err) {
+    setLineage({ ...activeLineage, partyId: null });
+    setParty(null);
+    setMembers([]);
+    setMessage("Left the party.");
+    void leavePlayerParty(user.uid, activeLineage).catch((err) => {
       setError(getPartyErrorMessage(err));
-    } finally {
-      setLoading(false);
-    }
+    });
   }
 
   function handleKickMember(member: PartyMemberInfo) {
@@ -240,11 +222,10 @@ export function ProfilePage() {
     });
   }
 
-  async function handleAbandonMission() {
-    setLoading(true);
+  function handleAbandonMission() {
     setError(null);
     try {
-      const result = await abandonPlayerMission(activeLineage.id, activeHeir.id);
+      const result = abandonPlayerMission(activeLineage.id, activeHeir);
       setHeir({
         ...activeHeir,
         activeMission: null,
@@ -256,16 +237,13 @@ export function ProfilePage() {
       setMessage("Mission abandoned. A short cooldown applies before you can take it again.");
     } catch (err) {
       setError(getMissionActionErrorMessage(err));
-    } finally {
-      setLoading(false);
     }
   }
 
-  async function handleFailMission() {
-    setLoading(true);
+  function handleFailMission() {
     setError(null);
     try {
-      const result = await failPlayerMission(activeLineage.id, activeHeir.id);
+      const result = failPlayerMission(activeLineage.id, activeHeir);
       setHeir({
         ...activeHeir,
         activeMission: null,
@@ -277,8 +255,6 @@ export function ProfilePage() {
       setMessage("Mission failed. Cooldown applied.");
     } catch (err) {
       setError(getMissionActionErrorMessage(err));
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -303,7 +279,6 @@ export function ProfilePage() {
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
-              disabled={loading}
               onClick={() => void handleAbandonMission()}
               className="btn-secondary text-sm px-3 py-1.5"
             >
@@ -311,7 +286,6 @@ export function ProfilePage() {
             </button>
             <button
               type="button"
-              disabled={loading}
               onClick={() => void handleFailMission()}
               className="text-sm px-3 py-1.5 text-red-400 hover:underline"
             >
@@ -403,7 +377,6 @@ export function ProfilePage() {
                     <div className="flex gap-2">
                       <button
                         type="button"
-                        disabled={loading}
                         onClick={() => void handleDeclineInvite(invite.id)}
                         className="btn-secondary text-sm px-3 py-1"
                       >
@@ -411,7 +384,6 @@ export function ProfilePage() {
                       </button>
                       <button
                         type="button"
-                        disabled={loading}
                         onClick={() => void handleAcceptInvite(invite.id)}
                         className="btn-primary text-sm px-3 py-1"
                       >
@@ -443,7 +415,7 @@ export function ProfilePage() {
                 />
                 <button
                   type="button"
-                  disabled={loading || !inviteHeirName.trim()}
+                  disabled={!inviteHeirName.trim()}
                   onClick={() => void handleInvite()}
                   className="btn-primary flex items-center gap-1 px-4"
                 >
@@ -455,7 +427,6 @@ export function ProfilePage() {
               <div className="text-center mt-2">
                 <button
                   type="button"
-                  disabled={loading}
                   onClick={() => void handleCreateParty()}
                   className="btn-secondary"
                 >
@@ -472,7 +443,6 @@ export function ProfilePage() {
                 </h2>
                 <button
                   type="button"
-                  disabled={loading}
                   onClick={() => void handleLeaveParty()}
                   className="flex items-center gap-1 text-sm text-red-400 hover:underline"
                 >
@@ -501,7 +471,6 @@ export function ProfilePage() {
                       <div className="flex items-center gap-3">
                         <button
                           type="button"
-                          disabled={loading}
                           onClick={() => void handleMakeLeader(member)}
                           className="flex items-center gap-1 text-xs text-gold hover:underline disabled:opacity-50"
                         >
@@ -510,7 +479,6 @@ export function ProfilePage() {
                         </button>
                         <button
                           type="button"
-                          disabled={loading}
                           onClick={() => void handleKickMember(member)}
                           className="flex items-center gap-1 text-xs text-red-400 hover:underline disabled:opacity-50"
                         >
@@ -534,7 +502,7 @@ export function ProfilePage() {
                   />
                   <button
                     type="button"
-                    disabled={loading || !inviteHeirName.trim()}
+                    disabled={!inviteHeirName.trim()}
                     onClick={() => void handleInvite()}
                     className="btn-primary flex items-center gap-1 px-4"
                   >

@@ -9,7 +9,7 @@ import {
   persistPlayerMissionAdvance,
 } from "@/firebase/missionBoard";
 import type { AdvanceMissionResult } from "@/firebase/functions";
-import { abandonMission } from "@/firebase/functions";
+import { abandonPlayerMission } from "@/firebase/missionActions";
 import { CampaignView } from "@/features/campaign/CampaignView";
 import { FieldEncountersPanel } from "@/features/tavern/FieldEncountersPanel";
 import { BattleView } from "@/features/battle/BattleView";
@@ -118,7 +118,6 @@ export function TavernPage() {
   const isBusyOnJob = useIsHeirBusyOnJob();
   const { loading: boardLoading, countdownMs, refreshBoard } = useMissionBoard();
   const { party, members } = usePartyMembers(lineage?.partyId);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [tavernTab, setTavernTab] = useState<"missions" | "encounters">("missions");
   const [completion, setCompletion] = useState<{
@@ -265,7 +264,7 @@ export function TavernPage() {
       ? Math.min(100, (adventurerRankXp / rankXpToNext) * 100)
       : 100;
 
-  const handleAcceptMission = async (slotIndex: number) => {
+  const handleAcceptMission = (slotIndex: number) => {
     if (!lineage || !heir || !user) return;
 
     if (inParty && !isPartyLeader) {
@@ -278,7 +277,6 @@ export function TavernPage() {
       return;
     }
 
-    setLoading(true);
     setError("");
 
     try {
@@ -288,12 +286,10 @@ export function TavernPage() {
       setMissionBoard(response.board);
     } catch (err: unknown) {
       setError(getFirebaseErrorMessage(err));
-    } finally {
-      setLoading(false);
     }
   };
 
-  const handleAdvanceMission = async (choice: MissionCampaignChoice) => {
+  const handleAdvanceMission = (choice: MissionCampaignChoice) => {
     if (!lineage || !heir || !user || !heir.activeMission) return;
 
     if (inParty && !isPartyLeader) {
@@ -302,10 +298,8 @@ export function TavernPage() {
     }
 
     setError("");
-    setLoading(true);
-
     try {
-      const response = await advancePlayerMission(
+      const response = advancePlayerMission(
         user.uid,
         lineage,
         heir,
@@ -328,19 +322,16 @@ export function TavernPage() {
             completed: response.completed,
           });
         }
-        setLoading(false);
         return;
       }
 
-      await applyAdvanceResponse(response);
+      applyAdvanceResponse(response);
     } catch (err: unknown) {
       setError(getFirebaseErrorMessage(err));
-    } finally {
-      setLoading(false);
     }
   };
 
-  const handleMissionBattleContinue = async () => {
+  const handleMissionBattleContinue = () => {
     if (!missionBattle || !lineage || !heir || !user) return;
     if (inParty && !isPartyLeader) {
       setMissionBattle(null);
@@ -349,36 +340,27 @@ export function TavernPage() {
     const { response, choiceId } = missionBattle;
     setMissionBattle(null);
     if (inParty && lineage.partyId && isPartyLeader) {
-      await clearPartyMissionPendingBattle(lineage.partyId);
+      void clearPartyMissionPendingBattle(lineage.partyId)
+        .catch((err) => setError(getFirebaseErrorMessage(err)));
     }
-    setLoading(true);
-    try {
-      await persistPlayerMissionAdvance(user.uid, lineage, heir, choiceId, response);
-      await applyAdvanceResponse(response);
-    } catch (err: unknown) {
-      setError(getFirebaseErrorMessage(err));
-    } finally {
-      setLoading(false);
-    }
+    persistPlayerMissionAdvance(user.uid, lineage, heir, choiceId, response);
+    applyAdvanceResponse(response);
   };
 
-  const handleDismissCompletion = async () => {
+  const handleDismissCompletion = () => {
     if (party?.lastMissionOutcome) {
       dismissedOutcomeAtMsRef.current = party.lastMissionOutcome.updatedAtMs;
     }
     setCompletion(null);
     setError("");
     if (isPartyLeader && lineage?.partyId) {
-      try {
-        await clearPartyMissionOutcome(lineage.partyId);
-      } catch (err: unknown) {
-        console.error("Clear party mission outcome error:", err);
-      }
+      void clearPartyMissionOutcome(lineage.partyId)
+        .catch((err) => console.error("Clear party mission outcome error:", err));
     }
-    await refreshBoard();
+    void refreshBoard();
   };
 
-  const handleAbandonMission = async () => {
+  const handleAbandonMission = () => {
     if (!lineage || !heir || !user) return;
     if (inParty && !isPartyLeader) {
       setError("Only the party leader can abandon the party mission.");
@@ -388,21 +370,15 @@ export function TavernPage() {
       return;
     }
 
-    setLoading(true);
     setError("");
 
-    try {
-      await abandonMission({ lineageId: lineage.id, heirId: heir.id });
-      if (inParty && lineage.partyId) {
-        await clearPartyMission(lineage.partyId);
-      }
-      setActiveMission(null);
-      await refreshBoard();
-    } catch (err: unknown) {
-      setError(getFirebaseErrorMessage(err));
-    } finally {
-      setLoading(false);
+    abandonPlayerMission(lineage.id, heir);
+    setActiveMission(null);
+    if (inParty && lineage.partyId) {
+      void clearPartyMission(lineage.partyId)
+        .catch((err) => setError(getFirebaseErrorMessage(err)));
     }
+    void refreshBoard();
   };
 
   if (!heir) {
@@ -460,7 +436,7 @@ export function TavernPage() {
           heir={heir}
           activeMission={activeMission}
           mission={activeTemplate}
-          loading={loading}
+          loading={false}
           onChoose={handleAdvanceMission}
           onAbandon={handleAbandonMission}
           partyMembers={adventurePartyMembers}
@@ -627,7 +603,7 @@ export function TavernPage() {
                     <RewardList rewards={mission.rewards} />
                     <button
                       onClick={() => handleAcceptMission(slot.slotIndex)}
-                      disabled={loading || (inParty && !isPartyLeader)}
+                      disabled={inParty && !isPartyLeader}
                       className="btn-primary w-full mt-4"
                     >
                       {inParty ? "Accept for Party" : "Accept Mission"}

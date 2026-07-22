@@ -1,14 +1,29 @@
-import { abandonMission, failMission } from "./functions";
+import { doc, updateDoc } from "firebase/firestore";
+import { MISSION_COOLDOWN_MS } from "@bloodline/shared/constants";
+import type { Heir } from "@bloodline/shared/types";
+import { db } from "./config";
 import { getFirebaseErrorMessage } from "@/lib/firebaseErrors";
 
-export async function abandonPlayerMission(lineageId: string, heirId: string) {
-  const response = await abandonMission({ lineageId, heirId });
-  return response.data;
+function endMissionLater(lineageId: string, heir: Heir) {
+  if (!heir.activeMission) throw new Error("No active mission");
+  const missionId = heir.activeMission.missionId;
+  const cooldownExpiresAtMs = Date.now() + MISSION_COOLDOWN_MS;
+  void updateDoc(doc(db, "lineages", lineageId, "heirs", heir.id), {
+    activeMission: null,
+    missionCooldowns: {
+      ...(heir.missionCooldowns ?? {}),
+      [missionId]: cooldownExpiresAtMs,
+    },
+  }).catch((error) => console.error("Failed to save ended mission", error));
+  return { missionId, cooldownExpiresAtMs };
 }
 
-export async function failPlayerMission(lineageId: string, heirId: string) {
-  const response = await failMission({ lineageId, heirId });
-  return response.data;
+export function abandonPlayerMission(lineageId: string, heir: Heir) {
+  return endMissionLater(lineageId, heir);
+}
+
+export function failPlayerMission(lineageId: string, heir: Heir) {
+  return endMissionLater(lineageId, heir);
 }
 
 export function getMissionActionErrorMessage(error: unknown): string {

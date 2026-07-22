@@ -166,14 +166,14 @@ function encounterMonster(step: MissionCampaignStep): Monster | null {
   };
 }
 
-export async function advancePlayerMission(
+export function advancePlayerMission(
   userId: string,
   lineage: Lineage,
   heir: Heir,
   choiceId?: string,
   partyAllies?: PartyReplayAlly[],
   options?: { deferPersist?: boolean }
-): Promise<AdvanceMissionResult> {
+): AdvanceMissionResult {
   void userId;
   void options;
   if (!heir.activeMission) throw new Error("No active mission");
@@ -303,13 +303,13 @@ export async function advancePlayerMission(
   };
 }
 
-export async function persistPlayerMissionAdvance(
+export function persistPlayerMissionAdvance(
   userId: string,
   lineage: Lineage,
   heir: Heir,
   choiceId: string | undefined,
   result: AdvanceMissionResult
-): Promise<void> {
+): void {
   void userId;
   void lineage;
   void heir;

@@ -11,7 +11,7 @@ alwaysApply: true
 
 ```
 ├── apps/web/          # React + Vite frontend (the live game UI)
-├── functions/         # Firebase Cloud Functions (authoritative game logic)
+├── functions/         # Firebase persistence helpers, maintenance, legacy actions
 ├── packages/shared/   # Shared TypeScript types, Zod schemas, constants
 ├── game-data/         # Static JSON content (classes, skills, dungeons, etc.)
 ├── crates/            # Rust game simulation (game-core) + WASM bindings (game-wasm)
@@ -30,7 +30,8 @@ GitHub Pages (static)     Firebase
   apps/web/dist    →    Auth, Firestore, Cloud Functions, Storage
 ```
 
-- **Client is untrusted.** Combat, rewards, death, inheritance, bank ops, and skill claims run in **Cloud Functions** (`functions/src/actions/`).
+- **Client is the gameplay authority.** Combat, rewards, progression, bank ops, and skill claims resolve locally and enqueue Firestore saves.
+- Cloud Functions are reserved for maintenance or complex persistence such as inheritance; they must not gate normal button interactions.
 - **Firestore** holds live player state (`lineages`, heirs, bank, missions, etc.).
 - **game-data/** is read-only content imported by the web app (`@game-data` alias) — not written at runtime.
 
@@ -75,7 +76,7 @@ Changes here are **user-facing** — bump `APP_VERSION` when shipping.
 - `game-core/` — simulation modules (combat, dungeons, skills, inheritance, …).
 - `game-wasm/` — WASM bindings for the browser.
 
-Build WASM: `pnpm build:wasm` → output under `apps/web/src/wasm`. Most gameplay authority still lives in Cloud Functions today.
+Build WASM: `pnpm build:wasm` → output under `apps/web/src/wasm`. Gameplay authority lives in the web client; Firebase is persistence and sync.
 
 ## Where to put new work
 

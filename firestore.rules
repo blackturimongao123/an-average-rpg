@@ -110,7 +110,7 @@ service cloud.firestore {
             .hasOnly([
               'activeHeirId', 'updatedAt', 'publicSummary', 'generation',
               'adventurerRank', 'adventurerRankXp', 'bloodlineSkillIds',
-              'partyId', 'merchantBoard'
+              'partyId', 'merchantBoard', 'bankGold'
             ]))
         || (resource.data.partyId != null
           && request.resource.data.partyId == null
@@ -126,9 +126,9 @@ service cloud.firestore {
         allow update: if ownsLineage(lineageId)
           && request.resource.data.diff(resource.data).affectedKeys()
             .hasOnly([
-              'activeJobShift', 'gold', 'jobRecords', 'xp', 'level', 'inventory',
+              'activeJobShift', 'gold', 'jobRecords', 'xp', 'level', 'inventory', 'equipment',
               'status', 'diedAt', 'deathCause', 'activeMission', 'subclassId', 'subclassTier',
-              'unspentStatPoints', 'stats', 'skillIds', 'missionCooldowns', 'itemInstances', 'completedMissionIds',
+              'unspentStatPoints', 'stats', 'skillIds', 'effectIds', 'missionCooldowns', 'itemInstances', 'completedMissionIds',
               'appliedPartyMissionOutcomeIds', 'seenUniqueMissionEventIds'
             ]);
         allow delete: if false;
@@ -145,7 +145,8 @@ service cloud.firestore {
       match /effects/{effectId} {
         allow read: if signedIn() 
           && get(/databases/$(database)/documents/lineages/$(lineageId)).data.ownerUid == request.auth.uid;
-        allow write: if false;
+        allow create: if ownsLineage(lineageId);
+        allow update, delete: if false;
       }
 
       // Dungeon progress subcollection

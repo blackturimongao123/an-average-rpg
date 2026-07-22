@@ -71,11 +71,10 @@ const jobIcons: Record<string, typeof Shield> = {
 const hourOptions = Array.from({ length: MAX_JOB_HOURS }, (_, index) => index + 1);
 
 export function JobsPage() {
-  const { lineage, heir, setActiveJobShift } = useGameStore();
+  const { lineage, heir, setActiveJobShift, setLineage } = useGameStore();
   const { active, shift, remainingMs } = useJobShiftCountdown();
   const [planningJobId, setPlanningJobId] = useState<string | null>(null);
   const [selectedHours, setSelectedHours] = useState(6);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const availableJobs = heir ? getJobsForHeir(heir) : [];
@@ -89,31 +88,26 @@ export function JobsPage() {
   };
 
   const closeShiftPlanner = () => {
-    if (loading) return;
     setPlanningJobId(null);
     setError("");
   };
 
-  const handleStartShift = async () => {
+  const handleStartShift = () => {
     if (!lineage || !heir || !planningJobId || active) return;
 
     setError("");
-    setLoading(true);
-
     try {
-      const activeJobShift = await startJobShift(
-        lineage.id,
-        heir.id,
+      const activeJobShift = startJobShift(
+        lineage,
         heir,
         planningJobId,
         selectedHours
       );
       setActiveJobShift(activeJobShift);
+      if (lineage.partyId) setLineage({ ...lineage, partyId: null });
       setPlanningJobId(null);
     } catch (err: unknown) {
       setError(getFirebaseErrorMessage(err));
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -244,7 +238,6 @@ export function JobsPage() {
                       <button
                         type="button"
                         onClick={closeShiftPlanner}
-                        disabled={loading}
                         className="p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary/60"
                         aria-label="Cancel shift planning"
                       >
@@ -300,22 +293,14 @@ export function JobsPage() {
                       <button
                         type="button"
                         onClick={handleStartShift}
-                        disabled={loading}
                         className="btn-primary flex items-center justify-center gap-2"
                       >
-                        {loading ? (
-                          "Starting shift..."
-                        ) : (
-                          <>
-                            <Check className="w-4 h-4" />
-                            Commit to {selectedHours}-Hour Shift
-                          </>
-                        )}
+                        <Check className="w-4 h-4" />
+                        Commit to {selectedHours}-Hour Shift
                       </button>
                       <button
                         type="button"
                         onClick={closeShiftPlanner}
-                        disabled={loading}
                         className="btn-secondary"
                       >
                         Cancel

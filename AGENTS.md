@@ -14,7 +14,7 @@ Stack: pnpm monorepo · React/Vite/Tailwind (apps/web) · Firebase (Auth, Firest
 Before coding:
 1. Read AGENTS.md and relevant .cursor/rules/
 2. Match existing patterns; keep diffs minimal
-3. Server-authoritative gameplay — mutations in functions/src/actions/, not client-only
+3. Client-authoritative gameplay — resolve locally first; Firebase only persists and syncs afterward
 4. User-facing changes → bump APP_VERSION in apps/web/src/constants/version.ts
 5. Never expose or commit secrets (.env, credentials)
 6. When done → git add . && git commit && git push (triggers deploy on main)
@@ -38,7 +38,7 @@ Read `.cursor/rules/game-core-concepts.mdc` for full design rules.
 | Path | Purpose |
 |------|---------|
 | `apps/web/` | React UI — features, components, stores, Firebase client |
-| `functions/` | Cloud Functions — authoritative game actions |
+| `functions/` | Cloud Functions — persistence helpers, maintenance, and legacy compatibility |
 | `packages/shared/` | Shared types & schemas (`@bloodline/shared`) |
 | `game-data/` | Static JSON (classes, skills, dungeons, events, …) |
 | `crates/` | Rust simulation + WASM bindings |
@@ -52,11 +52,12 @@ Full layout: `.cursor/rules/project-structure.mdc`.
 
 ## Architecture (non-negotiable)
 
-- **Client is untrusted.** Combat, rewards, death, inheritance, bank, skill claims → `functions/src/actions/`.
+- **Friends-only, client-authoritative.** Combat, rewards, progression, party actions, bank, and skills resolve locally before any save.
+- Firebase writes must run in the background and must never gate or roll back a completed local interaction.
 - **Firestore** = live state (`lineages`, subcollections for heirs, bank, effects, …).
 - **game-data/** = read-only content at build time; not mutated at runtime.
 - New screen → `features/` + route in `App.tsx` + sidebar.
-- New game rule → function action + export in `functions/src/index.ts` + callable in `apps/web/src/firebase/functions.ts` + types in `packages/shared/`.
+- New game rule → shared/client logic + background Firestore persistence; use a Function only when an atomic maintenance write cannot be expressed safely by the client.
 
 ---
 

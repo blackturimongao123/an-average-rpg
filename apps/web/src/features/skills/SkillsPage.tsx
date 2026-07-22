@@ -36,7 +36,6 @@ export function SkillsPage() {
   const [activeTab, setActiveTab] = useState<"character" | "bloodline">(
     searchParams.get("tab") === "bloodline" ? "bloodline" : "character"
   );
-  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   const ownedForTab = useMemo(() => {
@@ -114,7 +113,6 @@ export function SkillsPage() {
     const { canClaim } = getClaimStatus(node);
     if (!canClaim) return;
 
-    setLoading(false);
     setMessage(null);
 
     if (activeTab === "bloodline") {
@@ -207,7 +205,7 @@ export function SkillsPage() {
         subtitle={treeData.subtitle}
         headerExtra={headerExtra}
         message={messageBanner}
-        loading={loading}
+        loading={false}
         getClaimStatus={getClaimStatus}
         onUnlockRequest={handleUnlockRequest}
       />

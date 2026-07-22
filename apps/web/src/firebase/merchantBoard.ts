@@ -1,12 +1,10 @@
-import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
-import type { MerchantBoard } from "@bloodline/shared/types";
+import { doc, serverTimestamp, updateDoc, writeBatch } from "firebase/firestore";
+import type { Heir, ItemInstance, Lineage, MerchantBoard } from "@bloodline/shared/types";
 import {
   createMerchantBoard,
   merchantBoardNeedsReroll,
   rerollMerchantBoard,
 } from "@/lib/merchant";
-import { purchaseMerchantItem } from "./functions";
-import { getFirebaseErrorMessage } from "@/lib/firebaseErrors";
 import { db } from "./config";
 
 function parseMerchantBoard(data: Record<string, unknown> | undefined): MerchantBoard | null {
@@ -18,67 +16,56 @@ function parseMerchantBoard(data: Record<string, unknown> | undefined): Merchant
   };
 }
 
-async function ensureMerchantBoardOnLineage(
-  userId: string,
-  lineageId: string
-): Promise<MerchantBoard> {
-  const lineageRef = doc(db, "lineages", lineageId);
-  const lineageDoc = await getDoc(lineageRef);
-
-  if (!lineageDoc.exists()) {
-    throw new Error("Lineage not found");
-  }
-
-  const lineage = lineageDoc.data();
-  if (lineage.ownerUid !== userId) {
-    throw new Error("You do not own this lineage");
-  }
-
+function ensureMerchantBoardOnLineage(lineage: Lineage): MerchantBoard {
+  const lineageRef = doc(db, "lineages", lineage.id);
   const nowMs = Date.now();
-  let board = parseMerchantBoard(lineage.merchantBoard as Record<string, unknown> | undefined);
+  let board = parseMerchantBoard(lineage.merchantBoard as unknown as Record<string, unknown> | undefined);
 
   if (!board) {
-    board = createMerchantBoard(lineageId, nowMs);
-    await updateDoc(lineageRef, { merchantBoard: board, updatedAt: serverTimestamp() });
+    board = createMerchantBoard(lineage.id, nowMs);
+    void updateDoc(lineageRef, { merchantBoard: board, updatedAt: serverTimestamp() })
+      .catch((error) => console.error("Failed to save merchant board", error));
     return board;
   }
 
   if (merchantBoardNeedsReroll(board, nowMs)) {
-    board = rerollMerchantBoard(lineageId, board, nowMs);
-    await updateDoc(lineageRef, { merchantBoard: board, updatedAt: serverTimestamp() });
+    board = rerollMerchantBoard(lineage.id, board, nowMs);
+    void updateDoc(lineageRef, { merchantBoard: board, updatedAt: serverTimestamp() })
+      .catch((error) => console.error("Failed to save merchant reroll", error));
   }
 
   return board;
 }
 
-export async function bootstrapGetMerchantBoard(userId: string, lineageId: string) {
-  const board = await ensureMerchantBoardOnLineage(userId, lineageId);
-  return { board };
+export function getPlayerMerchantBoard(lineage: Lineage) {
+  return { board: ensureMerchantBoardOnLineage(lineage) };
 }
 
-export async function bootstrapPurchaseMerchantItem(
-  userId: string,
-  lineageId: string,
-  heirId: string,
+export function purchasePlayerMerchantItem(
+  lineage: Lineage,
+  heir: Heir,
+  board: MerchantBoard,
   slotIndex: number
 ) {
-  try {
-    const response = await purchaseMerchantItem({ lineageId, heirId, slotIndex });
-    return response.data;
-  } catch (error) {
-    throw new Error(getFirebaseErrorMessage(error));
+  const slot = board.slots.find((entry) => entry.slotIndex === slotIndex);
+  if (!slot?.itemId || slot.price === null || slot.status !== "available") {
+    throw new Error("That item is no longer available");
   }
-}
-
-export async function getPlayerMerchantBoard(userId: string, lineageId: string) {
-  return bootstrapGetMerchantBoard(userId, lineageId);
-}
-
-export async function purchasePlayerMerchantItem(
-  userId: string,
-  lineageId: string,
-  heirId: string,
-  slotIndex: number
-) {
-  return bootstrapPurchaseMerchantItem(userId, lineageId, heirId, slotIndex);
+  if (heir.gold < slot.price) throw new Error("Not enough gold");
+  const instanceId = crypto.randomUUID().replace(/-/g, "");
+  const instance: ItemInstance = { instanceId, itemId: slot.itemId, upgradeLevel: 0, itemLevel: 1 };
+  const inventory = [...heir.inventory, slot.itemId];
+  const itemInstances = { ...(heir.itemInstances ?? {}), [instanceId]: instance };
+  const merchantBoard: MerchantBoard = {
+    ...board,
+    slots: board.slots.map((entry) => entry.slotIndex === slotIndex
+      ? { slotIndex, itemId: null, price: null, status: "empty" }
+      : entry),
+  };
+  const heirGoldAfter = heir.gold - slot.price;
+  const batch = writeBatch(db);
+  batch.update(doc(db, "lineages", lineage.id, "heirs", heir.id), { gold: heirGoldAfter, inventory, itemInstances });
+  batch.update(doc(db, "lineages", lineage.id), { merchantBoard, updatedAt: serverTimestamp() });
+  void batch.commit().catch((error) => console.error("Failed to save merchant purchase", error));
+  return { itemId: slot.itemId, instanceId, price: slot.price, heirGoldAfter, inventory, merchantBoard };
 }

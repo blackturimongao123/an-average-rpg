@@ -10,12 +10,13 @@ import {
 import { heartbeatParty } from "./functions";
 import { getFirebaseErrorMessage } from "@/lib/firebaseErrors";
 
-export async function createPlayerParty(
+export function createPlayerParty(
   lineageId: string,
   lineage: import("@bloodline/shared/types").Lineage,
   userId: string,
   heir?: import("@bloodline/shared/types").Heir
 ) {
+  void lineageId;
   return createPartyClient(userId, lineage, heir);
 }
 

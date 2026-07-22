@@ -94,7 +94,7 @@ Mutations may alter ancestry/race over generations (see Rust `inheritance` engin
 1. **Meaningful death** — risk/reward should matter; not every outcome should be safe.
 2. **Generational payoff** — long grinds (bank, bloodline skills, rank) should feel worth losing an heir.
 3. **Branching builds** — skills and subclasses use lockouts; avoid “take everything” trees.
-4. **Server authority** — rewards, combat, death, bank ops, and skill claims must stay in Cloud Functions; the client displays and requests only.
+4. **Run first, save later** — this is a friends-only game. Gameplay resolves in the client immediately; Firebase persists and syncs afterward without gating the interaction.
 5. **JSON-driven content** — classes, skills, dungeons, events, jobs, items live in `game-data/`; keep IDs stable and cross-reference consistently.
 
 ## Tone

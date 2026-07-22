@@ -3,7 +3,7 @@ import { Link2 } from "lucide-react";
 import { migrateEquipment } from "@bloodline/shared/equipment";
 import type { Equipment, Heir } from "@bloodline/shared/types";
 import { useGameStore } from "@/stores/gameStore";
-import { equipItem, unequipItem } from "@/firebase/functions";
+import { equipItemLocally, unequipItemLocally } from "@/firebase/equipmentClient";
 import { getItemName, isTwoHandedItem } from "@/lib/items";
 import { getRarityColor } from "@/lib/utils";
 import { getItemById } from "@/lib/items";
@@ -41,55 +41,39 @@ function getEquippedId(equipment: Equipment, slot: SlotKey): string | null {
 export function EquipmentPanel({ heir }: { heir: Heir }) {
   const { lineage, setHeir } = useGameStore();
   const [activeSlot, setActiveSlot] = useState<SlotKey | null>(null);
-  const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const equipment = migrateEquipment(heir.equipment as Equipment & { weapon?: string | null });
   const twoHandMain = isTwoHandedItem(equipment.mainWeapon);
 
-  async function handleEquip(itemId: string) {
+  function handleEquip(itemId: string) {
     if (!lineage || !activeSlot) return;
-    setBusy(true);
     setError(null);
     try {
-      const result = await equipItem({
-        lineageId: lineage.id,
-        heirId: heir.id,
-        itemId,
-        slot: activeSlot,
-      });
+      const result = equipItemLocally(lineage.id, heir, itemId, activeSlot);
       setHeir({
         ...heir,
-        equipment: result.data.equipment,
-        inventory: result.data.inventory,
+        equipment: result.equipment,
+        inventory: result.inventory,
       });
       setActiveSlot(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to equip item");
-    } finally {
-      setBusy(false);
     }
   }
 
-  async function handleUnequip(slot: SlotKey) {
+  function handleUnequip(slot: SlotKey) {
     if (!lineage) return;
-    setBusy(true);
     setError(null);
     try {
-      const result = await unequipItem({
-        lineageId: lineage.id,
-        heirId: heir.id,
-        slot,
-      });
+      const result = unequipItemLocally(lineage.id, heir, slot);
       setHeir({
         ...heir,
-        equipment: result.data.equipment,
-        inventory: result.data.inventory,
+        equipment: result.equipment,
+        inventory: result.inventory,
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to unequip item");
-    } finally {
-      setBusy(false);
     }
   }
 
@@ -101,7 +85,7 @@ export function EquipmentPanel({ heir }: { heir: Heir }) {
     return (
       <button
         type="button"
-        disabled={busy || lockedSecondary}
+        disabled={lockedSecondary}
         onClick={() => {
           if (itemId && !activeSlot) {
             void handleUnequip(slot);

@@ -1,15 +1,14 @@
 import { useState } from "react";
 import { useGameStore } from "@/stores/gameStore";
-import { depositGold, withdrawGold } from "@/firebase/functions";
+import { saveGoldTransfer } from "@/firebase/bankClient";
 import { PiggyBank, Coins, ArrowDownToLine, ArrowUpFromLine, Package } from "lucide-react";
 
 export function BankPage() {
   const { lineage, heir, updateHeirGold, updateBankGold } = useGameStore();
   const [goldAmount, setGoldAmount] = useState("");
-  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  const handleDeposit = async () => {
+  const handleDeposit = () => {
     if (!lineage || !heir) return;
     const amount = parseInt(goldAmount);
     if (isNaN(amount) || amount <= 0) {
@@ -21,28 +20,17 @@ export function BankPage() {
       return;
     }
 
-    setLoading(true);
     setMessage(null);
-
-    try {
-      const response = await depositGold({
-        lineageId: lineage.id,
-        heirId: heir.id,
-        amount,
-      });
-
-      updateHeirGold(response.data.heirGoldAfter);
-      updateBankGold(response.data.bankGoldAfter);
-      setGoldAmount("");
-      setMessage({ type: "success", text: `Deposited ${amount} gold` });
-    } catch (err) {
-      setMessage({ type: "error", text: "Failed to deposit" });
-    } finally {
-      setLoading(false);
-    }
+    const heirGold = heir.gold - amount;
+    const bankGold = lineage.bankGold + amount;
+    updateHeirGold(heirGold);
+    updateBankGold(bankGold);
+    saveGoldTransfer(lineage.id, heir.id, heirGold, bankGold);
+    setGoldAmount("");
+    setMessage({ type: "success", text: `Deposited ${amount} gold` });
   };
 
-  const handleWithdraw = async () => {
+  const handleWithdraw = () => {
     if (!lineage || !heir) return;
     const amount = parseInt(goldAmount);
     if (isNaN(amount) || amount <= 0) {
@@ -54,25 +42,14 @@ export function BankPage() {
       return;
     }
 
-    setLoading(true);
     setMessage(null);
-
-    try {
-      const response = await withdrawGold({
-        lineageId: lineage.id,
-        heirId: heir.id,
-        amount,
-      });
-
-      updateHeirGold(response.data.heirGoldAfter);
-      updateBankGold(response.data.bankGoldAfter);
-      setGoldAmount("");
-      setMessage({ type: "success", text: `Withdrew ${amount} gold` });
-    } catch (err) {
-      setMessage({ type: "error", text: "Failed to withdraw" });
-    } finally {
-      setLoading(false);
-    }
+    const heirGold = heir.gold + amount;
+    const bankGold = lineage.bankGold - amount;
+    updateHeirGold(heirGold);
+    updateBankGold(bankGold);
+    saveGoldTransfer(lineage.id, heir.id, heirGold, bankGold);
+    setGoldAmount("");
+    setMessage({ type: "success", text: `Withdrew ${amount} gold` });
   };
 
   if (!heir || !lineage) {
@@ -142,7 +119,6 @@ export function BankPage() {
           </div>
           <button
             onClick={handleDeposit}
-            disabled={loading}
             className="btn-primary flex items-center gap-2"
           >
             <ArrowDownToLine className="w-4 h-4" />
@@ -150,7 +126,6 @@ export function BankPage() {
           </button>
           <button
             onClick={handleWithdraw}
-            disabled={loading}
             className="btn-secondary flex items-center gap-2"
           >
             <ArrowUpFromLine className="w-4 h-4" />

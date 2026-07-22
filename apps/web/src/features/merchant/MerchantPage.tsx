@@ -20,32 +20,14 @@ export function MerchantPage() {
   const busyOnJob = useIsHeirBusyOnJob();
   const [board, setBoard] = useState<MerchantBoard | null>(lineage?.merchantBoard ?? null);
   const [countdownMs, setCountdownMs] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [buyingSlot, setBuyingSlot] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user || !lineage || !heir) return;
 
-    let cancelled = false;
-    setLoading(true);
-
-    void getPlayerMerchantBoard(user.uid, lineage.id)
-      .then(({ board: freshBoard }) => {
-        if (cancelled) return;
-        setBoard(freshBoard);
-        setLineage({ ...lineage, merchantBoard: freshBoard });
-      })
-      .catch((err) => {
-        if (!cancelled) setError(getFirebaseErrorMessage(err));
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
+    const { board: freshBoard } = getPlayerMerchantBoard(lineage);
+    setBoard(freshBoard);
+    setLineage({ ...lineage, merchantBoard: freshBoard });
   }, [user, lineage?.id, heir?.id]);
 
   useEffect(() => {
@@ -64,12 +46,12 @@ export function MerchantPage() {
     );
   }
 
-  async function handleBuy(slotIndex: number) {
+  function handleBuy(slotIndex: number) {
     if (!user || !lineage || !heir) return;
-    setBuyingSlot(slotIndex);
     setError(null);
     try {
-      const result = await purchasePlayerMerchantItem(user.uid, lineage.id, heir.id, slotIndex);
+      if (!board) throw new Error("Merchant board is not ready");
+      const result = purchasePlayerMerchantItem(lineage, heir, board, slotIndex);
       setHeir({
         ...heir,
         gold: result.heirGoldAfter,
@@ -79,8 +61,6 @@ export function MerchantPage() {
       setLineage({ ...lineage, merchantBoard: result.merchantBoard as MerchantBoard });
     } catch (err) {
       setError(getFirebaseErrorMessage(err));
-    } finally {
-      setBuyingSlot(null);
     }
   }
 
@@ -117,9 +97,7 @@ export function MerchantPage() {
         </div>
       )}
 
-      {loading ? (
-        <p className="text-muted-foreground">Loading stock...</p>
-      ) : !board || board.slots.every((slot) => slot.status === "empty") ? (
+      {!board || board.slots.every((slot) => slot.status === "empty") ? (
         <div className="card p-8 text-center text-muted-foreground">
           <ShoppingBag className="w-10 h-10 mx-auto mb-3 opacity-50" />
           <p>The merchant&apos;s shelves are bare. Check back after the next restock.</p>
@@ -137,7 +115,7 @@ export function MerchantPage() {
 
             const item = getItemById(slot.itemId);
             const canAfford = heir.gold >= slot.price;
-            const disabled = busyOnJob || buyingSlot !== null || !canAfford;
+            const disabled = busyOnJob || !canAfford;
 
             return (
               <div key={slot.slotIndex} className="card p-5 flex flex-col gap-3">
@@ -165,7 +143,7 @@ export function MerchantPage() {
                     onClick={() => void handleBuy(slot.slotIndex)}
                     className="btn-primary text-sm px-3 py-1.5 disabled:opacity-50"
                   >
-                    {buyingSlot === slot.slotIndex ? "Buying..." : canAfford ? "Buy" : "Too poor"}
+                    {canAfford ? "Buy" : "Too poor"}
                   </button>
                 </div>
               </div>

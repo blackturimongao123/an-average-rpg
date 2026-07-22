@@ -35,11 +35,11 @@ async function lookupHeirByName(heirName: string): Promise<HeirLookupEntry> {
   return snap.data() as HeirLookupEntry;
 }
 
-export async function createPartyClient(
+export function createPartyClient(
   userId: string,
   lineage: Lineage,
   heir?: Heir
-): Promise<{ partyId: string }> {
+): { partyId: string } {
   if (lineage.ownerUid !== userId) {
     throw new Error("You do not own this lineage");
   }
@@ -69,7 +69,7 @@ export async function createPartyClient(
     updatedAt: serverTimestamp(),
   });
 
-  await batch.commit();
+  void batch.commit().catch((error) => console.error("Failed to save created party", error));
   return { partyId };
 }
 
@@ -85,7 +85,7 @@ export async function invitePlayerByHeirName(
 
   let partyId = lineage.partyId;
   if (!partyId) {
-    const created = await createPartyClient(userId, lineage, heir);
+    const created = createPartyClient(userId, lineage, heir);
     partyId = created.partyId;
   }
 

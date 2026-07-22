@@ -47,8 +47,8 @@ export function useJobShiftTimer() {
 
     const activeShift = countdown.shift;
     setCompleting(true);
-    completeJobShift(lineage.id, heir.id)
-      .then((result) => {
+    try {
+      const result = completeJobShift(lineage.id, heir);
         if (!result || !activeShift) return;
 
         const shiftJobId = activeShift.jobId;
@@ -68,13 +68,11 @@ export function useJobShiftTimer() {
             xp: existingRecord.xp + result.xpEarned,
           },
         });
-      })
-      .catch((error) => {
+    } catch (error) {
         console.error("Failed to complete job shift:", error);
-      })
-      .finally(() => {
-        setCompleting(false);
-      });
+    } finally {
+      setCompleting(false);
+    }
   }, [
     lineage,
     heir,

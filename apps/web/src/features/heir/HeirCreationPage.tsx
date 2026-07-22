@@ -27,31 +27,31 @@ const statIcons: Record<string, typeof Shield> = {
 export function HeirCreationPage() {
   const navigate = useNavigate();
   const { user } = useAuthStore();
-  const { lineage } = useGameStore();
+  const { lineage, setHeir, setLineage } = useGameStore();
   const [selectedClass, setSelectedClass] = useState<string | null>(null);
   const [heirName, setHeirName] = useState("");
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const selectedClassData = classes.find((c) => c.id === selectedClass);
 
-  const handleCreateHeir = async () => {
+  const handleCreateHeir = () => {
     if (!lineage || !selectedClass || !heirName.trim() || !user) {
       setError("Please select a class and enter a name");
       return;
     }
 
     setError("");
-    setLoading(true);
-
     try {
-      await createPlayerHeir(user.uid, lineage.id, selectedClass, heirName.trim());
-
+      const result = createPlayerHeir(user.uid, lineage, selectedClass, heirName.trim());
+      setHeir(result.heir);
+      setLineage({
+        ...lineage,
+        activeHeirId: result.heirId,
+        publicSummary: { ...lineage.publicSummary, currentClass: selectedClass },
+      });
       navigate("/character");
     } catch (err: unknown) {
       setError(getFirebaseErrorMessage(err));
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -174,10 +174,10 @@ export function HeirCreationPage() {
       <div className="flex justify-center">
         <button
           onClick={handleCreateHeir}
-          disabled={!selectedClass || !heirName.trim() || loading}
+          disabled={!selectedClass || !heirName.trim()}
           className="btn-primary px-8 py-3 text-lg"
         >
-          {loading ? "Creating Heir..." : "Begin Your Journey"}
+          Begin Your Journey
         </button>
       </div>
     </div>

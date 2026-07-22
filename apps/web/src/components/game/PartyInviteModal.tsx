@@ -20,7 +20,6 @@ export function PartyInviteModal() {
   const { user } = useAuthStore();
   const { lineage, setLineage, heir } = useGameStore();
   const [invites, setInvites] = useState<PartyInvite[]>([]);
-  const [loadingId, setLoadingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -48,31 +47,25 @@ export function PartyInviteModal() {
 
   const activeInvite = invites[0];
 
-  async function handleAccept(inviteId: string) {
+  function handleAccept(inviteId: string) {
     if (!lineage || !user || !heir) return;
-    setLoadingId(inviteId);
     setError(null);
-    try {
-      const result = await acceptPartyInviteClient(user.uid, lineage, inviteId, heir);
-      setLineage({ ...lineage, partyId: result.partyId });
-    } catch (err) {
+    const invite = invites.find((entry) => entry.id === inviteId);
+    if (!invite) return;
+    setInvites((current) => current.filter((entry) => entry.id !== inviteId));
+    setLineage({ ...lineage, partyId: invite.partyId });
+    void acceptPartyInviteClient(user.uid, lineage, inviteId, heir).catch((err) => {
       setError(getPartyErrorMessage(err));
-    } finally {
-      setLoadingId(null);
-    }
+    });
   }
 
-  async function handleDecline(inviteId: string) {
+  function handleDecline(inviteId: string) {
     if (!user) return;
-    setLoadingId(inviteId);
     setError(null);
-    try {
-      await declinePartyInviteClient(user.uid, inviteId);
-    } catch (err) {
+    setInvites((current) => current.filter((entry) => entry.id !== inviteId));
+    void declinePartyInviteClient(user.uid, inviteId).catch((err) => {
       setError(getPartyErrorMessage(err));
-    } finally {
-      setLoadingId(null);
-    }
+    });
   }
 
   return (
@@ -115,7 +108,6 @@ export function PartyInviteModal() {
           <button
             type="button"
             className="btn-secondary flex items-center gap-1"
-            disabled={loadingId === activeInvite.id}
             onClick={() => void handleDecline(activeInvite.id)}
           >
             <X className="w-4 h-4" />
@@ -124,7 +116,6 @@ export function PartyInviteModal() {
           <button
             type="button"
             className="btn-primary"
-            disabled={loadingId === activeInvite.id}
             onClick={() => void handleAccept(activeInvite.id)}
           >
             Join Party

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { AdventureEventView } from "@/features/adventure/AdventureEventView";
 import { resolvePlayerTavernQuest } from "@/firebase/tavernQuest";
-import { getFirebaseErrorMessage } from "@/lib/firebaseErrors";
 import {
   rollFieldEvent,
   tavernChoicesToCampaignChoices,
@@ -36,7 +35,6 @@ export function FieldEncountersPanel() {
 
   const [activeEvent, setActiveEvent] = useState<TavernEvent | null>(null);
   const [eventLog, setEventLog] = useState<Array<{ text: string; timestampMs: number }>>([]);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [outcome, setOutcome] = useState<FieldOutcome | null>(null);
 
@@ -58,15 +56,14 @@ export function FieldEncountersPanel() {
     ]);
   };
 
-  const handleChoose = async (choice: MissionCampaignChoice) => {
+  const handleChoose = (choice: MissionCampaignChoice) => {
     if (!activeEvent) return;
-    setLoading(true);
     setError("");
     try {
-      const response = await resolvePlayerTavernQuest(
+      const response = resolvePlayerTavernQuest(
         user.uid,
-        lineage.id,
-        heir.id,
+        lineage,
+        heir,
         activeEvent.id,
         choice.id
       );
@@ -74,7 +71,7 @@ export function FieldEncountersPanel() {
       updateHeirGold(response.heirGoldAfter);
       updateHeirXp(response.heirXpAfter);
       if (response.leveledUp) {
-        updateHeirLevel(heir.level + 1);
+        updateHeirLevel(response.heirLevelAfter);
       }
       response.outcome.itemRewards.forEach((itemId) => addItemToInventory(itemId));
 
@@ -93,9 +90,7 @@ export function FieldEncountersPanel() {
         setLineage({ ...lineage, activeHeirId: null });
       }
     } catch (err) {
-      setError(getFirebaseErrorMessage(err));
-    } finally {
-      setLoading(false);
+      setError(err instanceof Error ? err.message : "Could not resolve encounter");
     }
   };
 
@@ -117,7 +112,7 @@ export function FieldEncountersPanel() {
           progressLabel="Field Encounter"
           step={step}
           choices={choices}
-          loading={loading}
+          loading={false}
           onChoose={handleChoose}
           onLeave={() => setActiveEvent(null)}
           eventLog={eventLog}
@@ -191,7 +186,7 @@ export function FieldEncountersPanel() {
         ))}
       </div>
 
-      <button type="button" className="btn-primary w-full sm:w-auto" disabled={loading} onClick={handleRollEvent}>
+      <button type="button" className="btn-primary w-full sm:w-auto" onClick={handleRollEvent}>
         <MapPin className="w-4 h-4 inline mr-2" />
         Seek an Encounter
       </button>
