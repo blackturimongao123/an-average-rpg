@@ -104,14 +104,19 @@ service cloud.firestore {
     match /lineages/{lineageId} {
       allow read: if signedIn() && resource.data.ownerUid == request.auth.uid;
       allow create: if signedIn() && validLineageCreate() && userHasNoLineage();
-      allow update: if signedIn()
-        && resource.data.ownerUid == request.auth.uid
-        && request.resource.data.diff(resource.data).affectedKeys()
-          .hasOnly([
-            'activeHeirId', 'updatedAt', 'publicSummary', 'generation',
-            'adventurerRank', 'adventurerRankXp', 'bloodlineSkillIds',
-            'partyId', 'merchantBoard'
-          ]);
+      allow update: if signedIn() && (
+        (resource.data.ownerUid == request.auth.uid
+          && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly([
+              'activeHeirId', 'updatedAt', 'publicSummary', 'generation',
+              'adventurerRank', 'adventurerRankXp', 'bloodlineSkillIds',
+              'partyId', 'merchantBoard'
+            ]))
+        || (resource.data.partyId != null
+          && request.resource.data.partyId == null
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['partyId'])
+          && get(/databases/$(database)/documents/parties/$(resource.data.partyId)).data.leaderUid == request.auth.uid)
+      );
       allow delete: if false;
 
       // Heirs subcollection
@@ -123,7 +128,7 @@ service cloud.firestore {
             .hasOnly([
               'activeJobShift', 'gold', 'jobRecords', 'xp', 'level', 'inventory',
               'status', 'diedAt', 'deathCause', 'activeMission', 'subclassId', 'subclassTier',
-              'unspentStatPoints', 'missionCooldowns', 'itemInstances', 'completedMissionIds',
+              'unspentStatPoints', 'stats', 'skillIds', 'missionCooldowns', 'itemInstances', 'completedMissionIds',
               'appliedPartyMissionOutcomeIds', 'seenUniqueMissionEventIds'
             ]);
         allow delete: if false;
@@ -155,7 +160,7 @@ service cloud.firestore {
       match /missionBoard/{docId} {
         allow read: if signedIn()
           && get(/databases/$(database)/documents/lineages/$(lineageId)).data.ownerUid == request.auth.uid;
-        allow create, update: if false;
+        allow create, update: if ownsLineage(lineageId);
         allow delete: if false;
       }
     }

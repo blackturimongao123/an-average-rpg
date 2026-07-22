@@ -1,6 +1,7 @@
-import { claimSkill as claimSkillFunction } from "./functions";
-import { bootstrapAdvanceSubclass } from "./skillBootstrap";
+import { bootstrapAdvanceSubclass, bootstrapClaimSkill } from "./skillBootstrap";
 import { getFirebaseErrorMessage } from "@/lib/firebaseErrors";
+
+let skillSaveQueue: Promise<void> = Promise.resolve();
 
 export async function claimPlayerSkill(
   userId: string,
@@ -8,11 +9,13 @@ export async function claimPlayerSkill(
   heirId: string,
   skillId: string
 ) {
+  const save = skillSaveQueue.then(() =>
+    bootstrapClaimSkill(userId, lineageId, heirId, skillId)
+  );
+  skillSaveQueue = save.then(() => undefined, () => undefined);
   try {
-    const response = await claimSkillFunction({ lineageId, heirId, skillId });
-    return response.data;
+    return await save;
   } catch (error) {
-    void userId;
     throw new Error(getFirebaseErrorMessage(error));
   }
 }

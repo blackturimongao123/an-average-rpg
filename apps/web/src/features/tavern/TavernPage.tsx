@@ -37,7 +37,6 @@ import {
   Users,
 } from "lucide-react";
 import { usePartyMembers } from "@/hooks/usePartyMembers";
-import { useFunctionWarmup } from "@/hooks/useFunctionWarmup";
 import type { AdventurePartyMember } from "@/features/adventure/AdventureEventView";
 import { buildPartyReplayAllies } from "@/lib/partyBattle";
 import {
@@ -133,7 +132,6 @@ export function TavernPage() {
     choiceId?: string;
   } | null>(null);
   const dismissedOutcomeAtMsRef = useRef(0);
-  useFunctionWarmup(["acceptMission", "advanceMission"]);
 
   const inParty = Boolean(lineage?.partyId && party);
   const isPartyLeader = inParty && party?.leaderUid === user?.uid;
@@ -205,18 +203,18 @@ export function TavernPage() {
     }
   }, [party?.lastMissionOutcome?.updatedAtMs, inParty, isPartyLeader, setActiveMission]);
 
-  const applyAdvanceResponse = async (response: AdvanceMissionResult) => {
+  const applyAdvanceResponse = (response: AdvanceMissionResult) => {
     if (response.missionFailed) {
       setActiveMission(null);
       setMissionBattle(null);
       setError("Your heir was defeated. The contract failed.");
       if (inParty && lineage?.partyId && isPartyLeader) {
-        await finalizePartyMission(lineage.partyId, {
+        void finalizePartyMission(lineage.partyId, {
           completed: false,
           missionFailed: true,
-        });
+        }).catch((err) => setError(getFirebaseErrorMessage(err)));
       }
-      await refreshBoard();
+      void refreshBoard();
       return;
     }
 
@@ -238,23 +236,23 @@ export function TavernPage() {
       );
       response.rewards.items.forEach((itemId) => addItemToInventory(itemId));
       if (inParty && lineage?.partyId && isPartyLeader) {
-        await finalizePartyMission(lineage.partyId, {
+        void finalizePartyMission(lineage.partyId, {
           completed: true,
           rewards: response.rewards,
           adventurerRank: normalizeAdventurerRank(response.adventurerRank),
           adventurerRankXp: response.adventurerRankXp,
           rankUp: response.rankUp ?? null,
-        });
+        }).catch((err) => setError(getFirebaseErrorMessage(err)));
       }
-      await refreshBoard();
+      void refreshBoard();
     } else if (response.activeMission) {
       setActiveMission(response.activeMission);
       if (inParty && lineage?.partyId && isPartyLeader && heir) {
-        await syncPartyMissionState(lineage.partyId, response.activeMission, {
+        void syncPartyMissionState(lineage.partyId, response.activeMission, {
           uid: user!.uid,
           lineageId: lineage.id,
           heirId: heir.id,
-        });
+        }).catch((err) => setError(getFirebaseErrorMessage(err)));
       }
     }
   };
@@ -284,7 +282,8 @@ export function TavernPage() {
     setError("");
 
     try {
-      const response = await acceptPlayerMission(user.uid, lineage.id, heir.id, slotIndex);
+      if (!missionBoard) throw new Error("Mission board is not ready");
+      const response = acceptPlayerMission(user.uid, lineage, heir, missionBoard, slotIndex);
       setActiveMission(response.activeMission);
       setMissionBoard(response.board);
     } catch (err: unknown) {

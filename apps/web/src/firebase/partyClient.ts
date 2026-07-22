@@ -259,3 +259,57 @@ export async function leavePartyClient(
   });
   await batch.commit();
 }
+
+export async function kickPartyMemberClient(
+  userId: string,
+  lineage: Lineage,
+  targetUid: string
+): Promise<{ kicked: boolean }> {
+  if (!lineage.partyId) throw new Error("Not in a party");
+  const partyRef = doc(db, "parties", lineage.partyId);
+  const snapshot = await getDoc(partyRef);
+  if (!snapshot.exists()) throw new Error("Party not found");
+
+  const party = snapshot.data() as Party;
+  if (party.leaderUid !== userId) throw new Error("Only the party leader can kick members");
+  if (targetUid === userId) throw new Error("Use Leave Party to leave your own party");
+  const index = party.memberUids.indexOf(targetUid);
+  if (index < 0) throw new Error("Player is not in this party");
+
+  const targetLineageId = party.memberLineageIds[index];
+  const lastSeen = { ...(party.memberLastSeenAtMs ?? {}) };
+  delete lastSeen[targetUid];
+  const batch = writeBatch(db);
+  batch.update(partyRef, {
+    memberUids: party.memberUids.filter((_, i) => i !== index),
+    memberLineageIds: party.memberLineageIds.filter((_, i) => i !== index),
+    memberProfiles: (party.memberProfiles ?? []).filter((_, i) => i !== index),
+    memberLastSeenAtMs: lastSeen,
+  });
+  if (targetLineageId) {
+    batch.update(doc(db, "lineages", targetLineageId), { partyId: null });
+  }
+  await batch.commit();
+  return { kicked: true };
+}
+
+export async function transferPartyLeadershipClient(
+  userId: string,
+  lineage: Lineage,
+  targetUid: string
+): Promise<{ transferred: boolean }> {
+  if (!lineage.partyId) throw new Error("Not in a party");
+  const partyRef = doc(db, "parties", lineage.partyId);
+  const snapshot = await getDoc(partyRef);
+  if (!snapshot.exists()) throw new Error("Party not found");
+
+  const party = snapshot.data() as Party;
+  if (party.leaderUid !== userId) throw new Error("Only the party leader can transfer leadership");
+  const index = party.memberUids.indexOf(targetUid);
+  if (index < 0) throw new Error("Player is not in this party");
+  await updateDoc(partyRef, {
+    leaderUid: targetUid,
+    leaderLineageId: party.memberLineageIds[index],
+  });
+  return { transferred: true };
+}

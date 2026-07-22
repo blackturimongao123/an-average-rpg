@@ -46,7 +46,6 @@ interface AdvanceMissionRequest {
   heirId: string;
   choiceId?: string;
   expectedRevision?: number;
-  warmup?: boolean;
 }
 
 interface AdvanceMissionResponse {
@@ -68,7 +67,6 @@ interface AdvanceMissionResponse {
   adventurerRank?: AdventurerRank;
   adventurerRankXp?: number;
   missionFailed?: boolean;
-  warmed?: boolean;
 }
 
 function normalizeAdventurerRank(rank: unknown): AdventurerRank {
@@ -101,10 +99,6 @@ export const advanceMission = onCall<AdvanceMissionRequest>(
     if (!request.auth) {
       throw new HttpsError("unauthenticated", "Must be signed in");
     }
-    if (request.data.warmup) {
-      return { completed: false, activeMission: null, warmed: true };
-    }
-
     const { lineageId, heirId, choiceId, expectedRevision = 0 } = request.data;
     if (!lineageId || !heirId) {
       throw new HttpsError("invalid-argument", "Missing required fields");

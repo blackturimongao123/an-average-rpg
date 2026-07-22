@@ -11,6 +11,7 @@ import {
   getBloodlineSkillPoints,
   getCharacterSkillPoints,
   getSkillById,
+  resolveSubclassAdvancementOnClaim,
 } from "@/lib/skills";
 import { SkillTreeCanvas } from "@/features/skill-tree/SkillTreeCanvas";
 import { getBloodlineSkillTree, getClassSkillTree } from "@/features/skill-tree/data";
@@ -20,7 +21,6 @@ import {
   resolveClaimableSkillId,
 } from "@/features/skill-tree/skillTreeBridge";
 import type { ResolvedSkillNode } from "@/features/skill-tree/skillTreeTypes";
-import { useFunctionWarmup } from "@/hooks/useFunctionWarmup";
 
 export function SkillsPage() {
   const [searchParams] = useSearchParams();
@@ -38,7 +38,6 @@ export function SkillsPage() {
   );
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
-  useFunctionWarmup(["claimSkill"]);
 
   const ownedForTab = useMemo(() => {
     if (!heir || !lineage) return [];
@@ -103,7 +102,7 @@ export function SkillsPage() {
     });
   };
 
-  const handleUnlockRequest = async (node: ResolvedSkillNode) => {
+  const handleUnlockRequest = (node: ResolvedSkillNode) => {
     if (!user) return;
 
     const skillId = resolveClaimableSkillId(node);
@@ -115,27 +114,21 @@ export function SkillsPage() {
     const { canClaim } = getClaimStatus(node);
     if (!canClaim) return;
 
-    setLoading(true);
+    setLoading(false);
     setMessage(null);
 
-    try {
-      const result = await claimPlayerSkill(user.uid, lineage.id, heir.id, skillId);
-
-      if (activeTab === "bloodline") {
-        addBloodlineSkill(skillId);
-      } else {
-        addSkillToHeir(skillId);
-        if ("subclassId" in result && result.subclassId && result.subclassTier) {
-          setHeirSubclass(result.subclassId, result.subclassTier);
-        }
-      }
-
-      setMessage({ type: "success", text: `Learned ${skill.name}!` });
-    } catch (error: unknown) {
-      setMessage({ type: "error", text: getFirebaseErrorMessage(error) });
-    } finally {
-      setLoading(false);
+    if (activeTab === "bloodline") {
+      addBloodlineSkill(skillId);
+    } else {
+      addSkillToHeir(skillId);
+      const advancement = resolveSubclassAdvancementOnClaim(heir, skill);
+      if (advancement) setHeirSubclass(advancement.subclassId, advancement.subclassTier);
     }
+    setMessage({ type: "success", text: `Learned ${skill.name}!` });
+
+    void claimPlayerSkill(user.uid, lineage.id, heir.id, skillId).catch((error: unknown) => {
+      setMessage({ type: "error", text: getFirebaseErrorMessage(error) });
+    });
   };
 
   const headerExtra = (

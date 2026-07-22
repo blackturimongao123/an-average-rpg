@@ -15,7 +15,6 @@ interface ClaimSkillRequest {
   lineageId: string;
   heirId: string;
   skillId: string;
-  warmup?: boolean;
 }
 
 interface ClaimSkillResponse {
@@ -33,15 +32,6 @@ export const claimSkill = onCall<ClaimSkillRequest>(
     if (!request.auth) {
       throw new HttpsError("unauthenticated", "Must be signed in");
     }
-    if (request.data.warmup) {
-      return {
-        skillId: "",
-        skillName: "",
-        skillPointsRemaining: 0,
-        treeScope: "character",
-      };
-    }
-
     const { lineageId, heirId, skillId } = request.data;
 
     if (!lineageId || !heirId || !skillId) {

@@ -24,9 +24,8 @@ import {
 } from "lucide-react";
 import type { ClassData, SkillNode, Stats } from "@bloodline/shared/types";
 import { Link } from "react-router-dom";
-import { allocateStatPoints } from "@/firebase/functions";
+import { saveAllocatedStatPoint } from "@/firebase/statPointsClient";
 import { getFirebaseErrorMessage } from "@/lib/firebaseErrors";
-import { useFunctionWarmup } from "@/hooks/useFunctionWarmup";
 
 import classesData from "@game-data/classes.json";
 import skillsData from "@game-data/skills.json";
@@ -50,7 +49,6 @@ function formatClassName(classId: string): string {
 
 export function CharacterPage() {
   const { lineage, heir, setHeir } = useGameStore();
-  useFunctionWarmup(["allocateStatPoints"]);
 
   if (!lineage) {
     return (
@@ -78,7 +76,7 @@ export function CharacterPage() {
     .filter(Boolean);
   const unspent = activeHeir.unspentStatPoints ?? 0;
 
-  async function addStat(stat: keyof Stats) {
+  function addStat(stat: keyof Stats) {
     const latestHeir = useGameStore.getState().heir;
     if (!lineage || !latestHeir || (latestHeir.unspentStatPoints ?? 0) <= 0) return;
     setHeir({
@@ -86,14 +84,7 @@ export function CharacterPage() {
       stats: { ...latestHeir.stats, [stat]: latestHeir.stats[stat] + 1 },
       unspentStatPoints: (latestHeir.unspentStatPoints ?? 0) - 1,
     });
-    try {
-      await allocateStatPoints({
-        lineageId: lineage.id,
-        heirId: latestHeir.id,
-        stat,
-        amount: 1,
-      });
-    } catch (error) {
+    void saveAllocatedStatPoint(lineage.id, latestHeir.id, stat).catch((error) => {
       const current = useGameStore.getState().heir;
       if (current?.id === latestHeir.id) {
         setHeir({
@@ -103,7 +94,7 @@ export function CharacterPage() {
         });
       }
       window.alert(getFirebaseErrorMessage(error));
-    }
+    });
   }
 
   return (

@@ -3,9 +3,11 @@ import {
   createPartyClient,
   declinePartyInviteClient,
   invitePlayerByHeirName,
+  kickPartyMemberClient,
   leavePartyClient,
+  transferPartyLeadershipClient,
 } from "./partyClient";
-import { heartbeatParty, kickPartyMember, transferPartyLeadership } from "./functions";
+import { heartbeatParty } from "./functions";
 import { getFirebaseErrorMessage } from "@/lib/firebaseErrors";
 
 export async function createPlayerParty(
@@ -43,14 +45,20 @@ export async function leavePlayerParty(userId: string, lineage: import("@bloodli
   return leavePartyClient(userId, lineage);
 }
 
-export async function kickPlayerFromParty(lineageId: string, targetUid: string) {
-  const response = await kickPartyMember({ lineageId, targetUid });
-  return response.data;
+export function kickPlayerFromParty(
+  userId: string,
+  lineage: import("@bloodline/shared/types").Lineage,
+  targetUid: string
+) {
+  return kickPartyMemberClient(userId, lineage, targetUid);
 }
 
-export async function makePlayerPartyLeader(lineageId: string, targetUid: string) {
-  const response = await transferPartyLeadership({ lineageId, targetUid });
-  return response.data;
+export function makePlayerPartyLeader(
+  userId: string,
+  lineage: import("@bloodline/shared/types").Lineage,
+  targetUid: string
+) {
+  return transferPartyLeadershipClient(userId, lineage, targetUid);
 }
 
 export async function sendPartyHeartbeat(lineageId: string) {

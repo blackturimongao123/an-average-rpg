@@ -23,7 +23,6 @@ import {
 import { abandonPlayerMission, failPlayerMission, getMissionActionErrorMessage } from "@/firebase/missionActions";
 import type { Party, PartyInvite } from "@bloodline/shared/types";
 import { Settings, User, Users, UserPlus, LogOut, Crown, UserMinus } from "lucide-react";
-import { useFunctionWarmup } from "@/hooks/useFunctionWarmup";
 
 interface PartyMemberInfo {
   uid: string;
@@ -50,10 +49,6 @@ export function ProfilePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
-  useFunctionWarmup(
-    ["kickPartyMember", "transferPartyLeadership"],
-    tab === "party" && Boolean(lineage?.partyId)
-  );
 
   useEffect(() => {
     if (!user) return;
@@ -217,32 +212,32 @@ export function ProfilePage() {
     }
   }
 
-  async function handleKickMember(member: PartyMemberInfo) {
-    setLoading(true);
+  function handleKickMember(member: PartyMemberInfo) {
     setError(null);
     setMessage(null);
-    try {
-      await kickPlayerFromParty(activeLineage.id, member.uid);
-      setMessage(`${member.heirName} was removed from the party.`);
-    } catch (err) {
+    setMembers((current) => current.filter((entry) => entry.uid !== member.uid));
+    setMessage(`${member.heirName} was removed from the party.`);
+    void kickPlayerFromParty(user!.uid, activeLineage, member.uid).catch((err) => {
       setError(getPartyErrorMessage(err));
-    } finally {
-      setLoading(false);
-    }
+    });
   }
 
-  async function handleMakeLeader(member: PartyMemberInfo) {
-    setLoading(true);
+  function handleMakeLeader(member: PartyMemberInfo) {
     setError(null);
     setMessage(null);
-    try {
-      await makePlayerPartyLeader(activeLineage.id, member.uid);
-      setMessage(`${member.heirName} is now the party leader.`);
-    } catch (err) {
+    setParty((current) => current ? {
+      ...current,
+      leaderUid: member.uid,
+      leaderLineageId: member.lineageId,
+    } : current);
+    setMembers((current) => current.map((entry) => ({
+      ...entry,
+      isLeader: entry.uid === member.uid,
+    })));
+    setMessage(`${member.heirName} is now the party leader.`);
+    void makePlayerPartyLeader(user!.uid, activeLineage, member.uid).catch((err) => {
       setError(getPartyErrorMessage(err));
-    } finally {
-      setLoading(false);
-    }
+    });
   }
 
   async function handleAbandonMission() {
